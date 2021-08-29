@@ -3,10 +3,10 @@ namespace PantryBackEnd.Controllers
 
     using Microsoft.AspNetCore.Mvc;
 
-    [ApiController]
-    [Route("[controller]")]
     public class UserController : ControllerBase
     {
+
+        [Route("api/Users/name")]
         [HttpGet]
         public  int Get()
         {
