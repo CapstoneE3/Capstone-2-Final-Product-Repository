@@ -1,4 +1,7 @@
-public static class UserServices
-{
-    
-}
+namespace PantryBackEnd.Services
+{    
+    public class UserServices
+    {
+        
+    }
+}    

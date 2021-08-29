@@ -1,4 +1,7 @@
-public class ShoppingListServices
-{
-    
-}
+namespace PantryBackEnd.Services
+{    
+    public class ShoppingListService
+    {
+        
+    }
+}    

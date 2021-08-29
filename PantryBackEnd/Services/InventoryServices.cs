@@ -1,4 +1,7 @@
-public class InventoryServices
-{
-    
-}
+namespace PantryBackEnd.Services
+{    
+    public class InventoryServices
+    {
+        
+    }
+}    

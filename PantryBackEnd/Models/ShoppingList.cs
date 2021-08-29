@@ -1,4 +1,7 @@
-public class ShoppingList
+namespace PantryBackEnd.Models
 {
-    
+    public class ShoppingList
+    {
+        
+    }
 }

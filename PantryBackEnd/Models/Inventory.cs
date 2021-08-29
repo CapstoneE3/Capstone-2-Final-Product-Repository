@@ -1,4 +1,7 @@
-public class Inventory
+namespace PantryBackEnd.Models
 {
-    
+    public class Inventory
+    {
+
+    }
 }
