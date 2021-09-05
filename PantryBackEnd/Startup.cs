@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-
+using PantryBackEnd.JwtGenerator;
 namespace PantryBackEnd
 {
     public class Startup
@@ -26,7 +26,8 @@ namespace PantryBackEnd
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddCors();
+            services.AddScoped<JwtService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -37,6 +38,7 @@ namespace PantryBackEnd
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -44,11 +46,18 @@ namespace PantryBackEnd
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PantryBackEnd v1"));
             }
 
-            //app.UseHttpsRedirection();
-
+            app.UseHttpsRedirection();
+            app.UseCors(policy =>
+            {
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+                //policy.WithOrigins(new []{})
+                policy.AllowAnyOrigin();
+                policy.AllowCredentials();
+            });
             app.UseRouting();
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

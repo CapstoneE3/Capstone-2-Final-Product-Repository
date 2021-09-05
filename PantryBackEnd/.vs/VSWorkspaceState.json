@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Services"
   ],
-  "SelectedNode": "\\PantryBackEnd.csproj",
+  "SelectedNode": "\\Services\\UserServices.cs",
   "PreviewInSolutionExplorer": false
 }

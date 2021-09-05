@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 namespace PantryBackEnd.Controllers
 {
 
@@ -8,10 +9,9 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/Users/name")]
         [HttpGet]
-        public  int Get()
+        public async Task<ActionResult<bool>>login()
         {
-            
-            return 0;
+            return true;
         }
     }
 }

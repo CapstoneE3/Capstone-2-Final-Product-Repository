@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PantryBackEnd.Models
 {
-    [Table("Shopping_List")]
-    public partial class ShoppingList
+    [Table("Inventory_List")]
+    public partial class InventoryList
     {
         [Key]
         [Column("item_ID", TypeName = "char")]
@@ -17,14 +17,17 @@ namespace PantryBackEnd.Models
         [Key]
         [Column("acc_ID")]
         public Guid AccId { get; set; }
-        [Column("count")]
-        public int Count { get; set; }
+        [Key]
+        [Column("duplicate_ID")]
+        public Guid DuplicateId { get; set; }
+        [Column("exp_date", TypeName = "date")]
+        public DateTime ExpDate { get; set; }
 
         [ForeignKey(nameof(AccId))]
-        [InverseProperty(nameof(Account.ShoppingLists))]
+        [InverseProperty(nameof(Account.InventoryLists))]
         public virtual Account Acc { get; set; }
         [ForeignKey(nameof(ItemId))]
-        [InverseProperty(nameof(Product.ShoppingLists))]
+        [InverseProperty(nameof(Product.InventoryLists))]
         public virtual Product Item { get; set; }
     }
 }

@@ -8,9 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PantryBackEnd.Models
 {
-    public partial class Product
+    [Table("Account")]
+    public partial class Account
     {
-        public Product()
+        public Account()
         {
             InventoryLists = new HashSet<InventoryList>();
             RecipeLists = new HashSet<RecipeList>();
@@ -18,26 +19,24 @@ namespace PantryBackEnd.Models
         }
 
         [Key]
-        [Column("item_ID", TypeName = "char")]
-        public string ItemId { get; set; }
-        [Required]
-        [Column("quantity", TypeName = "char")]
-        public string Quantity { get; set; }
-        [Required]
-        [Column("category", TypeName = "char")]
-        public string Category { get; set; }
-        [Required]
-        [Column("price", TypeName = "char")]
-        public string Price { get; set; }
+        [Column("acc_ID")]
+        public Guid AccId { get; set; }
         [Required]
         [Column("name", TypeName = "char")]
         public string Name { get; set; }
+        [Required]
+        [Column("email", TypeName = "char")]
+        public string Email { get; set; }
+        [Required]
+        [Column("password")]
+        [StringLength(256)]
+        public string Password { get; set; }
 
-        [InverseProperty(nameof(InventoryList.Item))]
+        [InverseProperty(nameof(InventoryList.Acc))]
         public virtual ICollection<InventoryList> InventoryLists { get; set; }
-        [InverseProperty(nameof(RecipeList.Item))]
+        [InverseProperty(nameof(RecipeList.Acc))]
         public virtual ICollection<RecipeList> RecipeLists { get; set; }
-        [InverseProperty(nameof(ShoppingList.Item))]
+        [InverseProperty(nameof(ShoppingList.Acc))]
         public virtual ICollection<ShoppingList> ShoppingLists { get; set; }
     }
 }
