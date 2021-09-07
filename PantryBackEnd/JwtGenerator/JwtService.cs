@@ -8,7 +8,7 @@ namespace PantryBackEnd.JwtGenerator
     {
         private string key = "Secure key this is extremely secure";
 
-        public string Generator(int id)
+        public string Generator(Guid id)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
             var credentials = new SigningCredentials(securityKey,SecurityAlgorithms.HmacSha256Signature);
