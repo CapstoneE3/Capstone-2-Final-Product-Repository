@@ -1,17 +1,70 @@
 using System.Threading.Tasks;
+using System;
+using System.Text;
+using System.Security.Cryptography;
+using PantryBackEnd.Repositories;
+using PantryBackEnd.HashingPassword;
+using PantryBackEnd.JwtGenerator;
+using Microsoft.AspNetCore.Http;
 namespace PantryBackEnd.Controllers
 {
 
     using Microsoft.AspNetCore.Mvc;
-
+    using PantryBackEnd.Models;
     public class UserController : ControllerBase
     {
-
-        [Route("api/Users/name")]
-        [HttpGet]
-        public async Task<ActionResult<bool>>login()
+        private Guid guid = Guid.NewGuid();
+        JwtService service;
+        private IUserRepo userRepo;
+        public UserController(IUserRepo context, JwtService service)
         {
-            return true;
+            this.service = service;
+            this.userRepo = context;
+        }
+        [Route("api/Users/Login")]
+        [HttpGet]
+        public IActionResult login(LoginDt log)
+        {
+            Hash getPassword = new Hash();
+            Account user = userRepo.GetByEmail(log.email);
+            if(!getPassword.Verify(log.password,user.Password))
+            {
+                return BadRequest(new {message = "Invalid credentials"});
+            }
+            var jwt = service.Generator(user.AccId);
+            Response.Cookies.Append("jwt",jwt, new CookieOptions{
+                HttpOnly =true
+            });
+            return Ok( new {message = "Success"});
+        }
+        [Route("api/Users/Register")]
+        [HttpPost]
+        public ActionResult<Account> Register(string email,string password,string name)
+        {
+            Hash getPassword = new Hash();
+            string hashPassword = getPassword.HashPass(password);
+            using(SHA256 hash = SHA256.Create())
+            {
+                byte[] sourceBytes = Encoding.UTF8.GetBytes(password);
+                byte[] hashBytes = hash.ComputeHash(sourceBytes);
+                hashPassword = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
+            }
+            Account user = new Account
+            {
+                AccId = guid,
+                Email = email,
+                Password =hashPassword,
+                Name = name
+            };
+            //need fixing from database
+            Account newlyReg =userRepo.Register(user);
+            return Ok(newlyReg);
+            /*
+            Account user = new Account
+            {
+                Email = email,
+                Password = BCrypt.Net.BCrypt.HashPassword(password, workFactor)
+            }*/
         }
     }
 }
