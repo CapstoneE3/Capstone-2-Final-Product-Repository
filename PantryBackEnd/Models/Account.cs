@@ -29,7 +29,7 @@ namespace PantryBackEnd.Models
         public string Email { get; set; }
         [Required]
         [Column("password")]
-        [StringLength(256)]
+        [StringLength(64)]
         public string Password { get; set; }
 
         [InverseProperty(nameof(InventoryList.Acc))]
