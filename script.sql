@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS public."Account"
     "acc_ID" uuid NOT NULL,
     name "char" NOT NULL,
     email "char" NOT NULL,
-    password character varying(256) COLLATE pg_catalog."default" NOT NULL,
+    password character varying(64) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Account_pkey" PRIMARY KEY ("acc_ID")
 )
 
