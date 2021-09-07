@@ -40,3 +40,4 @@ G:\CapStoned\Repository\Capstone-2-Final-Product-Repository\PantryBackEnd\bin\De
 G:\CapStoned\Repository\Capstone-2-Final-Product-Repository\PantryBackEnd\bin\Debug\net5.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 G:\CapStoned\Repository\Capstone-2-Final-Product-Repository\PantryBackEnd\bin\Debug\net5.0\System.Diagnostics.DiagnosticSource.dll
 G:\CapStoned\Repository\Capstone-2-Final-Product-Repository\PantryBackEnd\bin\Debug\net5.0\System.IdentityModel.Tokens.Jwt.dll
+G:\CapStoned\Repository\Capstone-2-Final-Product-Repository\PantryBackEnd\bin\Debug\net5.0\BCrypt.Net.dll

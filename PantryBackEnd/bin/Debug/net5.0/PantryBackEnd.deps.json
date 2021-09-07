@@ -33,6 +33,7 @@
     ".NETCoreApp,Version=v5.0": {
       "PantryBackEnd/1.0.0": {
         "dependencies": {
+          "BCrypt-Official": "0.1.109",
           "Microsoft.AspNetCore.Cors": "2.2.0",
           "Microsoft.EntityFrameworkCore.Design": "5.0.9",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "5.0.7",
@@ -325,6 +326,17 @@
         },
         "compile": {
           "PantryBackEnd.dll": {}
+        }
+      },
+      "BCrypt-Official/0.1.109": {
+        "runtime": {
+          "lib/BCrypt.Net.dll": {
+            "assemblyVersion": "0.1.5073.29922",
+            "fileVersion": "0.1.0.0"
+          }
+        },
+        "compile": {
+          "lib/BCrypt.Net.dll": {}
         }
       },
       "Humanizer.Core/2.8.26": {
@@ -2350,6 +2362,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "BCrypt-Official/0.1.109": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-4iTKqcCn1Eb3fsbbjhv9d9bwswCvEwXavwwo+XTrYAGCfP1YfVZGmRybKWLf2A6BDh+9bZn4zK6AnQaNcqtraA==",
+      "path": "bcrypt-official/0.1.109",
+      "hashPath": "bcrypt-official.0.1.109.nupkg.sha512"
     },
     "Humanizer.Core/2.8.26": {
       "type": "package",

@@ -12,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PantryBackEnd.JwtGenerator;
+using Microsoft.EntityFrameworkCore;
+using PantryBackEnd.Models;
+using PantryBackEnd.Repositories;
 namespace PantryBackEnd
 {
     public class Startup
@@ -26,7 +29,9 @@ namespace PantryBackEnd
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<pantryContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddCors();
+            services.AddScoped<IUserRepo,UserRepo>();
             services.AddScoped<JwtService>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -53,7 +58,7 @@ namespace PantryBackEnd
                 policy.AllowAnyMethod();
                 //policy.WithOrigins(new []{})
                 policy.AllowAnyOrigin();
-                policy.AllowCredentials();
+                //policy.AllowCredentials();
             });
             app.UseRouting();
 
