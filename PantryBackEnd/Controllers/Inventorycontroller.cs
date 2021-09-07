@@ -79,10 +79,6 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                if(String.IsNullOrEmpty(token.Issuer) == true)
-                {
-                    return Unauthorized();
-                }
                 Account user = userRepo.GetByID(userId);
                 return Ok(user.InventoryLists);
             }catch(Exception)
@@ -101,10 +97,6 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                if(userId == null)
-                {
-                    return Unauthorized();
-                }
                 Account user = userRepo.GetByID(userId);
                 if(user.InventoryLists == null)
                 {
