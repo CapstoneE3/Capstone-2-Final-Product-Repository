@@ -40,22 +40,22 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/Users/Register")]
         [HttpPost]
-        public ActionResult<Account> Register(string email,string password,string name)
+        public ActionResult<Account> Register([FromBody] RegisterDt reg)
         {
             Hash getPassword = new Hash();
-            string hashPassword = getPassword.HashPass(password);
+            string hashPassword = getPassword.HashPass(reg.password);
             using(SHA256 hash = SHA256.Create())
             {
-                byte[] sourceBytes = Encoding.UTF8.GetBytes(password);
+                byte[] sourceBytes = Encoding.UTF8.GetBytes(reg.password);
                 byte[] hashBytes = hash.ComputeHash(sourceBytes);
                 hashPassword = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
             }
             Account user = new Account
             {
                 AccId = guid,
-                Email = email,
+                Email = reg.email,
                 Password =hashPassword,
-                Name = name
+                Name = reg.name
             };
             //need fixing from database
             Account newlyReg =userRepo.Register(user);
