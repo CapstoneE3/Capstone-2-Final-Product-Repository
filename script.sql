@@ -1,4 +1,4 @@
-CREATE DATABASE pantry
+CREATE DATABASE scriptTest
     WITH 
     OWNER = postgres
     ENCODING = 'UTF8'
@@ -7,15 +7,16 @@ CREATE DATABASE pantry
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 
-\c pantry
+\c scripttest
 
 CREATE TABLE IF NOT EXISTS public."Account"
 (
     "acc_ID" uuid NOT NULL,
-    name "char" NOT NULL,
-    email "char" NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(254) COLLATE pg_catalog."default" NOT NULL,
     password character varying(64) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Account_pkey" PRIMARY KEY ("acc_ID")
+    CONSTRAINT "Account_pkey" PRIMARY KEY ("acc_ID"),
+    CONSTRAINT "Account_email_key" UNIQUE (email)
 )
 
 TABLESPACE pg_default;
@@ -25,11 +26,11 @@ ALTER TABLE public."Account"
 
 CREATE TABLE IF NOT EXISTS public."Products"
 (
-    "item_ID" "char" NOT NULL,
-    quantity "char" NOT NULL,
-    category "char" NOT NULL,
-    price "char" NOT NULL,
-    name "char" NOT NULL,
+    "item_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    quantity character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    category character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    price money,
     CONSTRAINT "Products_pkey" PRIMARY KEY ("item_ID")
 )
 
@@ -41,8 +42,8 @@ ALTER TABLE public."Products"
 CREATE TABLE IF NOT EXISTS public."Recipes"
 (
     "recipe_ID" integer NOT NULL,
-    steps "char" NOT NULL,
-    recipe_name "char" NOT NULL,
+    steps character varying(1000) COLLATE pg_catalog."default" NOT NULL,
+    recipe_name character varying(60) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Recipes_pkey" PRIMARY KEY ("recipe_ID")
 )
 
@@ -53,7 +54,7 @@ ALTER TABLE public."Recipes"
 
 CREATE TABLE IF NOT EXISTS public."Inventory_List"
 (
-    "item_ID" "char" NOT NULL,
+    "item_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     "acc_ID" uuid NOT NULL,
     "duplicate_ID" uuid NOT NULL,
     exp_date date NOT NULL,
@@ -76,9 +77,9 @@ ALTER TABLE public."Inventory_List"
 CREATE TABLE IF NOT EXISTS public."Recipe_List"
 (
     "recipe_ID" integer NOT NULL,
-    "item_ID" "char" NOT NULL,
+    "item_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     "acc_ID" uuid NOT NULL,
-    quantity "char" NOT NULL,
+    quantity character varying(10) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Recipe_List_pkey" PRIMARY KEY ("recipe_ID"),
     CONSTRAINT "Recipe_List_acc_ID_fkey" FOREIGN KEY ("acc_ID")
         REFERENCES public."Account" ("acc_ID") MATCH SIMPLE
@@ -101,7 +102,7 @@ ALTER TABLE public."Recipe_List"
 
 CREATE TABLE IF NOT EXISTS public."Shopping_List"
 (
-    "item_ID" "char" NOT NULL,
+    "item_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     "acc_ID" uuid NOT NULL,
     count integer NOT NULL,
     CONSTRAINT "Shopping_List_pkey" PRIMARY KEY ("item_ID", "acc_ID"),
