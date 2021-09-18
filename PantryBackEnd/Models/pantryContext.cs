@@ -23,7 +23,7 @@ namespace PantryBackEnd.Models
         public virtual DbSet<Recipe> Recipes { get; set; }
         public virtual DbSet<RecipeList> RecipeLists { get; set; }
         public virtual DbSet<ShoppingList> ShoppingLists { get; set; }
-
+        /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -31,7 +31,7 @@ namespace PantryBackEnd.Models
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=pantry;Username=postgres;Password=Kaizouku21");
             }
-        }
+        }*/
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,13 +42,49 @@ namespace PantryBackEnd.Models
                 entity.HasKey(e => e.AccId)
                     .HasName("Account_pkey");
 
-                entity.Property(e => e.AccId).ValueGeneratedNever();
+                entity.ToTable("Account");
+
+                entity.HasIndex(e => e.Email, "Account_email_key")
+                    .IsUnique();
+
+                entity.Property(e => e.AccId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("acc_ID");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(254)
+                    .HasColumnName("email");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(64)
+                    .HasColumnName("password");   
             });
 
             modelBuilder.Entity<InventoryList>(entity =>
             {
                 entity.HasKey(e => new { e.ItemId, e.AccId, e.DuplicateId })
                     .HasName("Inventory_List_pkey");
+
+                entity.ToTable("Inventory_List");
+
+                entity.Property(e => e.ItemId)
+                    .HasMaxLength(10)
+                    .HasColumnName("item_ID");
+
+                entity.Property(e => e.AccId).HasColumnName("acc_ID");
+
+                entity.Property(e => e.DuplicateId).HasColumnName("duplicate_ID");
+
+                entity.Property(e => e.ExpDate)
+                    .HasColumnType("date")
+                    .HasColumnName("exp_date");
 
                 entity.HasOne(d => d.Acc)
                     .WithMany(p => p.InventoryLists)
@@ -67,11 +103,46 @@ namespace PantryBackEnd.Models
             {
                 entity.HasKey(e => e.ItemId)
                     .HasName("Products_pkey");
+
+                entity.Property(e => e.ItemId)
+                    .HasMaxLength(10)
+                    .HasColumnName("item_ID");
+
+                entity.Property(e => e.Category)
+                    .IsRequired()
+                    .HasMaxLength(20)
+                    .HasColumnName("category");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Price)
+                    .HasColumnType("money")
+                    .HasColumnName("price");
+
+                entity.Property(e => e.Quantity)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("quantity");
             });
 
             modelBuilder.Entity<Recipe>(entity =>
             {
-                entity.Property(e => e.RecipeId).ValueGeneratedNever();
+                entity.Property(e => e.RecipeId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("recipe_ID");
+
+                entity.Property(e => e.RecipeName)
+                    .IsRequired()
+                    .HasMaxLength(60)
+                    .HasColumnName("recipe_name");
+
+                entity.Property(e => e.Steps)
+                    .IsRequired()
+                    .HasMaxLength(1000)
+                    .HasColumnName("steps");
             });
 
             modelBuilder.Entity<RecipeList>(entity =>
@@ -79,7 +150,23 @@ namespace PantryBackEnd.Models
                 entity.HasKey(e => e.RecipeId)
                     .HasName("Recipe_List_pkey");
 
-                entity.Property(e => e.RecipeId).ValueGeneratedNever();
+                entity.ToTable("Recipe_List");
+
+                entity.Property(e => e.RecipeId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("recipe_ID");
+
+                entity.Property(e => e.AccId).HasColumnName("acc_ID");
+
+                entity.Property(e => e.ItemId)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("item_ID");
+
+                entity.Property(e => e.Quantity)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .HasColumnName("quantity");
 
                 entity.HasOne(d => d.Acc)
                     .WithMany(p => p.RecipeLists)
@@ -104,6 +191,16 @@ namespace PantryBackEnd.Models
             {
                 entity.HasKey(e => new { e.ItemId, e.AccId })
                     .HasName("Shopping_List_pkey");
+
+                entity.ToTable("Shopping_List");
+
+                entity.Property(e => e.ItemId)
+                    .HasMaxLength(10)
+                    .HasColumnName("item_ID");
+
+                entity.Property(e => e.AccId).HasColumnName("acc_ID");
+
+                entity.Property(e => e.Count).HasColumnName("count");
 
                 entity.HasOne(d => d.Acc)
                     .WithMany(p => p.ShoppingLists)
