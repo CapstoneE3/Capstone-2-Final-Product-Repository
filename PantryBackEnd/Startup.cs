@@ -15,6 +15,8 @@ using PantryBackEnd.JwtGenerator;
 using Microsoft.EntityFrameworkCore;
 using PantryBackEnd.Models;
 using PantryBackEnd.Repositories;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 namespace PantryBackEnd
 {
     public class Startup
@@ -29,8 +31,13 @@ namespace PantryBackEnd
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews().AddNewtonsoftJson(options => 
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            
             services.AddDbContext<pantryContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddCors();
+            services.AddScoped<IProduct,ProductRepo>();
+            services.AddScoped<IInventoryRepo,InventoryRepo>();
             services.AddScoped<IUserRepo,UserRepo>();
             services.AddScoped<JwtService>();
             services.AddControllers();
@@ -52,14 +59,11 @@ namespace PantryBackEnd
             }
 
             app.UseHttpsRedirection();
-            app.UseCors(policy =>
-            {
-                policy.AllowAnyHeader();
-                policy.AllowAnyMethod();
-                //policy.WithOrigins(new []{})
-                policy.AllowAnyOrigin();
-                //policy.AllowCredentials();
-            });
+            app.UseCors(policy => policy
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .WithOrigins("https://localhost:5001")
+                .AllowCredentials());
             app.UseRouting();
 
             app.UseAuthorization();

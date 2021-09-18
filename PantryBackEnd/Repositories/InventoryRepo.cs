@@ -11,7 +11,8 @@ namespace PantryBackEnd.Repositories
         }
         public void AddProduct(InventoryList product)
         {
-            
+            context.InventoryLists.Add(product);
+            context.SaveChanges();
         }
     }
 }

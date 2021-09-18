@@ -1,5 +1,6 @@
 using PantryBackEnd.Models;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System;
 namespace PantryBackEnd.Repositories
 {
@@ -23,7 +24,8 @@ namespace PantryBackEnd.Repositories
         }
         public Account GetByID(Guid id )
         {
-            return context.Accounts.FirstOrDefault(u => u.AccId.Equals(id));
+            Account x =context.Accounts.Where(user => user.AccId == id).Include(a => a.InventoryLists).FirstOrDefault();
+            return x;
         }
     }
 }
