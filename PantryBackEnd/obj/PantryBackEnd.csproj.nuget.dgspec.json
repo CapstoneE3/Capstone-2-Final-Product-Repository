@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "G:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj": {}
+    "C:\\Users\\gianq\\OneDrive\\Documents\\Capstone\\PantryBackEnd\\PantryBackEnd.csproj": {}
   },
   "projects": {
-    "G:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj": {
+    "C:\\Users\\gianq\\OneDrive\\Documents\\Capstone\\PantryBackEnd\\PantryBackEnd.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj",
+        "projectUniqueName": "C:\\Users\\gianq\\OneDrive\\Documents\\Capstone\\PantryBackEnd\\PantryBackEnd.csproj",
         "projectName": "PantryBackEnd",
-        "projectPath": "G:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj",
-        "packagesPath": "C:\\Users\\adena\\.nuget\\packages\\",
-        "outputPath": "G:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\obj\\",
+        "projectPath": "C:\\Users\\gianq\\OneDrive\\Documents\\Capstone\\PantryBackEnd\\PantryBackEnd.csproj",
+        "packagesPath": "C:\\Users\\gianq\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\gianq\\OneDrive\\Documents\\Capstone\\PantryBackEnd\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\adena\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\gianq\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -89,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }
