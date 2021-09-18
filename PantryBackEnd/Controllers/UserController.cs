@@ -27,7 +27,8 @@ namespace PantryBackEnd.Controllers
         {
             Hash getPassword = new Hash();
             Account user = userRepo.GetByEmail(log.email);
-            if(!getPassword.Verify(log.password,user.Password))
+
+            if(user == null||!getPassword.Verify(log.password,user.Password))
             {
                 return BadRequest(new {message = "Invalid credentials"});
             }
@@ -65,6 +66,16 @@ namespace PantryBackEnd.Controllers
                 Email = email,
                 Password = BCrypt.Net.BCrypt.HashPassword(password, workFactor)
             }*/
+        }
+        [Route("api/GetUser")]
+        [HttpGet]
+        public ActionResult<Account> GetUser()
+        {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
+                return Ok(user);
         }
     }
 }

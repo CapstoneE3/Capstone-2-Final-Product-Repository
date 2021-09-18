@@ -6,6 +6,7 @@ using PantryBackEnd.Repositories;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using PantryBackEnd.Services;
+using Microsoft.AspNetCore.Http;
 namespace PantryBackEnd.Controllers
 {
     public class Inventorycontroller : ControllerBase
@@ -15,11 +16,13 @@ namespace PantryBackEnd.Controllers
         JwtService service;
         private IInventoryRepo InvRepo;
         private IUserRepo userRepo;
-        public Inventorycontroller(IInventoryRepo context, JwtService service, IUserRepo userRepo)
+        private IProduct productRep;
+        public Inventorycontroller(IInventoryRepo context, JwtService service, IUserRepo userRepo, IProduct productRep)
         {
             this.service = service;
             this.InvRepo = context;
             this.userRepo = userRepo;
+            this.productRep = productRep;
         }
 
         [Route("api/SingleProduct")]
@@ -33,14 +36,17 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
-                if(user.InventoryLists == null)
+                if(user.InventoryLists.Count == 0)
                 {
-                    InvRepo.AddProduct(new InventoryList{
+                    InventoryList item = new InventoryList{
                         ItemId = dt.productID,
                         ExpDate = dt.exp,
-                        AccId = userId
-                    });
-                    itemsExist =true;
+                        AccId = userId,
+                        //Acc = user,
+                        //Item = productRep.getProductById(dt.productID)
+                        };
+                    InvRepo.AddProduct(item);
+                    itemsExist =true;                   
                 }
                 else if(await Task.Run(()=> Services.Services.FindDuplicate(user.InventoryLists,dt) ==true))
                 {
@@ -66,7 +72,7 @@ namespace PantryBackEnd.Controllers
                 return Unauthorized();
             }
 
-            return Ok();    
+            return Ok(new {message = "Success"});    
             
 
         }
