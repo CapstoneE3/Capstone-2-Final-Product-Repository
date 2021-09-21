@@ -1,4 +1,4 @@
-CREATE DATABASE scriptTest
+CREATE DATABASE pantry
     WITH 
     OWNER = postgres
     ENCODING = 'UTF8'
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS public."Products"
     "item_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     quantity character varying(10) COLLATE pg_catalog."default" NOT NULL,
     category character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
     price money,
     CONSTRAINT "Products_pkey" PRIMARY KEY ("item_ID")
 )
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS public."Recipes"
 (
     "recipe_ID" integer NOT NULL,
     steps character varying(1000) COLLATE pg_catalog."default" NOT NULL,
-    recipe_name character varying(60) COLLATE pg_catalog."default" NOT NULL,
+    recipe_name character varying(100) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Recipes_pkey" PRIMARY KEY ("recipe_ID")
 )
 
@@ -56,9 +56,10 @@ CREATE TABLE IF NOT EXISTS public."Inventory_List"
 (
     "item_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     "acc_ID" uuid NOT NULL,
-    "duplicate_ID" uuid NOT NULL,
     exp_date date NOT NULL,
-    CONSTRAINT "Inventory_List_pkey" PRIMARY KEY ("item_ID", "acc_ID", "duplicate_ID"),
+    count integer,
+    notification_time date,
+    CONSTRAINT "Inventory_List_pkey" PRIMARY KEY ("item_ID", "acc_ID", exp_date),
     CONSTRAINT "Inventory_List_acc_ID_fkey" FOREIGN KEY ("acc_ID")
         REFERENCES public."Account" ("acc_ID") MATCH SIMPLE
         ON UPDATE NO ACTION
