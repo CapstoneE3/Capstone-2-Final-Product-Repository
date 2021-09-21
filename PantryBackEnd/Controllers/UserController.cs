@@ -77,5 +77,21 @@ namespace PantryBackEnd.Controllers
                 Account user = userRepo.GetByID(userId);
                 return Ok(user);
         }
+
+        [Route("api/Users/Logout")]
+        [HttpGet]
+        public ActionResult<Account> logout()
+        {
+            try
+            {
+                Response.Cookies.Delete("jwt");
+                return Ok(new {message = "Success"});
+            }
+            catch(Exception)
+            {
+                return Unauthorized(new {message = "Failed"});
+            }
+            
+        }
     }
 }
