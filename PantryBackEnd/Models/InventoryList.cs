@@ -9,10 +9,11 @@ namespace PantryBackEnd.Models
     {
         public string ItemId { get; set; }
         public Guid AccId { get; set; }
-        public Guid DuplicateId { get; set; }
         public DateTime ExpDate { get; set; }
+        public int? Count { get; set; }
+        public DateTime? NotificationTime { get; set; }
 
-        public virtual Account Acc { get; set; }
+        //public virtual Account Acc { get; set; }
         public virtual Product Item { get; set; }
     }
 }

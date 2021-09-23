@@ -54,7 +54,7 @@ namespace PantryBackEnd.Controllers
                     ItemId = dt.productID,
                     ExpDate = dt.exp,
                     AccId = userId,
-                    DuplicateId = guid
+                    
                     });
                     itemsExist =true;   
                 }
@@ -78,7 +78,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/GetInventoryList")]
         [HttpGet]
-        public ActionResult<ICollection<InventoryList>> GetInventoryLists()
+        public ActionResult<Dictionary <string, object>> GetInventoryLists()
         {
             try
             {
@@ -86,7 +86,8 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
-                return Ok(user.InventoryLists);
+                var list = InvRepo.GetInventoryList(userId);
+                return Ok(list);
             }catch(Exception)
             {
                 return Unauthorized();
@@ -130,7 +131,7 @@ namespace PantryBackEnd.Controllers
                                 ItemId = a.productID,
                                 ExpDate = a.exp,
                                 AccId = userId,
-                                DuplicateId = guid
+                                
                                 });
                             }
                             else
