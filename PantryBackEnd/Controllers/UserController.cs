@@ -25,18 +25,23 @@ namespace PantryBackEnd.Controllers
         [HttpGet]
         public IActionResult login(LoginDt log)
         {
-            Hash getPassword = new Hash();
-            Account user = userRepo.GetByEmail(log.email);
-
-            if(user == null||!getPassword.Verify(log.password,user.Password))
+            if(Request.Cookies["jwt"] == null)
             {
-                return BadRequest(new {message = "Invalid credentials"});
+                Hash getPassword = new Hash();
+                Account user = userRepo.GetByEmail(log.email);
+
+                if(user == null||!getPassword.Verify(log.password,user.Password))
+                {
+                    return BadRequest(new {message = "Invalid credentials"});
+                }
+                var jwt = service.Generator(user.AccId);
+                Response.Cookies.Append("jwt",jwt, new CookieOptions{
+                    HttpOnly =true
+                });
+                return Ok( new {message = "Success"});
             }
-            var jwt = service.Generator(user.AccId);
-            Response.Cookies.Append("jwt",jwt, new CookieOptions{
-                HttpOnly =true
-            });
-            return Ok( new {message = "Success"});
+            return Unauthorized(new{message = "Already logged in"});
+            
         }
         [Route("api/Users/Register")]
         [HttpPost]
@@ -80,7 +85,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/Users/Logout")]
         [HttpGet]
-        public ActionResult<Account> logout()
+        public ActionResult logout()
         {
             try
             {
