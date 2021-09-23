@@ -17,6 +17,7 @@ using PantryBackEnd.Models;
 using PantryBackEnd.Repositories;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+
 namespace PantryBackEnd
 {
     public class Startup
@@ -31,10 +32,11 @@ namespace PantryBackEnd
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddControllersWithViews().AddNewtonsoftJson(options => 
-            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-            
-            services.AddDbContext<pantryContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);//handles json views
+            services.AddHostedService<PushNotfication>();
+            services.AddDbContext<pantryContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));//connect to database
             services.AddCors();
             services.AddScoped<IProduct,ProductRepo>();
             services.AddScoped<IInventoryRepo,InventoryRepo>();

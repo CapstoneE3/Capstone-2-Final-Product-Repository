@@ -23,7 +23,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/Users/Login")]
         [HttpGet]
-        public IActionResult login(LoginDt log)
+        public IActionResult login([FromBody]LoginDt log)
         {
             Hash getPassword = new Hash();
             Account user = userRepo.GetByEmail(log.email);
