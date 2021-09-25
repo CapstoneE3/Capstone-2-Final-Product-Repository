@@ -7,9 +7,11 @@ namespace PantryBackEnd.Models
 {
     public class Subscription
     {
-        public Guid acc_ID { get; set; }
         public string Endpoint { get; set; }
 
-        public Dictionary<string, string> Keys { get; set; }
+        public string key { get; set; }
+        public string auth { get; set; }
+
+        public DateTime expiry { get; set; }
     }
 }
