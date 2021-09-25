@@ -27,25 +27,25 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/SingleProduct")]
         [HttpPost]
-        public async Task<IActionResult> AddProduct(ProductDt dt)
+        public async Task<IActionResult> AddProduct([FromBody] ProductDt dt)
         {
             try
             {
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
+                Account user = userRepo.GetAccountWithInv(userId);
                 int count = Services.Services.getCount(user.InventoryLists, dt);
-                InventoryList item = new InventoryList
-                {
-                    ItemId = dt.productID,
-                    ExpDate = dt.exp,
-                    AccId = userId,
-                    Count = dt.count,
-                    NotificationTime = dt.NotificationTime
-                };
                 if (count == 0)
                 {
+                    InventoryList item = new InventoryList
+                    {
+                        ItemId = dt.productID,
+                        ExpDate = dt.exp,
+                        AccId = userId,
+                        Count = dt.count,
+                        NotificationTime = dt.NotificationTime
+                    };
                     await Task.Run(() =>
                     {
                         InvRepo.AddProduct(item);
@@ -56,8 +56,7 @@ namespace PantryBackEnd.Controllers
                 {
                     await Task.Run(() =>
                     {
-                        item.Count += count;
-                        InvRepo.updateItem(item);
+                        InvRepo.updateItem();
                     }
                     );
                 }
@@ -101,7 +100,7 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
+                Account user = userRepo.GetAccountWithInv(userId);
                 if (user.InventoryLists == null)
                 {
                     await Task.Run(() =>
@@ -119,28 +118,27 @@ namespace PantryBackEnd.Controllers
                 }
                 else
                 {
+                    int count = 0;
                     await Task.Run(() =>
                     {
                         foreach (ProductDt a in products)
                         {
-                            if (Services.Services.FindDuplicate(user.InventoryLists, a) == true)
+                            count = Services.Services.getCount(user.InventoryLists, a);
+                            if (count == 0)
                             {
-                                InvRepo.AddProduct(new InventoryList
+                                InventoryList item = new InventoryList
                                 {
                                     ItemId = a.productID,
                                     ExpDate = a.exp,
                                     AccId = userId,
-
-                                });
+                                    Count = a.count,
+                                    NotificationTime = a.NotificationTime
+                                };
+                                InvRepo.AddProduct(item);
                             }
                             else
                             {
-                                InvRepo.AddProduct(new InventoryList
-                                {
-                                    ItemId = a.productID,
-                                    ExpDate = a.exp,
-                                    AccId = userId
-                                });
+                                InvRepo.updateItem();
                             }
                         }
                     }
