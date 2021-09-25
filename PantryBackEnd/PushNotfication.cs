@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 namespace PantryBackEnd
 {
-    public class PushNotfication :BackgroundService
+    public class PushNotfication : BackgroundService
     {
         private readonly ILogger<PushNotfication> _logger;
 
@@ -18,7 +18,7 @@ namespace PantryBackEnd
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Timer setSchdule = new Timer()
+            //Timer setSchdule = new Timer()
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
