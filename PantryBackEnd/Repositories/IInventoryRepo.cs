@@ -10,6 +10,6 @@ namespace PantryBackEnd.Repositories
         Dictionary<string, object> GetInventoryList(Guid acc_id);
 
         bool sameItemExist(Guid acc_id, string itemId, DateTime exp);
-        void updateItem(InventoryList product);
+        void updateItem();
     }
 }
