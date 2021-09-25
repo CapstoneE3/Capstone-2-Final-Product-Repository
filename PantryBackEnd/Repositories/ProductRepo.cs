@@ -10,12 +10,13 @@ namespace PantryBackEnd.Repositories
         {
             this.context = context;
         }
-        
-        public Product getProductById(string Id)
+
+        public void AddProduct(Product dt)
         {
-            Product x =context.Products.FirstOrDefault( i => i.ItemId.Equals(Id));
-            return x;
+            context.Products.Add(dt);
+            context.SaveChanges();
         }
-    
+
+
     }
 }
