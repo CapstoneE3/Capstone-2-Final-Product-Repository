@@ -27,9 +27,8 @@ namespace PantryBackEnd.Repositories
             Account x = context.Accounts.Where(user => user.AccId == id).First();
             return x;
         }
-        public Account GetAccountWithInventory(Guid id)
+        public Account GetAccountWithInv(Guid id)
         {
-
             Account x = context.Accounts.Where(user => user.AccId == id).Include(a => a.InventoryLists).First();
             return x;
         }
