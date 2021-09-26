@@ -152,5 +152,27 @@ namespace PantryBackEnd.Controllers
             }
             return Ok();    
         }
+
+        [Route("api/removeInventoryItem")]
+        [HttpDelete]
+        public ActionResult removeInventoryItem(ProductDt dt)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
+
+                InvRepo.removeProduct(userId, dt.productID);
+                
+                return Ok(new {message = "Success"});
+
+            }catch(Exception)
+            {
+                return Unauthorized(new {message = "Failed"});
+            }
+
+        }
     }
 }
