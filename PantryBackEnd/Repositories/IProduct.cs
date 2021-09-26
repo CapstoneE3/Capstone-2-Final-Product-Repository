@@ -3,6 +3,6 @@ namespace PantryBackEnd.Repositories
 {
     public interface IProduct
     {
-    Product getProductById(string Id);
+        void AddProduct(Product Id);
     }
 }

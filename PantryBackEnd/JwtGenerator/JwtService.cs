@@ -11,11 +11,11 @@ namespace PantryBackEnd.JwtGenerator
         public string Generator(Guid id)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-            var credentials = new SigningCredentials(securityKey,SecurityAlgorithms.HmacSha256Signature);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
             var header = new JwtHeader(credentials);
             //Expiration time of token
-            var payload = new JwtPayload(id.ToString(),null,null,null,DateTime.Today.AddDays(1)); 
-            var securityToken = new JwtSecurityToken(header,payload);
+            var payload = new JwtPayload(id.ToString(), null, null, null, DateTime.Today.AddHours(2));
+            var securityToken = new JwtSecurityToken(header, payload);
 
             return new JwtSecurityTokenHandler().WriteToken(securityToken);
         }
@@ -23,14 +23,14 @@ namespace PantryBackEnd.JwtGenerator
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityKey = Encoding.ASCII.GetBytes(key);
-            tokenHandler.ValidateToken(jwt,new TokenValidationParameters
+            tokenHandler.ValidateToken(jwt, new TokenValidationParameters
             {
                 IssuerSigningKey = new SymmetricSecurityKey(securityKey),
                 ValidateIssuerSigningKey = true,
-                ValidateIssuer =false,
+                ValidateIssuer = false,
                 ValidateAudience = false
-            },out SecurityToken token);
-            return (JwtSecurityToken) token;
+            }, out SecurityToken token);
+            return (JwtSecurityToken)token;
         }
     }
 }

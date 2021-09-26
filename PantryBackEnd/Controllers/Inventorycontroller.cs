@@ -11,7 +11,7 @@ namespace PantryBackEnd.Controllers
 {
     public class Inventorycontroller : ControllerBase
     {
-        
+
         private Guid guid = Guid.NewGuid();
         JwtService service;
         private IInventoryRepo InvRepo;
@@ -27,58 +27,53 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/SingleProduct")]
         [HttpPost]
-        public async Task<IActionResult> AddProduct(ProductDt dt)
+        public async Task<IActionResult> AddProduct([FromBody] ProductDt dt)
         {
             try
             {
-                bool itemsExist = false;
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
-                if(user.InventoryLists.Count == 0)
+                Account user = userRepo.GetAccountWithInv(userId);
+                int count = Services.Services.getCount(user.InventoryLists, dt);
+                if (count == 0)
                 {
-                    InventoryList item = new InventoryList{
+                    InventoryList item = new InventoryList
+                    {
                         ItemId = dt.productID,
                         ExpDate = dt.exp,
                         AccId = userId,
-                        //Acc = user,
-                        //Item = productRep.getProductById(dt.productID)
-                        };
-                    InvRepo.AddProduct(item);
-                    itemsExist =true;                   
+                        Count = dt.count,
+                        NotificationTime = dt.NotificationTime
+                    };
+                    await Task.Run(() =>
+                    {
+                        InvRepo.AddProduct(item);
+                    }
+                    );
                 }
-                else if(await Task.Run(()=> Services.Services.FindDuplicate(user.InventoryLists,dt) ==true))
+                else
                 {
-                    InvRepo.AddProduct(new InventoryList{
-                    ItemId = dt.productID,
-                    ExpDate = dt.exp,
-                    AccId = userId,
-                    
-                    });
-                    itemsExist =true;   
-                }
-                if(itemsExist == false)
-                {
-                    InvRepo.AddProduct(new InventoryList{
-                        ItemId = dt.productID,
-                        ExpDate = dt.exp,
-                        AccId = userId
-                    });
+                    await Task.Run(() =>
+                    {
+                        InvRepo.updateItem();
+                    }
+                    );
                 }
 
-            }catch(Exception)
+                return Ok();
+
+            }
+            catch (Exception)
             {
                 return Unauthorized();
             }
 
-            return Ok(new {message = "Success"});    
-            
 
         }
         [Route("api/GetInventoryList")]
         [HttpGet]
-        public ActionResult<Dictionary <string, object>> GetInventoryLists()
+        public ActionResult<Dictionary<string, object>> GetInventoryLists()
         {
             try
             {
@@ -88,69 +83,73 @@ namespace PantryBackEnd.Controllers
                 Account user = userRepo.GetByID(userId);
                 var list = InvRepo.GetInventoryList(userId);
                 return Ok(list);
-            }catch(Exception)
+            }
+            catch (Exception)
             {
                 return Unauthorized();
             }
 
         }
-    
+
         [Route("api/QRProducts")]
         [HttpPost]
-        public async Task<IActionResult> AddProductFromQR(List<ProductDt> products)
+        public async Task<IActionResult> AddProductFromQR([FromBody] List<ProductDt> products)
         {
             try
             {
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
-                if(user.InventoryLists == null)
+                Account user = userRepo.GetAccountWithInv(userId);
+                if (user.InventoryLists == null)
                 {
-                    await Task.Run(()=>
+                    await Task.Run(() =>
                     {
-                        foreach(ProductDt a in products)
+                        foreach (ProductDt a in products)
                         {
-                            InvRepo.AddProduct(new InventoryList{
+                            InvRepo.AddProduct(new InventoryList
+                            {
                                 ItemId = a.productID,
                                 ExpDate = a.exp,
                                 AccId = userId
                             });
                         }
-                    });    
+                    });
                 }
                 else
-                { 
-                    await Task.Run(()=> 
+                {
+                    int count = 0;
+                    await Task.Run(() =>
                     {
-                        foreach(ProductDt a in products)
+                        foreach (ProductDt a in products)
                         {
-                            if(Services.Services.FindDuplicate(user.InventoryLists,a) ==true)
+                            count = Services.Services.getCount(user.InventoryLists, a);
+                            if (count == 0)
                             {
-                                InvRepo.AddProduct(new InventoryList{
-                                ItemId = a.productID,
-                                ExpDate = a.exp,
-                                AccId = userId,
-                                
-                                });
+                                InventoryList item = new InventoryList
+                                {
+                                    ItemId = a.productID,
+                                    ExpDate = a.exp,
+                                    AccId = userId,
+                                    Count = a.count,
+                                    NotificationTime = a.NotificationTime
+                                };
+                                InvRepo.AddProduct(item);
                             }
                             else
                             {
-                                InvRepo.AddProduct(new InventoryList{
-                                ItemId = a.productID,
-                                ExpDate = a.exp,
-                                AccId = userId
-                                });
+                                InvRepo.updateItem();
                             }
                         }
                     }
                     );
                 }
-            }catch(Exception)
+            }
+            catch (Exception)
             {
                 return Unauthorized();
             }
-            return Ok();    
+            return Ok();
         }
 
         [Route("api/removeInventoryItem")]

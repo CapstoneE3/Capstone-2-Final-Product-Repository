@@ -22,9 +22,14 @@ namespace PantryBackEnd.Repositories
             user = GetByEmail(user.Email);
             return user;
         }
-        public Account GetByID(Guid id )
+        public Account GetByID(Guid id)
         {
-            Account x =context.Accounts.Where(user => user.AccId == id).Include(a => a.InventoryLists).FirstOrDefault();
+            Account x = context.Accounts.Where(user => user.AccId == id).First();
+            return x;
+        }
+        public Account GetAccountWithInv(Guid id)
+        {
+            Account x = context.Accounts.Where(user => user.AccId == id).Include(a => a.InventoryLists).First();
             return x;
         }
     }

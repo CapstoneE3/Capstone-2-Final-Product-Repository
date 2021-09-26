@@ -22,65 +22,63 @@ namespace PantryBackEnd.Controllers
             this.userRepo = context;
         }
         [Route("api/Users/Login")]
-        [HttpGet]
-        public IActionResult login(LoginDt log)
+        [HttpPost]
+        public IActionResult login([FromBody] LoginDt log)
         {
-            if(Request.Cookies["jwt"] == null)
+            if (Request.Cookies["jwt"] == null)
             {
                 Hash getPassword = new Hash();
                 Account user = userRepo.GetByEmail(log.email);
 
-                if(user == null||!getPassword.Verify(log.password,user.Password))
+                if (user == null || !getPassword.Verify(log.password, user.Password))
                 {
-                    return BadRequest(new {message = "Invalid credentials"});
+                    return BadRequest(new { message = "Invalid credentials" });
                 }
                 var jwt = service.Generator(user.AccId);
-                Response.Cookies.Append("jwt",jwt, new CookieOptions{
-                    HttpOnly =true
+                Response.Cookies.Append("jwt", jwt, new CookieOptions
+                {
+                    HttpOnly = true
                 });
-                return Ok( new {message = "Success"});
+                return Ok(new { message = "Success" });
             }
-            return Unauthorized(new{message = "Already logged in"});
-            
+            return Unauthorized(new { message = "Already logged in" });
+
         }
         [Route("api/Users/Register")]
         [HttpPost]
-        public ActionResult<Account> Register(string email,string password,string name)
+        public ActionResult<Account> Register([FromBody] RegisterDt reg)
         {
             Hash getPassword = new Hash();
-            string hashPassword = getPassword.HashPass(password);
-            using(SHA256 hash = SHA256.Create())
+            string hashPassword = getPassword.HashPass(reg.password);
+            using (SHA256 hash = SHA256.Create())
             {
-                byte[] sourceBytes = Encoding.UTF8.GetBytes(password);
+                byte[] sourceBytes = Encoding.UTF8.GetBytes(reg.password);
                 byte[] hashBytes = hash.ComputeHash(sourceBytes);
                 hashPassword = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
             }
             Account user = new Account
             {
                 AccId = guid,
-                Email = email,
-                Password =hashPassword,
-                Name = name
+                Email = reg.email,
+                Password = hashPassword,
+                Name = reg.name
             };
-            //need fixing from database
-            Account newlyReg =userRepo.Register(user);
-            return Ok(newlyReg);
-            /*
-            Account user = new Account
+            Account newReg = userRepo.Register(user);
+            if (newReg != null)
             {
-                Email = email,
-                Password = BCrypt.Net.BCrypt.HashPassword(password, workFactor)
-            }*/
+                return Ok(new { message = "You have successfully registered" });
+            }
+            return Ok(new { message = "Cannot Register" });
         }
         [Route("api/GetUser")]
         [HttpGet]
         public ActionResult<Account> GetUser()
         {
-                var jwt = Request.Cookies["jwt"];
-                var token = service.Verification(jwt);
-                Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
-                return Ok(user);
+            var jwt = Request.Cookies["jwt"];
+            var token = service.Verification(jwt);
+            Guid userId = Guid.Parse(token.Issuer);
+            Account user = userRepo.GetByID(userId);
+            return Ok(user);
         }
 
         [Route("api/Users/Logout")]
@@ -90,13 +88,13 @@ namespace PantryBackEnd.Controllers
             try
             {
                 Response.Cookies.Delete("jwt");
-                return Ok(new {message = "Success"});
+                return Ok(new { message = "Success" });
             }
-            catch(Exception)
+            catch (Exception)
             {
-                return Unauthorized(new {message = "Failed"});
+                return Unauthorized(new { message = "Failed" });
             }
-            
+
         }
     }
 }

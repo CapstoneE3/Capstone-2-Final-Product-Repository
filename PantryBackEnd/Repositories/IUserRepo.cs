@@ -6,7 +6,9 @@ namespace PantryBackEnd.Repositories
     {
         Account GetByEmail(string email);
 
-        Account GetByID(Guid id );
+        Account GetByID(Guid id);
         Account Register(Account user);
+
+        Account GetAccountWithInv(Guid id);
     }
 }
