@@ -23,7 +23,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/Users/Login")]
         [HttpPost]
-        public IActionResult login([FromBody] LoginDt log)
+        public IActionResult login(LoginDt log)
         {
             if (Request.Cookies["jwt"] == null)
             {
@@ -46,29 +46,37 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/Users/Register")]
         [HttpPost]
-        public ActionResult<Account> Register([FromBody] RegisterDt reg)
+        public ActionResult<Account> Register(RegisterDt reg)
         {
-            Hash getPassword = new Hash();
-            string hashPassword = getPassword.HashPass(reg.password);
-            using (SHA256 hash = SHA256.Create())
+            try
             {
-                byte[] sourceBytes = Encoding.UTF8.GetBytes(reg.password);
-                byte[] hashBytes = hash.ComputeHash(sourceBytes);
-                hashPassword = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
+                Hash getPassword = new Hash();
+                string hashPassword = getPassword.HashPass(reg.password);
+                using (SHA256 hash = SHA256.Create())
+                {
+                    byte[] sourceBytes = Encoding.UTF8.GetBytes(reg.password);
+                    byte[] hashBytes = hash.ComputeHash(sourceBytes);
+                    hashPassword = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
+                }
+                Account user = new Account
+                {
+                    AccId = guid,
+                    Email = reg.email,
+                    Password = hashPassword,
+                    Firstname = reg.FirstName,
+                    Lastname = reg.LastName
+                };
+                Account newReg = userRepo.Register(user);
+                if (newReg != null)
+                {
+                    return Ok(new { message = "You have successfully registered" });
+                }
+                return Ok(new { message = "Cannot Register" });
             }
-            Account user = new Account
+            catch (Exception)
             {
-                AccId = guid,
-                Email = reg.email,
-                Password = hashPassword,
-                Name = reg.name
-            };
-            Account newReg = userRepo.Register(user);
-            if (newReg != null)
-            {
-                return Ok(new { message = "You have successfully registered" });
+                return Ok(new { message = "Account already exist" });
             }
-            return Ok(new { message = "Cannot Register" });
         }
         [Route("api/GetUser")]
         [HttpGet]

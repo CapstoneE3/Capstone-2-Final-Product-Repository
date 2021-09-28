@@ -7,7 +7,7 @@ CREATE DATABASE pantry
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 
-\c scripttest
+\c pantry
 
 CREATE TABLE IF NOT EXISTS public."Account"
 (

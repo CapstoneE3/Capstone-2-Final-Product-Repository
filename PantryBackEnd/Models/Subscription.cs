@@ -1,17 +1,18 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+
+#nullable disable
+
 namespace PantryBackEnd.Models
 {
-    public class Subscription
+    public partial class Subscription
     {
-        public string Endpoint { get; set; }
+        public Guid AccId { get; set; }
+        public string SubEndpoint { get; set; }
+        public string Key { get; set; }
+        public string Audh { get; set; }
+        public DateTime ExpNotif { get; set; }
 
-        public string key { get; set; }
-        public string auth { get; set; }
-
-        public DateTime expiry { get; set; }
+        public virtual Account Acc { get; set; }
     }
 }

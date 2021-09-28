@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace PantryBackEnd.Models
 {
-    public partial class RecipeList
+    public partial class RecipeStep
     {
         public int RecipeId { get; set; }
-        public Guid AccId { get; set; }
+        public int StepId { get; set; }
+        public string Instructions { get; set; }
 
-        public virtual Account Acc { get; set; }
         public virtual Recipe Recipe { get; set; }
     }
 }

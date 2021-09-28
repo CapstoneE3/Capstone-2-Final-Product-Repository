@@ -13,7 +13,7 @@ namespace PantryBackEnd.Models
         public int? Count { get; set; }
         public DateTime? NotificationTime { get; set; }
 
-        //public virtual Account Acc { get; set; }
+        public virtual Account Acc { get; set; }
         public virtual Product Item { get; set; }
     }
 }

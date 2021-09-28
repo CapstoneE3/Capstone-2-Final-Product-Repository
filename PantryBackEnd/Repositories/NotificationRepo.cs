@@ -3,24 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PantryBackEnd.Models;
+using Microsoft.Extensions.Configuration;
 namespace PantryBackEnd.Repositories
 {
     public class NotificationRepo : INotification
     {
-        pantryContext context;
+        private pantryContext context;
+        private readonly VapidDt vapidDetails;
 
-        public NotificationRepo(pantryContext context)
+        public NotificationRepo(pantryContext context, IConfiguration configuration)
         {
             this.context = context;
+            var vapidSubject = configuration.GetValue<string>("Vapid:Subject");
+            var vapidPublicKey = configuration.GetValue<string>("Vapid:PublicKey");
+            var vapidPrivateKey = configuration.GetValue<string>("Vapid:PrivateKey");
+
+            vapidDetails = new VapidDt(vapidPrivateKey, vapidPublicKey, vapidSubject);
         }
 
-        public Task StoreSubscription(Subscription subs, Guid id)
+        public VapidDt GetVapidDt()
+        {
+            return vapidDetails;
+        }
+        public Task StoreSubscription(Subscription subs)
         {
             return Task.Run(() =>
             {
-                Account ac = context.Accounts.FirstOrDefault(a => a.AccId == id);
-                //modify ac and then update
-                context.Accounts.Update(ac);
+                context.Subscriptions.Add(subs);
                 context.SaveChangesAsync();
             });
         }
@@ -28,9 +37,22 @@ namespace PantryBackEnd.Repositories
         {
             return Task.Run(() =>
             {
-
+                context.Subscriptions.Remove(context.Subscriptions.Single(a => a.AccId == id));
             }
             );
+        }
+        public List<InventoryList> GetInventoryList()
+        {
+            return context.InventoryLists.Where(a => a.ExpDate >= DateTime.Today).ToList();
+        }
+
+        public string getProductName(string itemId)
+        {
+            return context.Products.Single(a => a.ItemId.Equals(itemId)).Name;
+        }
+        public Subscription GetSubscription(Guid id)
+        {
+            return context.Subscriptions.Single(a => a.AccId == id);
         }
     }
 }
