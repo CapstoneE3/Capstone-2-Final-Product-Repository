@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using PantryBackEnd.Models;
 using PantryBackEnd.Repositories;
 using PantryBackEnd.JwtGenerator;
+using WebPush;
+using Newtonsoft.Json;
 namespace PantryBackEnd.Controllers
 {
     public class NotificationController : ControllerBase
@@ -23,7 +25,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/subcriptions")]
         [HttpPost]
-        public async Task<ActionResult> StoreSubscription([FromBody] Subscription subs)
+        public async Task<ActionResult> StoreSubscription(SubscriptionFrontEnd subs)
         {
             try
             {
@@ -31,7 +33,15 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
-                await store.StoreSubscription(subs, userId);
+                Subscription subDbEntry = new Subscription
+                {
+                    AccId = userId,
+                    SubEndpoint = subs.Endpoint,
+                    ExpNotif = subs.expiry,
+                    Key = subs.key,
+                    Audh = subs.auth
+                };
+                await store.StoreSubscription(subDbEntry);
                 return NoContent();
             }
             catch (Exception)
@@ -41,7 +51,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/DeleteSubcriptions")]
         [HttpDelete]
-        public async Task<ActionResult> DeleteSubs([FromBody] Subscription subs)
+        public async Task<ActionResult> DeleteSubs(SubscriptionFrontEnd subs)
         {
             try
             {
@@ -56,6 +66,33 @@ namespace PantryBackEnd.Controllers
             {
                 return Unauthorized(new { message = "Unauthorized" });
             }
+        }
+
+        [Route("api/Test")]
+        [HttpGet]
+        public async Task<ActionResult> TestNotification()
+        {
+            try
+            {
+
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer); ;
+                WebPushClient webpush = new WebPushClient();
+                VapidDt details = store.GetVapidDt();
+                webpush.SetVapidDetails(details.subjecy, details.publicKey, details.privateKey);
+                Subscription subscriptionData = store.GetSubscription(userId);
+
+                PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
+                string payload = "Your items are expiring ";
+                await webpush.SendNotificationAsync(push, payload);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return Ok();
+            }
+
         }
     }
 }
