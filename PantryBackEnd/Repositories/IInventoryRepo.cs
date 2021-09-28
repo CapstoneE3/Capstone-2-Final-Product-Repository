@@ -8,7 +8,7 @@ namespace PantryBackEnd.Repositories
     {
         void AddProduct(InventoryList product);
         Dictionary <string, object> GetInventoryList(Guid acc_id);
-        void removeProduct(Guid acc_id, string item_id);
+        string removeProduct(Guid acc_id, string item_id, int count, DateTime exp);
         
 
         

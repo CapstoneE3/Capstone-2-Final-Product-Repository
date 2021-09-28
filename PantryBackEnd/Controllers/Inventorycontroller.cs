@@ -154,7 +154,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/removeInventoryItem")]
         [HttpDelete]
-        public ActionResult removeInventoryItem(ProductDt dt)
+        public ActionResult removeInventoryItem(removeProd dt)
         {
             try
             {
@@ -163,9 +163,9 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
 
-                InvRepo.removeProduct(userId, dt.productID);
+                string msg = InvRepo.removeProduct(userId, dt.productID, dt.count, dt.exp);
                 
-                return Ok(new {message = "Success"});
+                return Ok(new {message = msg});
 
             }catch(Exception)
             {

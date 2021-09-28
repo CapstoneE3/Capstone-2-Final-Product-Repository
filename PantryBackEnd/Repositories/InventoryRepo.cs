@@ -81,15 +81,39 @@ namespace PantryBackEnd.Repositories
             return invList;
         }
 
-        public void removeProduct(Guid acc_id, string item_id)
+        public string removeProduct(Guid acc_id, string item_id, int count, DateTime exp)
         {
-            if (context.InventoryLists.Where(a => a.ItemId == item_id && a.AccId.Equals(acc_id) ) != null)
+            List<InventoryList> invlist =    context.InventoryLists.ToList();
+            foreach(InventoryList il in invlist)
             {
-
-                //context.Remove(context.InventoryLists.Where(a => a.ItemId == item_id && a.AccId.Equals(acc_id)));
-                context.Remove(context.InventoryLists.Single(a => a.AccId == acc_id && a.ItemId.Equals(item_id)));               
-                context.SaveChanges();
+                if(il.AccId == acc_id && il.ItemId == item_id && il.ExpDate == exp)
+                {
+                    if(count == il.Count)
+                    {
+                        //invlist.Remove(il);
+                        context.Remove(context.InventoryLists.Single(a => a.ItemId.Equals(item_id) && a.AccId == acc_id && exp == a.ExpDate));
+                        break;
+                    }
+                    else if(count < il.Count)
+                    {
+                        il.Count -= count;
+                        break;
+                    }
+                    else
+                    {
+                        return "failed";
+                    }
+                    
+                }
             }
+            //if (context.InventoryLists.Where(a => a.ItemId == item_id && a.AccId.Equals(acc_id) ) != null)
+            //{
+                
+                //context.Remove(context.InventoryLists.Where(a => a.ItemId == item_id && a.AccId.Equals(acc_id)));
+                //context.Remove(context.InventoryLists.Single(a => a.AccId == acc_id && a.ItemId.Equals(item_id)));               
+                context.SaveChanges();
+            //}
+            return "success";
         }
     }
 }
