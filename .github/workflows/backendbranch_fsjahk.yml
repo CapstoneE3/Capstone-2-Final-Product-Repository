@@ -21,7 +21,10 @@ jobs:
         with:
           dotnet-version: '5.0.x'
           include-prerelease: true
-
+          
+      - name: move to Folder
+        run: cd PantryBackEnd
+        
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
