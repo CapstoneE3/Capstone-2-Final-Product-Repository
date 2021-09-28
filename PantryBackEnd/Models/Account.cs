@@ -15,10 +15,12 @@ namespace PantryBackEnd.Models
         }
 
         public Guid AccId { get; set; }
-        public string Name { get; set; }
+        public string Firstname { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string Lastname { get; set; }
 
+        public virtual Subscription Subscription { get; set; }
         public virtual ICollection<InventoryList> InventoryLists { get; set; }
         public virtual ICollection<RecipeList> RecipeLists { get; set; }
         public virtual ICollection<ShoppingList> ShoppingLists { get; set; }

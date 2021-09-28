@@ -10,7 +10,7 @@ namespace PantryBackEnd.Models
         public Product()
         {
             InventoryLists = new HashSet<InventoryList>();
-            RecipeLists = new HashSet<RecipeList>();
+            RecipeIngredients = new HashSet<RecipeIngredient>();
             ShoppingLists = new HashSet<ShoppingList>();
         }
 
@@ -21,7 +21,7 @@ namespace PantryBackEnd.Models
         public decimal? Price { get; set; }
 
         public virtual ICollection<InventoryList> InventoryLists { get; set; }
-        public virtual ICollection<RecipeList> RecipeLists { get; set; }
+        public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
         public virtual ICollection<ShoppingList> ShoppingLists { get; set; }
     }
 }
