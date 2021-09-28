@@ -33,15 +33,18 @@ namespace PantryBackEnd
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllersWithViews().AddNewtonsoftJson(options => 
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);//handles json views
-            services.AddHostedService<PushNotfication>();
             services.AddDbContext<pantryContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));//connect to database
+
             services.AddCors();
-            services.AddScoped<IProduct,ProductRepo>();
-            services.AddScoped<IInventoryRepo,InventoryRepo>();
-            services.AddScoped<IUserRepo,UserRepo>();
+            services.AddScoped<INotification, NotificationRepo>();
+            services.AddScoped<IProduct, ProductRepo>();
+            services.AddScoped<IInventoryRepo, InventoryRepo>();
+            services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<JwtService>();
+            services.AddHostedService<PushNotfication>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
