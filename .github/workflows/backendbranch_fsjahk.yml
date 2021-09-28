@@ -23,7 +23,7 @@ jobs:
           include-prerelease: true
           
       - name: move to Folder
-        run: cd PantryBackEnd/
+        run: ls
         
       - name: Build with dotnet
         run: dotnet build --configuration Release
