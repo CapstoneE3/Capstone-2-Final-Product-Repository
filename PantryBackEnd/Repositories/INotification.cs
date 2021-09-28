@@ -7,8 +7,16 @@ namespace PantryBackEnd.Repositories
 {
     public interface INotification
     {
-        Task StoreSubscription(Subscription subs, Guid id);
+        Task StoreSubscription(Subscription subs);
 
         Task DeleteSub(Guid id);
+
+        List<InventoryList> GetInventoryList();
+
+        string getProductName(string itemId);
+
+        Subscription GetSubscription(Guid id);
+
+        VapidDt GetVapidDt();
     }
 }
