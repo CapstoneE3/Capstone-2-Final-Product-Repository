@@ -7,14 +7,15 @@ CREATE DATABASE pantry
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 
-\c scripttest
+\c pantry
 
 CREATE TABLE IF NOT EXISTS public."Account"
 (
     "acc_ID" uuid NOT NULL,
-    name character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    email character varying(254) COLLATE pg_catalog."default" NOT NULL,
+    firstname character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(127) COLLATE pg_catalog."default" NOT NULL,
     password character varying(64) COLLATE pg_catalog."default" NOT NULL,
+    lastname character varying(50) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Account_pkey" PRIMARY KEY ("acc_ID"),
     CONSTRAINT "Account_email_key" UNIQUE (email)
 )
@@ -42,8 +43,8 @@ ALTER TABLE public."Products"
 CREATE TABLE IF NOT EXISTS public."Recipes"
 (
     "recipe_ID" integer NOT NULL,
-    steps character varying(1000) COLLATE pg_catalog."default" NOT NULL,
-    recipe_name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    "recipe_Description" text COLLATE pg_catalog."default" NOT NULL,
+    recipe_name text COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Recipes_pkey" PRIMARY KEY ("recipe_ID")
 )
 
@@ -78,16 +79,10 @@ ALTER TABLE public."Inventory_List"
 CREATE TABLE IF NOT EXISTS public."Recipe_List"
 (
     "recipe_ID" integer NOT NULL,
-    "item_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     "acc_ID" uuid NOT NULL,
-    quantity character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Recipe_List_pkey" PRIMARY KEY ("recipe_ID"),
+    CONSTRAINT "Recipe_List_pkey" PRIMARY KEY ("recipe_ID", "acc_ID"),
     CONSTRAINT "Recipe_List_acc_ID_fkey" FOREIGN KEY ("acc_ID")
         REFERENCES public."Account" ("acc_ID") MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT "Recipe_List_item_ID_fkey" FOREIGN KEY ("item_ID")
-        REFERENCES public."Products" ("item_ID") MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT "Recipe_List_recipe_ID_fkey" FOREIGN KEY ("recipe_ID")
@@ -121,3 +116,62 @@ TABLESPACE pg_default;
 
 ALTER TABLE public."Shopping_List"
     OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Recipe_Steps"
+(
+    "recipe_ID" integer NOT NULL,
+    "step_ID" integer NOT NULL,
+    instructions character varying(200) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "recipe_Steps_pkey" PRIMARY KEY ("recipe_ID"),
+    CONSTRAINT "recipe_Steps_recipe_ID_fkey" FOREIGN KEY ("recipe_ID")
+        REFERENCES public."Recipes" ("recipe_ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."Recipe_Steps"
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Recipe_Ingredients"
+(
+    "recipe_ID" integer NOT NULL,
+    "ingredient_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    amount integer NOT NULL,
+    unit_of_measure text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Recipe_Ingredients_pkey" PRIMARY KEY ("recipe_ID", "ingredient_ID"),
+    CONSTRAINT "Recipe_Ingredients_ingredient_ID_fkey" FOREIGN KEY ("ingredient_ID")
+        REFERENCES public."Products" ("item_ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT "Recipe_Ingredients_recipe_ID_fkey" FOREIGN KEY ("recipe_ID")
+        REFERENCES public."Recipes" ("recipe_ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."Recipe_Ingredients"
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Subscription"
+(
+    "acc_ID" uuid NOT NULL,
+    sub_endpoint text COLLATE pg_catalog."default" NOT NULL,
+    key text COLLATE pg_catalog."default" NOT NULL,
+    audh text COLLATE pg_catalog."default" NOT NULL,
+    exp_notif date NOT NULL,
+    CONSTRAINT "Subscription_pkey" PRIMARY KEY ("acc_ID"),
+    CONSTRAINT "Subscription_acc_ID_fkey" FOREIGN KEY ("acc_ID")
+        REFERENCES public."Account" ("acc_ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."Subscription"
+    OWNER to postgres;
+
