@@ -80,16 +80,15 @@ namespace PantryBackEnd.Repositories
             }
             return invList;
         }
-        public bool sameItemExist(Guid acc_ID, string itemID, DateTime exp)
+
+        public void removeProduct(Guid acc_id, string item_id)
         {
-            try
+            if (context.InventoryLists.Where(a => a.ItemId == item_id && a.AccId.Equals(acc_id) ) != null)
             {
-                InventoryList item = context.InventoryLists.Where(b => b.AccId.Equals(acc_ID) && b.ItemId.Equals(itemID) && b.ExpDate.Equals(exp)).Single();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
+
+                //context.Remove(context.InventoryLists.Where(a => a.ItemId == item_id && a.AccId.Equals(acc_id)));
+                context.Remove(context.InventoryLists.Single(a => a.AccId == acc_id && a.ItemId.Equals(item_id)));               
+                context.SaveChanges();
             }
         }
     }
