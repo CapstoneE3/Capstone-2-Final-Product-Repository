@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "G:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj": {}
+    "g:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj": {}
   },
   "projects": {
-    "G:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj": {
+    "g:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj",
+        "projectUniqueName": "g:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj",
         "projectName": "PantryBackEnd",
-        "projectPath": "G:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj",
+        "projectPath": "g:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj",
         "packagesPath": "C:\\Users\\adena\\.nuget\\packages\\",
-        "outputPath": "G:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\obj\\",
+        "outputPath": "g:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\adena\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -43,6 +43,10 @@
             "BCrypt-Official": {
               "target": "Package",
               "version": "[0.1.109, )"
+            },
+            "Microsoft.ApplicationInsights.AspNetCore": {
+              "target": "Package",
+              "version": "[2.17.0, )"
             },
             "Microsoft.AspNetCore.Cors": {
               "target": "Package",
