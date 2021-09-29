@@ -8,19 +8,22 @@ using PantryBackEnd.Repositories;
 using PantryBackEnd.JwtGenerator;
 using WebPush;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 namespace PantryBackEnd.Controllers
 {
     public class NotificationController : ControllerBase
     {
+        ILogger<NotificationController> logger;
         private INotification store;
         private IUserRepo userRepo;
         private JwtService service;
 
-        public NotificationController(JwtService service, IUserRepo userRepo, INotification store)
+        public NotificationController(JwtService service, IUserRepo userRepo, INotification store, ILogger<NotificationController> logger)
         {
             this.service = service;
             this.userRepo = userRepo;
             this.store = store;
+            this.logger = logger;
         }
 
         [Route("api/subcriptions")]
@@ -67,7 +70,12 @@ namespace PantryBackEnd.Controllers
                 return Unauthorized(new { message = "Unauthorized" });
             }
         }
-
+        [Route("TestingAzure")]
+        [HttpGet]
+        public void Test()
+        {
+            logger.LogInformation(JsonConvert.SerializeObject(store.GetVapidDt()));
+        }
         [Route("api/Test")]
         [HttpGet]
         public async Task<ActionResult> TestNotification()
