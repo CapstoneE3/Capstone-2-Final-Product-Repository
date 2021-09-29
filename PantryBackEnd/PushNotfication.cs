@@ -16,17 +16,19 @@ namespace PantryBackEnd
     public class PushNotfication : BackgroundService
     {
         int delay = 5000;
+        ILogger<PushNotfication> logger;
         private CrontabSchedule crontab;
         private DateTime NexRun;
         private const string schedule = "0 0 12 * * *";
 
         private INotification notification;
 
-        public PushNotfication(IServiceScopeFactory provider)
+        public PushNotfication(IServiceScopeFactory provider, ILogger<PushNotfication> logger)
         {
             crontab = CrontabSchedule.Parse("0 12 * * * ");
             NexRun = crontab.GetNextOccurrence(DateTime.Now);
             this.notification = provider.CreateScope().ServiceProvider.GetRequiredService<INotification>();
+            this.logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -42,7 +44,7 @@ namespace PantryBackEnd
                     NexRun = crontab.GetNextOccurrence(DateTime.Now);
                     delay = 1000 * 60 * 60 * 24;
                 }
-                System.Diagnostics.Trace.TraceInformation(now + " " + NexRun + " " + JsonConvert.SerializeObject(notification.GetVapidDt()));
+                logger.LogInformation(now + " " + NexRun + " " + JsonConvert.SerializeObject(notification.GetVapidDt()));
                 await Task.Delay(delay, stoppingToken);
             } while (!stoppingToken.IsCancellationRequested);
         }
