@@ -42,7 +42,7 @@ namespace PantryBackEnd
                     NexRun = crontab.GetNextOccurrence(DateTime.Now);
                     delay = 1000 * 60 * 60 * 24;
                 }
-                Console.WriteLine(now + " " + NexRun + " " + notification.GetVapidDt().toString());
+                Console.WriteLine(now + " " + NexRun + " " + JsonConvert.SerializeObject(notification.GetVapidDt()));
                 await Task.Delay(delay, stoppingToken);
             } while (!stoppingToken.IsCancellationRequested);
         }
