@@ -65,4 +65,4 @@ jobs:
           app-name: 'handipantree'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FFDC40741A8947F79A837F75899F1313 }}
-          package: ./PantryFrontEnd
+          package: ./PantryFrontEnd/pantry-app/build/
