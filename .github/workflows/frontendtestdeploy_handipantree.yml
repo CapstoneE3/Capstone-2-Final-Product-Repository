@@ -26,7 +26,6 @@ jobs:
           cd PantryFrontEnd/pantry-app/
           npm install
           CI=false npm run build
-          npm run test --if-present
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
