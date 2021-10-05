@@ -51,8 +51,12 @@ jobs:
           
       - name: unzip artifact for deployment
         run: |
-          unzip release.zip
+          unzip release.zip -q
           ls
+          rm release.zip
+          cd PantryFrontEnd/
+          ls
+          
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -61,4 +65,4 @@ jobs:
           app-name: 'handipantree'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FFDC40741A8947F79A837F75899F1313 }}
-          package: ./PantryFrontEnd/pantry-app
+          package: ./PantryFrontEnd
