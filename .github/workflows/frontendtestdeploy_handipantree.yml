@@ -28,7 +28,7 @@ jobs:
           CI=false npm run build
           
       - name: Zip artifact for deployment
-        run: zip release.zip ./PantryFrontEnd/pantry-app -r
+        run: zip release.zip ./PantryFrontEnd/* -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -59,4 +59,4 @@ jobs:
           app-name: 'handipantree'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_FFDC40741A8947F79A837F75899F1313 }}
-          package: ./PantryFrontEnd/pantry-app
+          package: ./pantry-app
