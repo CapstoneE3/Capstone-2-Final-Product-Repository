@@ -51,7 +51,7 @@ jobs:
           
       - name: unzip artifact for deployment
         run: |
-          unzip release.zip -q
+          unzip -q release.zip
           ls
           rm release.zip
           cd PantryFrontEnd/
