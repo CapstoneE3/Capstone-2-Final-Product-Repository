@@ -38,6 +38,7 @@ namespace PantryBackEnd
             services.AddDbContext<pantryContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));//connect to database
 
             services.AddCors();
+            services.AddScoped<IShoppingList, ShoppingListRepo>();
             services.AddScoped<INotification, NotificationRepo>();
             services.AddScoped<IProduct, ProductRepo>();
             services.AddScoped<IInventoryRepo, InventoryRepo>();
