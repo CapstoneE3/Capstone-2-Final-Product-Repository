@@ -120,10 +120,10 @@ ALTER TABLE public."Shopping_List"
 CREATE TABLE IF NOT EXISTS public."Recipe_Steps"
 (
     "recipe_ID" integer NOT NULL,
-    "step_ID" integer NOT NULL,
-    instructions character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "recipe_Steps_pkey" PRIMARY KEY ("recipe_ID"),
-    CONSTRAINT "recipe_Steps_recipe_ID_fkey" FOREIGN KEY ("recipe_ID")
+    recipe_steps integer NOT NULL,
+    instructions text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Recipe_Steps_pkey" PRIMARY KEY ("recipe_ID", recipe_steps),
+    CONSTRAINT "Recipe_Steps_recipe_ID_fkey" FOREIGN KEY ("recipe_ID")
         REFERENCES public."Recipes" ("recipe_ID") MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION

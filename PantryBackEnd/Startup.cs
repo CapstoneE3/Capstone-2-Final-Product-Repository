@@ -58,7 +58,6 @@ namespace PantryBackEnd
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PantryBackEnd v1"));
             }
@@ -67,7 +66,7 @@ namespace PantryBackEnd
             app.UseCors(policy => policy
                 .AllowAnyHeader()
                 .AllowAnyMethod()
-                .WithOrigins("https://localhost:5001")
+                .WithOrigins(new[] { "" })
                 .AllowCredentials());
             app.UseRouting();
 
