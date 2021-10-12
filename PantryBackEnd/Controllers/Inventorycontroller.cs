@@ -93,7 +93,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/QRProducts")]
         [HttpPost]
-        public async Task<IActionResult> AddProductFromQR([FromBody] List<ProductDt> products)
+        public async Task<IActionResult> AddProductFromQR([FromBody] TillShoppingItems products)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace PantryBackEnd.Controllers
                 {
                     await Task.Run(() =>
                     {
-                        foreach (ProductDt a in products)
+                        foreach (ProductDt a in products.items)
                         {
                             InvRepo.AddProduct(new InventoryList
                             {
@@ -121,7 +121,7 @@ namespace PantryBackEnd.Controllers
                     int count = 0;
                     await Task.Run(() =>
                     {
-                        foreach (ProductDt a in products)
+                        foreach (ProductDt a in products.items)
                         {
                             count = Services.Services.getCount(user.InventoryLists, a);
                             if (count == 0)
@@ -164,12 +164,13 @@ namespace PantryBackEnd.Controllers
                 Account user = userRepo.GetByID(userId);
 
                 InvRepo.removeProduct(userId, dt.productID);
-                
-                return Ok(new {message = "Success"});
 
-            }catch(Exception)
+                return Ok(new { message = "Success" });
+
+            }
+            catch (Exception)
             {
-                return Unauthorized(new {message = "Failed"});
+                return Unauthorized(new { message = "Failed" });
             }
 
         }
