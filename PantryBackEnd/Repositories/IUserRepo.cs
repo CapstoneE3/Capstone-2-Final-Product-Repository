@@ -10,5 +10,7 @@ namespace PantryBackEnd.Repositories
         Account Register(Account user);
 
         Account GetAccountWithInv(Guid id);
+
+        string removeUser(Account user);
     }
 }

@@ -175,3 +175,35 @@ TABLESPACE pg_default;
 ALTER TABLE public."Subscription"
     OWNER to postgres;
 
+CREATE TABLE IF NOT EXISTS public."Admin"
+(
+    acc_id uuid NOT NULL,
+    level integer NOT NULL,
+    CONSTRAINT "Admin_pkey" PRIMARY KEY (acc_id),
+    CONSTRAINT "Admin_acc_id_fkey" FOREIGN KEY (acc_id)
+        REFERENCES public."Account" ("acc_ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."Admin"
+    OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Recipe_document"
+(
+    "recipe_ID" integer NOT NULL,
+    url text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Recipe_document_pkey" PRIMARY KEY ("recipe_ID"),
+    CONSTRAINT "Recipe_document_recipe_ID_fkey" FOREIGN KEY ("recipe_ID")
+        REFERENCES public."Recipes" ("recipe_ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."Recipe_document"
+    OWNER to postgres;
+

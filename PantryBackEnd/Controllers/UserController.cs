@@ -104,5 +104,20 @@ namespace PantryBackEnd.Controllers
             }
 
         }
+
+        [Route("api/Users/removeUser")]
+        [HttpDelete]
+        public ActionResult removeUser()
+        {
+            
+            var jwt = Request.Cookies["jwt"];
+            var token = service.Verification(jwt);
+            Guid userId = Guid.Parse(token.Issuer);
+            Account user = userRepo.GetByID(userId);
+
+            string str = userRepo.removeUser(user);
+            return Ok(new { message = "Success" });
+            
+        }
     }
 }

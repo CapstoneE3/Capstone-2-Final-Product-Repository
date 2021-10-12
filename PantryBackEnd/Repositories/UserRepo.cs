@@ -2,6 +2,8 @@ using PantryBackEnd.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+
 namespace PantryBackEnd.Repositories
 {
     public class UserRepo : IUserRepo
@@ -31,6 +33,12 @@ namespace PantryBackEnd.Repositories
         {
             Account x = context.Accounts.Where(user => user.AccId == id).Include(a => a.InventoryLists).First();
             return x;
+        }
+
+        public string removeUser(Account user)
+        {
+            
+            return "";
         }
     }
 }
