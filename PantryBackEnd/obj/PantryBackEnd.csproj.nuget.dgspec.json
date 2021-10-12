@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "g:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj": {}
   },
   "projects": {
@@ -12,6 +13,19 @@
         "projectPath": "g:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj",
         "packagesPath": "C:\\Users\\adena\\.nuget\\packages\\",
         "outputPath": "g:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\obj\\",
+=======
+    "G:\\CapStoned\\Undepolyed\\PantryBackEnd\\PantryBackEnd.csproj": {}
+  },
+  "projects": {
+    "G:\\CapStoned\\Undepolyed\\PantryBackEnd\\PantryBackEnd.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "G:\\CapStoned\\Undepolyed\\PantryBackEnd\\PantryBackEnd.csproj",
+        "projectName": "PantryBackEnd",
+        "projectPath": "G:\\CapStoned\\Undepolyed\\PantryBackEnd\\PantryBackEnd.csproj",
+        "packagesPath": "C:\\Users\\adena\\.nuget\\packages\\",
+        "outputPath": "G:\\CapStoned\\Undepolyed\\PantryBackEnd\\obj\\",
+>>>>>>> 135a8cfda5e6aa1e4b861d0d33782644a9d3ae8a
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\adena\\AppData\\Roaming\\NuGet\\NuGet.Config",

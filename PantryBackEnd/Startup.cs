@@ -49,8 +49,13 @@ namespace PantryBackEnd
 
             if (env.IsDevelopment())
             {
+<<<<<<< HEAD
                 app.UseDeveloperExceptionPage();
 
+=======
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PantryBackEnd v1"));
+>>>>>>> 135a8cfda5e6aa1e4b861d0d33782644a9d3ae8a
             }
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PantryBackEnd v1"));
@@ -59,7 +64,11 @@ namespace PantryBackEnd
             app.UseCors(policy => policy
                 .AllowAnyHeader()
                 .AllowAnyMethod()
+<<<<<<< HEAD
                 .WithOrigins("https://pantties.azurewebsites.net/")
+=======
+                .WithOrigins(new[] { "" })
+>>>>>>> 135a8cfda5e6aa1e4b861d0d33782644a9d3ae8a
                 .AllowCredentials());
             app.UseRouting();
 
