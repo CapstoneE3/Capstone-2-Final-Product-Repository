@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PantryBackEnd.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class RecipeController : ControllerBase
     {
+        [Route("api/addRecipe")]
+        [HttpPost]
         public void addRecipe()
         {
 
