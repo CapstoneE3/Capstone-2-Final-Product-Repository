@@ -63,7 +63,7 @@ namespace PantryBackEnd
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
-                .AllowCredentials());
+            );
             app.UseRouting();
 
             app.UseAuthorization();
