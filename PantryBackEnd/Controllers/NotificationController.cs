@@ -28,7 +28,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/subcriptions")]
         [HttpPost]
-        public async Task<ActionResult> StoreSubscription(SubscriptionFrontEnd subs)
+        public async Task<ActionResult> StoreSubscription([FromBody]SubscriptionFrontEnd subs)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/DeleteSubcriptions")]
         [HttpDelete]
-        public async Task<ActionResult> DeleteSubs(SubscriptionFrontEnd subs)
+        public async Task<ActionResult> DeleteSubs([FromBody]SubscriptionFrontEnd subs)
         {
             try
             {

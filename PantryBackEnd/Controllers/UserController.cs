@@ -23,7 +23,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/Users/Login")]
         [HttpPost]
-        public IActionResult login(LoginDt log)
+        public IActionResult login([FromBody] LoginDt log)
         {
             if (Request.Cookies["jwt"] == null)
             {
@@ -35,9 +35,12 @@ namespace PantryBackEnd.Controllers
                     return BadRequest(new { message = "Invalid credentials" });
                 }
                 var jwt = service.Generator(user.AccId);
+                var loggedin = service.Generator(guid = new Guid());
+                Response.Cookies.Append("LoggedIn", loggedin);
                 Response.Cookies.Append("jwt", jwt, new CookieOptions
                 {
                     HttpOnly = true
+
                 });
                 return Ok(new { message = "Success" });
             }
@@ -46,7 +49,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/Users/Register")]
         [HttpPost]
-        public ActionResult<Account> Register(RegisterDt reg)
+        public ActionResult<Account> Register([FromBody] RegisterDt reg)
         {
             try
             {

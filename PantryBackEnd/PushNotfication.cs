@@ -15,7 +15,7 @@ namespace PantryBackEnd
 {
     public class PushNotfication : BackgroundService
     {
-        int delay = 5000;
+        int delay = 60000;
         ILogger<PushNotfication> logger;
         private CrontabSchedule crontab;
         private DateTime NexRun;
@@ -44,7 +44,6 @@ namespace PantryBackEnd
                     NexRun = crontab.GetNextOccurrence(DateTime.Now);
                     delay = 1000 * 60 * 60 * 24;
                 }
-                logger.LogInformation(now + " " + NexRun + " " + JsonConvert.SerializeObject(notification.GetVapidDt()));
                 await Task.Delay(delay, stoppingToken);
             } while (!stoppingToken.IsCancellationRequested);
         }

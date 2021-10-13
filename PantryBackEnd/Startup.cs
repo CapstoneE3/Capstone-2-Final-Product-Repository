@@ -62,7 +62,7 @@ namespace PantryBackEnd
             app.UseCors(policy => policy
                 .AllowAnyHeader()
                 .AllowAnyMethod()
-                .WithOrigins(new[] { "https://handypantry.azurewebsites.net/" })
+                .WithOrigins("https://handypantry.azurewebsites.net/")
                 .AllowCredentials());
             app.UseRouting();
 
