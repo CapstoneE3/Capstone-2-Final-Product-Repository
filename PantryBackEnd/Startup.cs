@@ -62,7 +62,8 @@ namespace PantryBackEnd
             app.UseCors(policy => policy
                 .AllowAnyHeader()
                 .AllowAnyMethod()
-                .AllowAnyOrigin()
+                .WithOrigins("175.38.15.236")
+                .AllowCredentials()
             );
             app.UseRouting();
 
