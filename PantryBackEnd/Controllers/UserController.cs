@@ -38,11 +38,11 @@ namespace PantryBackEnd.Controllers
                 var loggedin = service.Generator(guid = new Guid());
                 Response.Cookies.Append("LoggedIn", "SuckOnMY", new CookieOptions
                 {
-                    Domain = "https://pantties.azurewebsites.net/"
+                    Domain = "pantties.azurewebsites.net/"
                 });
                 Response.Cookies.Append("jwt", jwt, new CookieOptions
                 {
-                    Domain = "https://pantties.azurewebsites.net/",
+                    Domain = "pantties.azurewebsites.net/",
                     HttpOnly = true
 
                 });
