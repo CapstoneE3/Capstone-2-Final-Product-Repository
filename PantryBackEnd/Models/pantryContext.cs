@@ -214,15 +214,13 @@ namespace PantryBackEnd.Models
 
                 entity.Property(e => e.Amount).HasColumnName("amount");
 
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
+
                 entity.Property(e => e.UnitOfMeasure)
                     .IsRequired()
                     .HasColumnName("unit_of_measure");
-
-                entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.RecipeIngredients)
-                    .HasForeignKey(d => d.IngredientId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Recipe_Ingredients_ingredient_ID_fkey");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeIngredients)

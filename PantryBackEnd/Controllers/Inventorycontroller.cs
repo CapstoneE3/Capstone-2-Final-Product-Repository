@@ -175,5 +175,16 @@ namespace PantryBackEnd.Controllers
             }
 
         }
+
+        [Route("api/getAPIRecipe")]
+        [HttpGet]
+        public async  Task<ActionResult>getAPIRecipe()
+        {
+            
+            await InvRepo.randomRecipe();
+            return Ok(new { message = "Success" });
+            
+            
+        }
     }
 }

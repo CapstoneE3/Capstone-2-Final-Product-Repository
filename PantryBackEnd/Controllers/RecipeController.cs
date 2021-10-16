@@ -2,18 +2,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PantryBackEnd.Repositories;
+
 
 using Microsoft.AspNetCore.Mvc;
 
 namespace PantryBackEnd.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class RecipeController : ControllerBase
     {
-        public void addRecipe()
-        {
+        private IRecipe recipeRepo;
 
+        public RecipeController(IRecipe context)
+        {
+            this.recipeRepo = context;
         }
+        /*
+        [Route("api/getAPIRecipe")]
+        [HttpGet]
+        public ActionResult getAPIRecipe()
+        {
+            
+            recipeRepo.randomRecipe();
+            return Ok(new { message = "Success" });
+            
+            
+        }*/
     }
 }

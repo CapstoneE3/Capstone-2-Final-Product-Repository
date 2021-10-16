@@ -8,5 +8,7 @@ namespace PantryBackEnd.Repositories
     public interface IRecipe
     {
         
+        void randomRecipe();
+        void recipeFormat(dynamic details);
     }
 }
