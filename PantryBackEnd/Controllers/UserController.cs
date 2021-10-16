@@ -36,9 +36,13 @@ namespace PantryBackEnd.Controllers
                 }
                 var jwt = service.Generator(user.AccId);
                 var loggedin = service.Generator(guid = new Guid());
-                Response.Cookies.Append("LoggedIn", loggedin);
+                Response.Cookies.Append("LoggedIn", loggedin, new CookieOptions
+                {
+                    Domain = "https://pantties.azurewebsites.net/"
+                });
                 Response.Cookies.Append("jwt", jwt, new CookieOptions
                 {
+                    Domain = "https://pantties.azurewebsites.net/",
                     HttpOnly = true
 
                 });
