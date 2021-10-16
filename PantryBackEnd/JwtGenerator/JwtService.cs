@@ -14,7 +14,7 @@ namespace PantryBackEnd.JwtGenerator
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
             var header = new JwtHeader(credentials);
             //Expiration time of token
-            var payload = new JwtPayload(id.ToString(), null, null, null, DateTime.Now.AddHours(2));
+            var payload = new JwtPayload(id.ToString(), null, null, null, DateTime.Today.AddMonths(1));
             var securityToken = new JwtSecurityToken(header, payload);
 
             return new JwtSecurityTokenHandler().WriteToken(securityToken);

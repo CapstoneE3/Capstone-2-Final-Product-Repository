@@ -40,14 +40,18 @@ namespace PantryBackEnd.Controllers
                 {
                     Domain = "pantties.azurewebsites.net",
                     SameSite = SameSiteMode.None,
-                    Secure = true
+                    Secure = true,
+                    Expires = DateTime.Today.AddMonths(1)
                 });
                 Response.Cookies.Append("jwt", jwt, new CookieOptions
                 {
                     Domain = "pantties.azurewebsites.net",
                     HttpOnly = true,
                     SameSite = SameSiteMode.None,
-                    Secure = true
+                    Secure = true,
+                    Expires = DateTime.Today.AddMonths(1)
+
+
                 });
                 return Ok(new { message = "Success" });
             }
