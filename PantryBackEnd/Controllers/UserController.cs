@@ -39,14 +39,15 @@ namespace PantryBackEnd.Controllers
                 Response.Cookies.Append("LoggedIn", "SuckOnMY", new CookieOptions
                 {
                     Domain = ".azurewebsites.net",
-                    SameSite = SameSiteMode.None
+                    SameSite = SameSiteMode.None,
+                    Secure = true
                 });
                 Response.Cookies.Append("jwt", jwt, new CookieOptions
                 {
                     Domain = "azurewebsites.net",
                     HttpOnly = true,
-                    SameSite = SameSiteMode.None
-
+                    SameSite = SameSiteMode.None,
+                    Secure = true
                 });
                 return Ok(new { message = "Success" });
             }
