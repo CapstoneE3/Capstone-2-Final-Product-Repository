@@ -61,8 +61,15 @@ namespace PantryBackEnd
             app.UseHttpsRedirection();
             app.UseCors(policy => policy
                 .AllowAnyHeader()
-                .AllowAnyMethod()
-                .SetIsOriginAllowed(isOriginAllowed => true)
+                .AllowAnyMethod().SetIsOriginAllowed(origin =>
+                {
+                    if (string.IsNullOrWhiteSpace(origin)) return false;
+                    // Only add this to allow testing with localhost, remove this line in production!
+                    if (origin.ToLower().StartsWith("http://localhost")) return true;
+                    // Insert your production domain here.
+                    if (origin.ToLower().StartsWith("https://handypantry.azurewebsites.net/")) return true;
+                    return false;
+                })
                 .AllowCredentials()
             );
             app.UseRouting();
