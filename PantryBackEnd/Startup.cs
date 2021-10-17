@@ -35,8 +35,10 @@ namespace PantryBackEnd
 
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);//handles json views
-            services.AddDbContext<pantryContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));//connect to database
-
+            services.AddDbContext<pantryContext>(options => {
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
+                options.EnableSensitiveDataLogging();}
+                 ,optionsLifetime: ServiceLifetime.Transient);//connect to database
             services.AddCors();
             services.AddScoped<IShoppingList, ShoppingListRepo>();
             services.AddScoped<INotification, NotificationRepo>();
@@ -44,8 +46,14 @@ namespace PantryBackEnd
             services.AddScoped<IInventoryRepo, InventoryRepo>();
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<JwtService>();
+            services.AddScoped<IRecipe, RecipeRepo>();
             services.AddHostedService<PushNotfication>();
-
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+                loggingBuilder.AddDebug();
+            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

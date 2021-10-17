@@ -38,8 +38,22 @@ namespace PantryBackEnd.Controllers
                 Response.Cookies.Append("jwt", jwt, new CookieOptions
                 {
                     HttpOnly = true
+                    
                 });
                 return Ok(new { message = "Success" });
+            }
+            else
+            {
+                try
+                {
+                    var jwt = Request.Cookies["jwt"];
+                    var token = service.Verification(jwt);
+                }catch(Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+                {
+                     Response.Cookies.Delete("jwt");
+                    return Unauthorized(new {message = "Expired"});
+                }
+                
             }
             return Unauthorized(new { message = "Already logged in" });
 

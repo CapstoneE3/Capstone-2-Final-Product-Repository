@@ -140,11 +140,8 @@ CREATE TABLE IF NOT EXISTS public."Recipe_Ingredients"
     "ingredient_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
     amount integer NOT NULL,
     unit_of_measure text COLLATE pg_catalog."default" NOT NULL,
+    name text COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Recipe_Ingredients_pkey" PRIMARY KEY ("recipe_ID", "ingredient_ID"),
-    CONSTRAINT "Recipe_Ingredients_ingredient_ID_fkey" FOREIGN KEY ("ingredient_ID")
-        REFERENCES public."Products" ("item_ID") MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
     CONSTRAINT "Recipe_Ingredients_recipe_ID_fkey" FOREIGN KEY ("recipe_ID")
         REFERENCES public."Recipes" ("recipe_ID") MATCH SIMPLE
         ON UPDATE NO ACTION

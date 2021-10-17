@@ -11,8 +11,8 @@ namespace PantryBackEnd.Models
         public string IngredientId { get; set; }
         public int Amount { get; set; }
         public string UnitOfMeasure { get; set; }
+        public string Name { get; set; }
 
-        public virtual Product Ingredient { get; set; }
         public virtual Recipe Recipe { get; set; }
     }
 }
