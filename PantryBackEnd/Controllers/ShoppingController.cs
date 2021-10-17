@@ -13,11 +13,13 @@ namespace PantryBackEnd.Controllers
     {
         JwtService service;
         IShoppingList shopping;
+        IProduct product;
 
-        public ShoppingController(JwtService service, IShoppingList shoppingList)
+        public ShoppingController(JwtService service, IShoppingList shoppingList, IProduct product)
         {
             this.service = service;
             this.shopping = shoppingList;
+            this.product = product;
         }
         [Route("api/AddShoppingItem")]
         [HttpPost]
@@ -83,5 +85,23 @@ namespace PantryBackEnd.Controllers
             }
         }
 
+
+        public ActionResult<List<Product>> GetProducts(int index)
+        {
+            try
+            {
+
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                List<Product> pro = product.fetchProducts(index);
+                return Ok(pro);
+            }
+            catch (Exception)
+            {
+                return Unauthorized();
+            }
+
+
+        }
     }
 }

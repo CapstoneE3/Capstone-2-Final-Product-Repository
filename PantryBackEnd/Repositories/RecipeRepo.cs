@@ -33,18 +33,7 @@ namespace PantryBackEnd.Repositories
             };
             using (var response = await client.SendAsync(request))
             {
-                string json = @"[
-  {
-    'Title': 'Json.NET is awesome!',
-    'Author': {
-      'Name': 'James Newton-King',
-      'Twitter': '@JamesNK',
-      'Picture': '/jamesnk.png'
-    },
-    'Date': '2013-01-23T19:30:00',
-    'BodyHtml': '&lt;h3&gt;Title!&lt;/h3&gt;\r\n&lt;p&gt;Content!&lt;/p&gt;'
-  }
-]";
+
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
                 details = JsonConvert.DeserializeObject<dynamic>(body);
@@ -52,33 +41,31 @@ namespace PantryBackEnd.Repositories
             }
             recipeFormat(details);
         }
-    
+
         public void recipeFormat(dynamic details)
         {
-            IList<Recipe> list = new List<Recipe>(); 
-            foreach(dynamic a in details.recipes)
+            IList<Recipe> list = new List<Recipe>();
+            foreach (dynamic a in details.recipes)
             {
                 Recipe rec = new Recipe();
 
-                
+
                 rec.RecipeId = Convert.ToInt32(a.id);
-                
-                
+
+
                 rec.RecipeName = a.title;
                 rec.RecipeDescription = a.summary;
-                //context.Recipes.Add(rec);
-                
+
                 RecipeDocument recDoc = new RecipeDocument();
                 recDoc.Url = a.sourceUrl;
                 recDoc.RecipeId = Convert.ToInt32(a.id);
-                //context.RecipeDocuments.Add(recDoc);
                 rec.RecipeDocument = recDoc;
 
 
                 ICollection<RecipeStep> recipeStep = new HashSet<RecipeStep>();
-                foreach(var b in a.analyzedInstructions)
+                foreach (var b in a.analyzedInstructions)
                 {
-                    foreach(var instruction in b.steps)
+                    foreach (var instruction in b.steps)
                     {
                         RecipeStep recStep = new RecipeStep
                         {
@@ -89,14 +76,14 @@ namespace PantryBackEnd.Repositories
                         recipeStep.Add(recStep);
                     }
                 }
-                // context.RecipeSteps.AddRange(recipeStep);
-    
+
                 rec.RecipeSteps = recipeStep;
-                               
+
                 ICollection<RecipeIngredient> RecipeIngredients = new HashSet<RecipeIngredient>();
                 foreach (var item in a.extendedIngredients)
                 {
-                    RecipeIngredient ingredient = new RecipeIngredient{
+                    RecipeIngredient ingredient = new RecipeIngredient
+                    {
                         RecipeId = Convert.ToInt32(a.id),
                         IngredientId = item.ID,
                         Amount = item.amount,
@@ -104,11 +91,10 @@ namespace PantryBackEnd.Repositories
                     };
                     RecipeIngredients.Add(ingredient);
                 }
-                //context.RecipeIngredients.AddRange(RecipeIngredients);
-                //context.SaveChanges();
                 rec.RecipeIngredients = RecipeIngredients;
                 list.Add(rec);
             }
+            list = list.Distinct().ToList();
             context.Recipes.AddRange(list);
         }
 
