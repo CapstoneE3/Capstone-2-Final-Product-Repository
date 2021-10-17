@@ -64,6 +64,11 @@ namespace PantryBackEnd.Controllers
                 return Ok();
 
             }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+            {
+                Response.Cookies.Delete("jwt");
+                return Unauthorized(new { message = "Expired" });
+            }
             catch (Exception)
             {
                 return Unauthorized();
@@ -84,6 +89,11 @@ namespace PantryBackEnd.Controllers
                 var list = InvRepo.GetInventoryList(userId);
                 return Ok(list);
             }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+            {
+                Response.Cookies.Delete("jwt");
+                return Unauthorized(new { message = "Expired" });
+            }
             catch (Exception)
             {
                 return Unauthorized();
@@ -101,20 +111,18 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetAccountWithInv(userId);
+                List<InventoryList> list = new List<InventoryList>();
                 if (user.InventoryLists == null)
                 {
                     await Task.Run(() =>
                     {
                         foreach (ProductDt a in products.items)
                         {
-                            InvRepo.AddProduct(new InventoryList
-                            {
-                                ItemId = a.productID,
-                                ExpDate = a.exp,
-                                AccId = userId
-                            });
+                            InventoryList inv = new InventoryList { AccId = userId, ItemId = a.productID, NotificationTime = a.exp, Count = a.count };
+                            list.Add(inv);
                         }
                     });
+                    InvRepo.AddTIllProduct(list);
                 }
                 else
                 {
@@ -145,6 +153,11 @@ namespace PantryBackEnd.Controllers
                     );
                 }
             }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+            {
+                Response.Cookies.Delete("jwt");
+                return Unauthorized(new { message = "Expired" });
+            }
             catch (Exception)
             {
                 return Unauthorized();
@@ -154,7 +167,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/removeInventoryItem")]
         [HttpDelete]
-        public ActionResult removeInventoryItem([FromBody]ProductDt dt)
+        public ActionResult removeInventoryItem([FromBody] ProductDt dt)
         {
             try
             {
@@ -167,6 +180,11 @@ namespace PantryBackEnd.Controllers
 
                 return Ok(new { message = "Success" });
 
+            }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+            {
+                Response.Cookies.Delete("jwt");
+                return Unauthorized(new { message = "Expired" });
             }
             catch (Exception)
             {

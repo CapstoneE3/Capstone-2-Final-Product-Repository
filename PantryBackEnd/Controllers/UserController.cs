@@ -55,6 +55,10 @@ namespace PantryBackEnd.Controllers
                 });
                 return Ok(new { message = "Success" });
             }
+            else
+            {
+
+            }
             return Unauthorized(new { message = "Already logged in" });
 
         }
@@ -94,13 +98,12 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/GetUser")]
         [HttpGet]
-        public ActionResult<Account> GetUser()
+        public ActionResult<Guid> GetUser()
         {
             var jwt = Request.Cookies["jwt"];
             var token = service.Verification(jwt);
             Guid userId = Guid.Parse(token.Issuer);
-            Account user = userRepo.GetByID(userId);
-            return Ok(user);
+            return Ok(userId);
         }
 
         [Route("api/Users/Logout")]

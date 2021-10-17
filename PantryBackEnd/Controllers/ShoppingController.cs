@@ -39,6 +39,11 @@ namespace PantryBackEnd.Controllers
                 return Ok();
 
             }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+            {
+                Response.Cookies.Delete("jwt");
+                return Unauthorized(new { message = "Expired" });
+            }
             catch (Exception)
             {
                 return Unauthorized();
@@ -59,6 +64,11 @@ namespace PantryBackEnd.Controllers
                 return Ok();
 
             }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+            {
+                Response.Cookies.Delete("jwt");
+                return Unauthorized(new { message = "Expired" });
+            }
             catch (Exception)
             {
                 return Unauthorized();
@@ -75,7 +85,11 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
                 return Ok(shopping.getShoppingList(userId));
-
+            }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+            {
+                Response.Cookies.Delete("jwt");
+                return Unauthorized(new { message = "Expired" });
             }
             catch (Exception)
             {

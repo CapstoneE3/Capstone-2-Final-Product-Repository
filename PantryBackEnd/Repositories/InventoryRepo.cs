@@ -19,6 +19,11 @@ namespace PantryBackEnd.Repositories
             context.InventoryLists.Add(product);
             context.SaveChanges();
         }
+        public void AddTIllProduct(List<InventoryList> product)
+        {
+            context.AddRange(product);
+            context.SaveChanges();
+        }
         public void updateItem()
         {
             context.SaveChanges();
@@ -83,11 +88,11 @@ namespace PantryBackEnd.Repositories
 
         public void removeProduct(Guid acc_id, string item_id)
         {
-            if (context.InventoryLists.Where(a => a.ItemId == item_id && a.AccId.Equals(acc_id) ) != null)
+            if (context.InventoryLists.Where(a => a.ItemId == item_id && a.AccId.Equals(acc_id)) != null)
             {
 
                 //context.Remove(context.InventoryLists.Where(a => a.ItemId == item_id && a.AccId.Equals(acc_id)));
-                context.Remove(context.InventoryLists.Single(a => a.AccId == acc_id && a.ItemId.Equals(item_id)));               
+                context.Remove(context.InventoryLists.Single(a => a.AccId == acc_id && a.ItemId.Equals(item_id)));
                 context.SaveChanges();
             }
         }
