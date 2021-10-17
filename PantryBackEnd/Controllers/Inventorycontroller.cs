@@ -164,7 +164,7 @@ namespace PantryBackEnd.Controllers
                 Account user = userRepo.GetByID(userId);
 
                 string msg = InvRepo.removeProduct(userId, dt.productID, dt.count, dt.exp);
-                
+
 
                 return Ok(new { message = "Success" });
 
@@ -178,13 +178,13 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/getAPIRecipe")]
         [HttpGet]
-        public async  Task<ActionResult>getAPIRecipe()
+        public async Task<ActionResult> getAPIRecipe()
         {
-            
+
             await InvRepo.randomRecipe();
             return Ok(new { message = "Success" });
-            
-            
+
+
         }
     }
 }

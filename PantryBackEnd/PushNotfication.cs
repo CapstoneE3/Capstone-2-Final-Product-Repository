@@ -96,7 +96,7 @@ namespace PantryBackEnd
 
                 PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
                 string data = JsonConvert.SerializeObject(a.Value);
-                string payload = "Your items are expiring " + data;
+                string payload = data;
                 await webpush.SendNotificationAsync(push, payload);
             }
         }
