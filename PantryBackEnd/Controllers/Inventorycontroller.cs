@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using PantryBackEnd.Services;
 using Microsoft.AspNetCore.Http;
+using PantryBackEnd.Notification;
 namespace PantryBackEnd.Controllers
 {
     public class Inventorycontroller : ControllerBase
@@ -17,12 +18,14 @@ namespace PantryBackEnd.Controllers
         private IInventoryRepo InvRepo;
         private IUserRepo userRepo;
         private IProduct productRep;
-        public Inventorycontroller(IInventoryRepo context, JwtService service, IUserRepo userRepo, IProduct productRep)
+        private SendNotification notification;
+        public Inventorycontroller(IInventoryRepo context, JwtService service, IUserRepo userRepo, IProduct productRep, SendNotification notification)
         {
             this.service = service;
             this.InvRepo = context;
             this.userRepo = userRepo;
             this.productRep = productRep;
+            this.notification = notification;
         }
 
         [Route("api/SingleProduct")]
@@ -123,6 +126,7 @@ namespace PantryBackEnd.Controllers
                         }
                     });
                     InvRepo.AddTIllProduct(list);
+                    notification.PreparingNotification(userId, products.items);
                 }
                 else
                 {
@@ -149,6 +153,7 @@ namespace PantryBackEnd.Controllers
                                 InvRepo.updateItem();
                             }
                         }
+                        notification.PreparingNotification(userId, products.items);
                     }
                     );
                 }
