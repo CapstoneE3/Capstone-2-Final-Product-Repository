@@ -20,6 +20,7 @@ namespace PantryBackEnd.Models
         public string Password { get; set; }
         public string Lastname { get; set; }
 
+        public virtual Admin Admin { get; set; }
         public virtual Subscription Subscription { get; set; }
         public virtual ICollection<InventoryList> InventoryLists { get; set; }
         public virtual ICollection<RecipeList> RecipeLists { get; set; }

@@ -176,7 +176,8 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
 
-                InvRepo.removeProduct(userId, dt.productID);
+                string msg = InvRepo.removeProduct(userId, dt.productID, dt.count, dt.exp);
+
 
                 return Ok(new { message = "Success" });
 
@@ -190,6 +191,17 @@ namespace PantryBackEnd.Controllers
             {
                 return Unauthorized(new { message = "Failed" });
             }
+
+        }
+
+        [Route("api/getAPIRecipe")]
+        [HttpGet]
+        public async Task<ActionResult> getAPIRecipe()
+        {
+
+            await InvRepo.randomRecipe();
+            return Ok(new { message = "Success" });
+
 
         }
     }

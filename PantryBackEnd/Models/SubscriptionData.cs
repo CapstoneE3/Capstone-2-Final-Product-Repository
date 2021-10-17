@@ -7,7 +7,8 @@ namespace PantryBackEnd.Models
 {
     public class SubscriptionData
     {
-        public string name { get; set; }
+        public string title { get; set; }
+        public List<string> body { get; set; }
         public DateTime expiry { get; set; }
     }
 }

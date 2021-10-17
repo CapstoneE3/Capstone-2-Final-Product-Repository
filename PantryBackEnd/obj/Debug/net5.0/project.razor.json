@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "FilePath": "g:\\CapStoned\\Repository\\Capstone-2-Final-Product-Repository\\PantryBackEnd\\PantryBackEnd.csproj",
+=======
+  "FilePath": "c:\\Users\\gianq\\OneDrive\\Documents\\Capstone\\PantryBackEnd\\PantryBackEnd.csproj",
+>>>>>>> 61dd839a4e64c4bf49f76661ca703b4f82437d04
   "Configuration": {
     "ConfigurationName": "MVC-3.0",
     "LanguageVersion": "5.0",

@@ -18,22 +18,23 @@ namespace PantryBackEnd.Models
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Admin> Admins { get; set; }
         public virtual DbSet<InventoryList> InventoryLists { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
+        public virtual DbSet<RecipeDocument> RecipeDocuments { get; set; }
         public virtual DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public virtual DbSet<RecipeList> RecipeLists { get; set; }
         public virtual DbSet<RecipeStep> RecipeSteps { get; set; }
         public virtual DbSet<ShoppingList> ShoppingLists { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
-
         /*
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=pantry;Username=postgres;Password=Kaizouku21");
+                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=scripttest;Username=postgres;Password=Khassar23");
             }
         }*/
 
@@ -74,6 +75,26 @@ namespace PantryBackEnd.Models
                     .IsRequired()
                     .HasMaxLength(64)
                     .HasColumnName("password");
+            });
+
+            modelBuilder.Entity<Admin>(entity =>
+            {
+                entity.HasKey(e => e.AccId)
+                    .HasName("Admin_pkey");
+
+                entity.ToTable("Admin");
+
+                entity.Property(e => e.AccId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("acc_id");
+
+                entity.Property(e => e.Level).HasColumnName("level");
+
+                entity.HasOne(d => d.Acc)
+                    .WithOne(p => p.Admin)
+                    .HasForeignKey<Admin>(d => d.AccId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Admin_acc_id_fkey");
             });
 
             modelBuilder.Entity<InventoryList>(entity =>
@@ -156,6 +177,28 @@ namespace PantryBackEnd.Models
                     .HasColumnName("recipe_name");
             });
 
+            modelBuilder.Entity<RecipeDocument>(entity =>
+            {
+                entity.HasKey(e => e.RecipeId)
+                    .HasName("Recipe_document_pkey");
+
+                entity.ToTable("Recipe_document");
+
+                entity.Property(e => e.RecipeId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("recipe_ID");
+
+                entity.Property(e => e.Url)
+                    .IsRequired()
+                    .HasColumnName("url");
+
+                entity.HasOne(d => d.Recipe)
+                    .WithOne(p => p.RecipeDocument)
+                    .HasForeignKey<RecipeDocument>(d => d.RecipeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Recipe_document_recipe_ID_fkey");
+            });
+
             modelBuilder.Entity<RecipeIngredient>(entity =>
             {
                 entity.HasKey(e => new { e.RecipeId, e.IngredientId })
@@ -171,15 +214,13 @@ namespace PantryBackEnd.Models
 
                 entity.Property(e => e.Amount).HasColumnName("amount");
 
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
+
                 entity.Property(e => e.UnitOfMeasure)
                     .IsRequired()
                     .HasColumnName("unit_of_measure");
-
-                entity.HasOne(d => d.Ingredient)
-                    .WithMany(p => p.RecipeIngredients)
-                    .HasForeignKey(d => d.IngredientId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Recipe_Ingredients_ingredient_ID_fkey");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeIngredients)
@@ -214,27 +255,24 @@ namespace PantryBackEnd.Models
 
             modelBuilder.Entity<RecipeStep>(entity =>
             {
-                entity.HasKey(e => e.RecipeId)
-                    .HasName("recipe_Steps_pkey");
+                entity.HasKey(e => new { e.RecipeId, e.StepId })
+                    .HasName("Recipe_Steps_pkey");
 
                 entity.ToTable("Recipe_Steps");
 
-                entity.Property(e => e.RecipeId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("recipe_ID");
-
-                entity.Property(e => e.Instructions)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .HasColumnName("instructions");
+                entity.Property(e => e.RecipeId).HasColumnName("recipe_ID");
 
                 entity.Property(e => e.StepId).HasColumnName("step_ID");
 
+                entity.Property(e => e.Instructions)
+                    .IsRequired()
+                    .HasColumnName("instructions");
+
                 entity.HasOne(d => d.Recipe)
-                    .WithOne(p => p.RecipeStep)
-                    .HasForeignKey<RecipeStep>(d => d.RecipeId)
+                    .WithMany(p => p.RecipeSteps)
+                    .HasForeignKey(d => d.RecipeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("recipe_Steps_recipe_ID_fkey");
+                    .HasConstraintName("Recipe_Steps_recipe_ID_fkey");
             });
 
             modelBuilder.Entity<ShoppingList>(entity =>
