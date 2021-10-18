@@ -125,7 +125,7 @@ namespace PantryBackEnd.Repositories
              var request = new HttpRequestMessage
              {
                  Method = HttpMethod.Get,
-                 RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=20"),
+                 RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=1000"),
                  Headers =
                  {
                      { "x-rapidapi-host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" },
@@ -143,59 +143,90 @@ namespace PantryBackEnd.Repositories
     
         public Task recipeFormat(dynamic details)
         {
-            IList<Recipe> list = new List<Recipe>(); 
+            IList<Recipe> list = new List<Recipe>();
+            IList<Ingredient> ingre = new List<Ingredient>();
+            List<int> ingIDs = context.Ingredients.AsNoTracking().Select(d => d.IngredientId).ToList();
             foreach(dynamic a in details.recipes)
             {
-                Recipe rec = new Recipe();          
-                rec.RecipeId = Convert.ToInt32(a.id);
-  
-                rec.RecipeName = a.title;
-                rec.RecipeDescription = a.summary;
-
-                RecipeDocument recDoc = new RecipeDocument();
-                recDoc.Url = a.sourceUrl;
-                recDoc.RecipeId = Convert.ToInt32(a.id);
-                rec.RecipeDocument = recDoc;
-
-                int count = 0;
-                ICollection<RecipeStep> recipeStep = new HashSet<RecipeStep>();
-                foreach(var b in a.analyzedInstructions)
+                int recid = Convert.ToInt32(a.id);
+                if(context.Recipes.Any( b => b.RecipeId == recid )== false && a.image != null)
                 {
-                    foreach(var instruction in b.steps)
-                    {
-                        RecipeStep recStep = new RecipeStep
-                        {
-                            RecipeId = Convert.ToInt32(a.id),
-                            StepId = count,
-                            Instructions = instruction.step
-                        };
-                        count++;
-                        recipeStep.Add(recStep);
-                    }
-                }
+                    
+                    Recipe rec = new Recipe();
+                            
+                    rec.RecipeId = Convert.ToInt32(a.id);
     
-                rec.RecipeSteps = recipeStep;
-                               
-                ICollection<RecipeIngredient> RecipeIngredients = new HashSet<RecipeIngredient>();
-                foreach (var item in a.extendedIngredients)
-                {
-                    RecipeIngredient ingredient = new RecipeIngredient{
-                        RecipeId = Convert.ToInt32(a.id),
-                        IngredientId = Convert.ToInt32(item.id),
-                        Amount = Convert.ToSingle(item.amount),
-                        UnitOfMeasure = item.unit,
-                        Name = item.name,
-                        OriginalName = item.originalString
-                    };
-                    if(ingredient.IngredientId != null)
+                    rec.RecipeName = a.title;
+                    rec.RecipeDescription = a.summary;
+
+                    RecipeDocument recDoc = new RecipeDocument();
+                    recDoc.Url = a.sourceUrl;
+                    recDoc.RecipeId = Convert.ToInt32(a.id);
+                    recDoc.PhotoUrl = a.image;
+                    rec.RecipeDocument = recDoc;
+
+
+                    int count = 0;
+                    ICollection<RecipeStep> recipeStep = new HashSet<RecipeStep>();
+                    foreach(var b in a.analyzedInstructions)
                     {
-                        RecipeIngredients.Add(ingredient);
+                        foreach(var instruction in b.steps)
+                        {
+                            RecipeStep recStep = new RecipeStep
+                            {
+                                RecipeId = Convert.ToInt32(a.id),
+                                StepId = count,
+                                Instructions = instruction.step
+                            };
+                            count++;
+                            recipeStep.Add(recStep);
+                        }
                     }
-                }
-                rec.RecipeIngredients = RecipeIngredients;
-                list.Add(rec);
+        
+                    rec.RecipeSteps = recipeStep;
+                                
+                    ICollection<RecipeIngredient> RecipeIngredients = new HashSet<RecipeIngredient>();
+                    foreach (var item in a.extendedIngredients)
+                    {
+                        
+                        try
+                        {   
+                            RecipeIngredient ingredient = new RecipeIngredient{
+                                RecipeId = Convert.ToInt32(a.id),
+                                IngredientId = Convert.ToInt32(item.id),
+                                Amount = Convert.ToSingle(item.amount),
+                                UnitOfMeasure = item.unit,
+                                Name = item.name,
+                                OriginalName = item.originalString
+                            };
+                            RecipeIngredients.Add(ingredient);
+                            
+                            int K = Convert.ToInt32(item.id);
+                            Ingredient ing = new Ingredient{
+                                IngredientId = K,
+                                Name = item.name
+                            };
+
+                            if(ingIDs.Contains(K) == false)
+                            {
+                                ingIDs.Add(K);
+                                ingre.Add(ing);
+                            }
+                            
+                        }
+                        catch(Exception)
+                        {
+                            //unlucky
+                        }
+
+                    }                    
+                    rec.RecipeIngredients = RecipeIngredients;
+                    list.Add(rec);
+                    }
                          
             }
+
+                context.Ingredients.AddRange(ingre);
                 context.Recipes.AddRange(list);
                 context.SaveChanges();
 

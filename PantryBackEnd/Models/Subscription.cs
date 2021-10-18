@@ -11,7 +11,6 @@ namespace PantryBackEnd.Models
         public string SubEndpoint { get; set; }
         public string Key { get; set; }
         public string Audh { get; set; }
-        public DateTime ExpNotif { get; set; }
 
         public virtual Account Acc { get; set; }
     }

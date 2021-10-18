@@ -37,7 +37,6 @@ namespace PantryBackEnd.Controllers
                 {
                     AccId = userId,
                     SubEndpoint = subs.Endpoint,
-                    ExpNotif = subs.expiry,
                     Key = subs.key,
                     Audh = subs.auth
                 };

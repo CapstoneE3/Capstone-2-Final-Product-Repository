@@ -18,7 +18,10 @@ namespace PantryBackEnd.Models
         public string Category { get; set; }
         public string Name { get; set; }
         public decimal? Price { get; set; }
+        public string Searchtag { get; set; }
+        public int IngredientId { get; set; }
 
+        public virtual Ingredient Ingredient { get; set; }
         public virtual ICollection<InventoryList> InventoryLists { get; set; }
         public virtual ICollection<ShoppingList> ShoppingLists { get; set; }
     }

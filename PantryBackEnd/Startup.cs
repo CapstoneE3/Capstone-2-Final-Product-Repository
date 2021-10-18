@@ -48,12 +48,6 @@ namespace PantryBackEnd
             services.AddScoped<JwtService>();
             services.AddScoped<IRecipe, RecipeRepo>();
             //services.AddHostedService<PushNotfication>();
-            services.AddLogging(loggingBuilder =>
-            {
-                loggingBuilder.AddConsole()
-                    .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
-                loggingBuilder.AddDebug();
-            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
