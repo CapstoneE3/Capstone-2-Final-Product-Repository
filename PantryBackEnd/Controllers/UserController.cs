@@ -134,7 +134,10 @@ namespace PantryBackEnd.Controllers
         {
             try
             {
-                Response.Cookies.Delete("jwt");
+                foreach (var cookie in HttpContext.Request.Cookies)
+                {
+                    Response.Cookies.Delete(cookie.Key);
+                }
                 return Ok(new { message = "Success" });
             }
             catch (Exception)
