@@ -25,17 +25,18 @@ namespace PantryBackEnd.Controllers
         [HttpPost]
         public IActionResult login([FromBody] LoginDt log)
         {
+            Hash getPassword = new Hash();
+            Account user = userRepo.GetByEmail(log.email);
+            var jwt = service.Generator(user.AccId);
+            var loggedin = service.Generator(guid = new Guid());
             if (Request.Cookies["jwt"] == null)
             {
-                Hash getPassword = new Hash();
-                Account user = userRepo.GetByEmail(log.email);
+
 
                 if (user == null || !getPassword.Verify(log.password, user.Password))
                 {
                     return BadRequest(new { message = "Invalid credentials" });
                 }
-                var jwt = service.Generator(user.AccId);
-                var loggedin = service.Generator(guid = new Guid());
                 Response.Cookies.Append("LoggedIn", "SuckOnMY", new CookieOptions
                 {
                     Domain = "handypantry.azurewebsites.net",
@@ -57,8 +58,33 @@ namespace PantryBackEnd.Controllers
             }
             else
             {
+                try
+                {
+
+                    var check = Request.Cookies["jwt"];
+                    var token = service.Verification(check);
+                    return Unauthorized(new { message = "Already logged in" });
+                }
+                catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+                {
+                    Response.Cookies.Append("LoggedIn", "SuckOnMY", new CookieOptions
+                    {
+                        Domain = "handypantry.azurewebsites.net",
+                        SameSite = SameSiteMode.None,
+                        Secure = true,
+                        Expires = DateTime.Today.AddMonths(1)
+                    });
+                    Response.Cookies.Append("jwt", jwt, new CookieOptions
+                    {
+                        Domain = "pantties.azurewebsites.net",
+                        HttpOnly = true,
+                        SameSite = SameSiteMode.None,
+                        Secure = true,
+                        Expires = DateTime.Today.AddMonths(1)
+                    });
+                    return Ok(new { message = "Success" });
+                }
             }
-            return Unauthorized(new { message = "Already logged in" });
 
         }
         [Route("api/Users/Register")]
@@ -134,10 +160,21 @@ namespace PantryBackEnd.Controllers
         {
             try
             {
-                foreach (var cookie in HttpContext.Request.Cookies)
+                Response.Cookies.Append("LoggedIn", "", new CookieOptions
                 {
-                    Response.Cookies.Delete(cookie.Key);
-                }
+                    Domain = "handypantry.azurewebsites.net",
+                    SameSite = SameSiteMode.None,
+                    Secure = true,
+                    Expires = DateTime.Today.AddMonths(-1)
+                });
+                Response.Cookies.Append("jwt", "", new CookieOptions
+                {
+                    Domain = "pantties.azurewebsites.net",
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.None,
+                    Secure = true,
+                    Expires = DateTime.Today.AddMonths(-1)
+                });
                 return Ok(new { message = "Success" });
             }
             catch (Exception)
