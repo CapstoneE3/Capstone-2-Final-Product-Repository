@@ -201,16 +201,16 @@ namespace PantryBackEnd.Models
 
             modelBuilder.Entity<RecipeIngredient>(entity =>
             {
-                entity.HasKey(e => new { e.RecipeId, e.IngredientId })
+                entity.HasKey(e => new { e.RecipeId, e.IngredientId, e.OriginalName })
                     .HasName("Recipe_Ingredients_pkey");
 
                 entity.ToTable("Recipe_Ingredients");
 
                 entity.Property(e => e.RecipeId).HasColumnName("recipe_ID");
 
-                entity.Property(e => e.IngredientId)
-                    .HasMaxLength(10)
-                    .HasColumnName("ingredient_ID");
+                entity.Property(e => e.IngredientId).HasColumnName("ingredient_ID");
+
+                entity.Property(e => e.OriginalName).HasColumnName("originalName");
 
                 entity.Property(e => e.Amount).HasColumnName("amount");
 

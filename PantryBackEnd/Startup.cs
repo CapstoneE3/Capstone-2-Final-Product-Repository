@@ -47,7 +47,7 @@ namespace PantryBackEnd
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<JwtService>();
             services.AddScoped<IRecipe, RecipeRepo>();
-            services.AddHostedService<PushNotfication>();
+            //services.AddHostedService<PushNotfication>();
             services.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.AddConsole()

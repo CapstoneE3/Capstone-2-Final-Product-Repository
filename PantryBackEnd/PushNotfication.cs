@@ -13,6 +13,7 @@ using WebPush;
 using Newtonsoft.Json;
 namespace PantryBackEnd
 {
+/*
     public class PushNotfication : BackgroundService
     {
         int delay = 5000;
@@ -100,5 +101,5 @@ namespace PantryBackEnd
                 await webpush.SendNotificationAsync(push, payload);
             }
         }
-    }
+    }*/
 }

@@ -125,7 +125,7 @@ namespace PantryBackEnd.Repositories
              var request = new HttpRequestMessage
              {
                  Method = HttpMethod.Get,
-                 RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=1"),
+                 RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=20"),
                  Headers =
                  {
                      { "x-rapidapi-host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" },
@@ -137,8 +137,8 @@ namespace PantryBackEnd.Repositories
                     response.EnsureSuccessStatusCode();
                     var body = await response.Content.ReadAsStringAsync();
                     details = JsonConvert.DeserializeObject<dynamic>(body);
-                    await recipeFormat(details);
             }
+                    await recipeFormat(details);
         }
     
         public Task recipeFormat(dynamic details)
@@ -157,7 +157,7 @@ namespace PantryBackEnd.Repositories
                 recDoc.RecipeId = Convert.ToInt32(a.id);
                 rec.RecipeDocument = recDoc;
 
-
+                int count = 0;
                 ICollection<RecipeStep> recipeStep = new HashSet<RecipeStep>();
                 foreach(var b in a.analyzedInstructions)
                 {
@@ -166,9 +166,10 @@ namespace PantryBackEnd.Repositories
                         RecipeStep recStep = new RecipeStep
                         {
                             RecipeId = Convert.ToInt32(a.id),
-                            StepId = instruction.number,
+                            StepId = count,
                             Instructions = instruction.step
                         };
+                        count++;
                         recipeStep.Add(recStep);
                     }
                 }
@@ -180,25 +181,34 @@ namespace PantryBackEnd.Repositories
                 {
                     RecipeIngredient ingredient = new RecipeIngredient{
                         RecipeId = Convert.ToInt32(a.id),
-                        IngredientId = item.id,
-                        Amount = item.amount,
+                        IngredientId = Convert.ToInt32(item.id),
+                        Amount = Convert.ToSingle(item.amount),
                         UnitOfMeasure = item.unit,
-                        Name = item.name
+                        Name = item.name,
+                        OriginalName = item.originalString
                     };
-                    RecipeIngredients.Add(ingredient);
+                    if(ingredient.IngredientId != null)
+                    {
+                        RecipeIngredients.Add(ingredient);
+                    }
                 }
                 rec.RecipeIngredients = RecipeIngredients;
                 list.Add(rec);
                          
             }
-            foreach(Recipe a in list)
-            {
-                context.Recipes.Add(a);
+                context.Recipes.AddRange(list);
                 context.SaveChanges();
-            }
+            //hello(list);
+
             //context.Recipes.AddRange(list);
             return Task.CompletedTask;
-        }
+        }/*
+        private void hello(IList<Recipe> list)
+        {
+            context.Entry(list).State = EntityState.Detached;
+            context.Recipes.AddRange(list);
+            context.SaveChanges();
+        }*/
     }
     
 }
