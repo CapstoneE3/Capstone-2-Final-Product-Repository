@@ -95,14 +95,37 @@ namespace PantryBackEnd.Controllers
                 return Ok(new { message = "Account already exist" });
             }
         }
+        [Route("api/isLoggedIn")]
+        [HttpGet]
+        public ActionResult<bool> IsLoggedIn()
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                return Ok(true);
+            }
+            catch (Exception)
+            {
+                return Ok(false);
+            }
+        }
         [Route("api/GetUser")]
         [HttpGet]
         public ActionResult<Guid> GetUser()
         {
-            var jwt = Request.Cookies["jwt"];
-            var token = service.Verification(jwt);
-            Guid userId = Guid.Parse(token.Issuer);
-            return Ok(userId);
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                return Ok(userId);
+
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         [Route("api/Users/Logout")]

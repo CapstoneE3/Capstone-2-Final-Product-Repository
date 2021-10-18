@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using PantryBackEnd.Services;
 using Microsoft.AspNetCore.Http;
+using PantryBackEnd.Notification;
 namespace PantryBackEnd.Controllers
 {
     public class Inventorycontroller : ControllerBase
@@ -17,20 +18,25 @@ namespace PantryBackEnd.Controllers
         private IInventoryRepo InvRepo;
         private IUserRepo userRepo;
         private IProduct productRep;
-        public Inventorycontroller(IInventoryRepo context, JwtService service, IUserRepo userRepo, IProduct productRep)
+        private SendNotification notification;
+        public Inventorycontroller(IInventoryRepo context, JwtService service, IUserRepo userRepo, IProduct productRep, SendNotification notification)
         {
             this.service = service;
             this.InvRepo = context;
             this.userRepo = userRepo;
             this.productRep = productRep;
+            this.notification = notification;
         }
-
+        /*
+        Add a single product to the database 
+         */
         [Route("api/SingleProduct")]
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] ProductDt dt)
         {
             try
             {
+                // check if the request have a valid cookie
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
@@ -82,6 +88,7 @@ namespace PantryBackEnd.Controllers
         {
             try
             {
+                // get inventory repo
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
@@ -123,6 +130,7 @@ namespace PantryBackEnd.Controllers
                         }
                     });
                     InvRepo.AddTIllProduct(list);
+                    notification.PreparingNotification(userId, products.items);
                 }
                 else
                 {
@@ -149,6 +157,7 @@ namespace PantryBackEnd.Controllers
                                 InvRepo.updateItem();
                             }
                         }
+                        notification.PreparingNotification(userId, products.items);
                     }
                     );
                 }

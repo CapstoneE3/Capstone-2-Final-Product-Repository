@@ -99,7 +99,8 @@ namespace PantryBackEnd.Controllers
             }
         }
 
-
+        [Route("api/getShoppingProducts")]
+        [HttpGet]
         public ActionResult<List<Product>> GetProducts(int index)
         {
             try
