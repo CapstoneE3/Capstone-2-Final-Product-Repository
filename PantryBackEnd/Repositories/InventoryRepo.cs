@@ -198,17 +198,9 @@ namespace PantryBackEnd.Repositories
             }
                 context.Recipes.AddRange(list);
                 context.SaveChanges();
-            //hello(list);
 
-            //context.Recipes.AddRange(list);
             return Task.CompletedTask;
-        }/*
-        private void hello(IList<Recipe> list)
-        {
-            context.Entry(list).State = EntityState.Detached;
-            context.Recipes.AddRange(list);
-            context.SaveChanges();
-        }*/
+        }
     }
     
 }
