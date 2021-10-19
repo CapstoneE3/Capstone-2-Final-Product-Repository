@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using PantryBackEnd.Models;
 using WebPush;
 using Newtonsoft.Json;
+using System.Globalization;
 using PantryBackEnd.Repositories;
 namespace PantryBackEnd.Notification
 {
@@ -17,6 +18,14 @@ namespace PantryBackEnd.Notification
             this.notification = notification1;
         }
 
+        public List<ProductDt> getNotifactionTIme(List<ProductDt> list)
+        {
+            foreach (var item in list)
+            {
+                item.NotificationTime = item.exp.Subtract(new TimeSpan(4, 0, 0, 0, 0));
+            }
+            return list;
+        }
         public void PreparingNotification(Guid id, List<ProductDt> list)
         {
             List<SubscriptionData> why = new List<SubscriptionData>();

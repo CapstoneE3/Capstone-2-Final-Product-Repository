@@ -119,6 +119,7 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetAccountWithInv(userId);
                 List<InventoryList> list = new List<InventoryList>();
+                products.items = notification.getNotifactionTIme(products.items);
                 if (user.InventoryLists == null)
                 {
                     await Task.Run(() =>
@@ -130,6 +131,7 @@ namespace PantryBackEnd.Controllers
                         }
                     });
                     InvRepo.AddTIllProduct(list);
+
                     notification.PreparingNotification(userId, products.items);
                 }
                 else
