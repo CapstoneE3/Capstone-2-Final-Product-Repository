@@ -8,18 +8,21 @@ using PantryBackEnd.JwtGenerator;
 using Microsoft.EntityFrameworkCore;
 using PantryBackEnd.Models;
 using PantryBackEnd.Repositories;
-using Microsoft.Extensions.Logging;
 using PantryBackEnd.Notification;
 namespace PantryBackEnd
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var Builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            .AddEnvironmentVariables();
+            Configuration = Builder.Build();
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

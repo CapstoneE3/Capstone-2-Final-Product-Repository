@@ -67,6 +67,10 @@ namespace PantryBackEnd.Controllers
                 }
                 catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
                 {
+                    if (user == null || !getPassword.Verify(log.password, user.Password))
+                    {
+                        return BadRequest(new { message = "Invalid credentials" });
+                    }
                     Response.Cookies.Append("LoggedIn", "SuckOnMY", new CookieOptions
                     {
                         Domain = "handypantry.azurewebsites.net",
