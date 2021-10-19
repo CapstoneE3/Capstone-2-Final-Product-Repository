@@ -16,6 +16,7 @@ namespace PantryBackEnd
         public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            Configuration = configuration;
             var Builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
