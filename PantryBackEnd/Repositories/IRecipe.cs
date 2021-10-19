@@ -8,7 +8,7 @@ namespace PantryBackEnd.Repositories
     public interface IRecipe
     {
         
-
+        String createRecipe(Guid id, string recipeName, string recipeDesc);
         List<Recipe> getRecipes(Guid id);
     }
 }

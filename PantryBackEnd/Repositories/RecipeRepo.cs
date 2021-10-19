@@ -206,5 +206,48 @@ namespace PantryBackEnd.Repositories
             return recipes;
         }
 
+        public string createRecipe(Guid id, string recipeName, string recipeDesc)
+        {
+            try
+            {
+                Recipe recipes = context.Recipes.Where(a => a.RecipeName.Equals(recipeName)).Include(b => b.RecipeLists.Where(c => c.AccId == id)).Single();
+                return "Exists";
+            }
+            catch(Exception)
+            {   
+                try
+                {
+                    int random;
+                    do
+                    {
+                        Random rand = new Random();
+                        random = rand.Next(10000);
+
+                    }while(context.Recipes.Where(a => a.RecipeId == random) == null);
+                        
+                    Recipe rec = new Recipe{
+                        RecipeId = random,
+                        RecipeName = recipeName,
+                        RecipeDescription = recipeDesc
+                    };
+
+                    RecipeList reclist = new RecipeList{
+                        RecipeId = random,
+                        AccId = id,
+                        Recipe = rec
+                    };
+
+                    context.RecipeLists.Add(reclist);
+                    context.SaveChanges();
+
+                    return "Success";
+
+                }
+                catch(Exception)
+                {
+                    return "Error";
+                }
+            }
+        }
     }
 }

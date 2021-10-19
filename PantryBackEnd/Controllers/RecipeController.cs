@@ -44,7 +44,27 @@ namespace PantryBackEnd.Controllers
             {
                 return Unauthorized();
             }
-            
+        }
+
+        [Route("api/addCustomRecipe")]
+        [HttpPost]
+        public ActionResult addCustomRecipe(string recipeName, string recipeDesc, List<String> steps, List<RecipeStep> ingredients)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
+
+                var str = recipeRepo.createRecipe(userId, recipeName, recipeDesc);
+
+                return Ok(new { message = "Success" });
+            }
+            catch(Exception)
+            {
+                return Ok(new { message = "Failed" });
+            }
         }
     }
 }
