@@ -25,14 +25,33 @@ TABLESPACE pg_default;
 ALTER TABLE public."Account"
     OWNER to postgres;
 
+CREATE TABLE IF NOT EXISTS public."Ingredients"
+(
+    "ingredient_ID" integer NOT NULL,
+    name text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Ingredients_pkey" PRIMARY KEY ("ingredient_ID")
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."Ingredients"
+    OWNER to postgres;
+
 CREATE TABLE IF NOT EXISTS public."Products"
 (
-    "item_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    quantity character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    category character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    "item_ID" text COLLATE pg_catalog."default" NOT NULL,
+    quantity text COLLATE pg_catalog."default" NOT NULL,
+    category text COLLATE pg_catalog."default" NOT NULL,
+    name text COLLATE pg_catalog."default" NOT NULL,
     price money,
-    CONSTRAINT "Products_pkey" PRIMARY KEY ("item_ID")
+    searchtag text COLLATE pg_catalog."default" NOT NULL,
+    "ingredient_ID" integer NOT NULL,
+    CONSTRAINT "Products_pkey" PRIMARY KEY ("item_ID"),
+    CONSTRAINT "Products_ingredient_ID_fkey" FOREIGN KEY ("ingredient_ID")
+        REFERENCES public."Ingredients" ("ingredient_ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
 )
 
 TABLESPACE pg_default;
@@ -55,7 +74,7 @@ ALTER TABLE public."Recipes"
 
 CREATE TABLE IF NOT EXISTS public."Inventory_List"
 (
-    "item_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    "item_ID" text COLLATE pg_catalog."default" NOT NULL,
     "acc_ID" uuid NOT NULL,
     exp_date date NOT NULL,
     count integer,
@@ -98,7 +117,7 @@ ALTER TABLE public."Recipe_List"
 
 CREATE TABLE IF NOT EXISTS public."Shopping_List"
 (
-    "item_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
+    "item_ID" text COLLATE pg_catalog."default" NOT NULL,
     "acc_ID" uuid NOT NULL,
     count integer NOT NULL,
     CONSTRAINT "Shopping_List_pkey" PRIMARY KEY ("item_ID", "acc_ID"),
@@ -120,9 +139,9 @@ ALTER TABLE public."Shopping_List"
 CREATE TABLE IF NOT EXISTS public."Recipe_Steps"
 (
     "recipe_ID" integer NOT NULL,
-    recipe_steps integer NOT NULL,
+    "step_ID" integer NOT NULL,
     instructions text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Recipe_Steps_pkey" PRIMARY KEY ("recipe_ID", recipe_steps),
+    CONSTRAINT "Recipe_Steps_pkey" PRIMARY KEY ("recipe_ID", "step_ID"),
     CONSTRAINT "Recipe_Steps_recipe_ID_fkey" FOREIGN KEY ("recipe_ID")
         REFERENCES public."Recipes" ("recipe_ID") MATCH SIMPLE
         ON UPDATE NO ACTION
@@ -137,11 +156,12 @@ ALTER TABLE public."Recipe_Steps"
 CREATE TABLE IF NOT EXISTS public."Recipe_Ingredients"
 (
     "recipe_ID" integer NOT NULL,
-    "ingredient_ID" character varying(10) COLLATE pg_catalog."default" NOT NULL,
-    amount integer NOT NULL,
+    "ingredient_ID" integer NOT NULL,
+    amount real NOT NULL,
     unit_of_measure text COLLATE pg_catalog."default" NOT NULL,
     name text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Recipe_Ingredients_pkey" PRIMARY KEY ("recipe_ID", "ingredient_ID"),
+    "originalName" text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Recipe_Ingredients_pkey" PRIMARY KEY ("recipe_ID", "ingredient_ID", "originalName"),
     CONSTRAINT "Recipe_Ingredients_recipe_ID_fkey" FOREIGN KEY ("recipe_ID")
         REFERENCES public."Recipes" ("recipe_ID") MATCH SIMPLE
         ON UPDATE NO ACTION
@@ -159,7 +179,6 @@ CREATE TABLE IF NOT EXISTS public."Subscription"
     sub_endpoint text COLLATE pg_catalog."default" NOT NULL,
     key text COLLATE pg_catalog."default" NOT NULL,
     audh text COLLATE pg_catalog."default" NOT NULL,
-    exp_notif date NOT NULL,
     CONSTRAINT "Subscription_pkey" PRIMARY KEY ("acc_ID"),
     CONSTRAINT "Subscription_acc_ID_fkey" FOREIGN KEY ("acc_ID")
         REFERENCES public."Account" ("acc_ID") MATCH SIMPLE
@@ -192,6 +211,7 @@ CREATE TABLE IF NOT EXISTS public."Recipe_document"
 (
     "recipe_ID" integer NOT NULL,
     url text COLLATE pg_catalog."default" NOT NULL,
+    "photoUrl" text COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Recipe_document_pkey" PRIMARY KEY ("recipe_ID"),
     CONSTRAINT "Recipe_document_recipe_ID_fkey" FOREIGN KEY ("recipe_ID")
         REFERENCES public."Recipes" ("recipe_ID") MATCH SIMPLE

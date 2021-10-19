@@ -19,6 +19,7 @@ namespace PantryBackEnd.Models
 
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Admin> Admins { get; set; }
+        public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<InventoryList> InventoryLists { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Recipe> Recipes { get; set; }
@@ -97,6 +98,17 @@ namespace PantryBackEnd.Models
                     .HasConstraintName("Admin_acc_id_fkey");
             });
 
+            modelBuilder.Entity<Ingredient>(entity =>
+            {
+                entity.Property(e => e.IngredientId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ingredient_ID");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnName("name");
+            });
+
             modelBuilder.Entity<InventoryList>(entity =>
             {
                 entity.HasKey(e => new { e.ItemId, e.AccId, e.ExpDate })
@@ -104,9 +116,7 @@ namespace PantryBackEnd.Models
 
                 entity.ToTable("Inventory_List");
 
-                entity.Property(e => e.ItemId)
-                    .HasMaxLength(10)
-                    .HasColumnName("item_ID");
+                entity.Property(e => e.ItemId).HasColumnName("item_ID");
 
                 entity.Property(e => e.AccId).HasColumnName("acc_ID");
 
@@ -138,18 +148,16 @@ namespace PantryBackEnd.Models
                 entity.HasKey(e => e.ItemId)
                     .HasName("Products_pkey");
 
-                entity.Property(e => e.ItemId)
-                    .HasMaxLength(10)
-                    .HasColumnName("item_ID");
+                entity.Property(e => e.ItemId).HasColumnName("item_ID");
 
                 entity.Property(e => e.Category)
                     .IsRequired()
-                    .HasMaxLength(20)
                     .HasColumnName("category");
+
+                entity.Property(e => e.IngredientId).HasColumnName("ingredient_ID");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(100)
                     .HasColumnName("name");
 
                 entity.Property(e => e.Price)
@@ -158,8 +166,17 @@ namespace PantryBackEnd.Models
 
                 entity.Property(e => e.Quantity)
                     .IsRequired()
-                    .HasMaxLength(10)
                     .HasColumnName("quantity");
+
+                entity.Property(e => e.Searchtag)
+                    .IsRequired()
+                    .HasColumnName("searchtag");
+
+                entity.HasOne(d => d.Ingredient)
+                    .WithMany(p => p.Products)
+                    .HasForeignKey(d => d.IngredientId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Products_ingredient_ID_fkey");
             });
 
             modelBuilder.Entity<Recipe>(entity =>
@@ -188,6 +205,10 @@ namespace PantryBackEnd.Models
                     .ValueGeneratedNever()
                     .HasColumnName("recipe_ID");
 
+                entity.Property(e => e.PhotoUrl)
+                    .IsRequired()
+                    .HasColumnName("photoUrl");
+
                 entity.Property(e => e.Url)
                     .IsRequired()
                     .HasColumnName("url");
@@ -201,16 +222,16 @@ namespace PantryBackEnd.Models
 
             modelBuilder.Entity<RecipeIngredient>(entity =>
             {
-                entity.HasKey(e => new { e.RecipeId, e.IngredientId })
+                entity.HasKey(e => new { e.RecipeId, e.IngredientId, e.OriginalName })
                     .HasName("Recipe_Ingredients_pkey");
 
                 entity.ToTable("Recipe_Ingredients");
 
                 entity.Property(e => e.RecipeId).HasColumnName("recipe_ID");
 
-                entity.Property(e => e.IngredientId)
-                    .HasMaxLength(10)
-                    .HasColumnName("ingredient_ID");
+                entity.Property(e => e.IngredientId).HasColumnName("ingredient_ID");
+
+                entity.Property(e => e.OriginalName).HasColumnName("originalName");
 
                 entity.Property(e => e.Amount).HasColumnName("amount");
 
@@ -282,9 +303,7 @@ namespace PantryBackEnd.Models
 
                 entity.ToTable("Shopping_List");
 
-                entity.Property(e => e.ItemId)
-                    .HasMaxLength(10)
-                    .HasColumnName("item_ID");
+                entity.Property(e => e.ItemId).HasColumnName("item_ID");
 
                 entity.Property(e => e.AccId).HasColumnName("acc_ID");
 
@@ -317,10 +336,6 @@ namespace PantryBackEnd.Models
                 entity.Property(e => e.Audh)
                     .IsRequired()
                     .HasColumnName("audh");
-
-                entity.Property(e => e.ExpNotif)
-                    .HasColumnType("date")
-                    .HasColumnName("exp_notif");
 
                 entity.Property(e => e.Key)
                     .IsRequired()

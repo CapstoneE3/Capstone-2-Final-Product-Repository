@@ -42,6 +42,7 @@ namespace PantryBackEnd
             services.AddScoped<IUserRepo, UserRepo>();
             services.AddScoped<JwtService>();
             services.AddScoped<IRecipe, RecipeRepo>();
+<<<<<<< HEAD
             // services.AddHostedService<PushNotfication>();
             services.AddLogging(loggingBuilder =>
             {
@@ -49,6 +50,9 @@ namespace PantryBackEnd
                     .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
                 loggingBuilder.AddDebug();
             });
+=======
+            //services.AddHostedService<PushNotfication>();
+>>>>>>> a7bcda6e0e8c7d8b5119f9fc9f0673c11202d27f
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
