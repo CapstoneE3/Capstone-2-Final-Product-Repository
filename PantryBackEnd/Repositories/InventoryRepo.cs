@@ -125,23 +125,13 @@ namespace PantryBackEnd.Repositories
         }
         public async Task randomRecipe()
         {
-<<<<<<< HEAD
             var client = new HttpClient();
             dynamic details;
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=1"),
+                RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=1000"),
                 Headers =
-=======
-             var client = new HttpClient();
-             dynamic details;
-             var request = new HttpRequestMessage
-             {
-                 Method = HttpMethod.Get,
-                 RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=1000"),
-                 Headers =
->>>>>>> a7bcda6e0e8c7d8b5119f9fc9f0673c11202d27f
                  {
                      { "x-rapidapi-host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" },
                      { "x-rapidapi-key", "50140e856emsh7d1de4f17f3e37ep1db084jsnaf474ebb6158" },
@@ -149,47 +139,30 @@ namespace PantryBackEnd.Repositories
             };
             using (var response = await client.SendAsync(request))
             {
-<<<<<<< HEAD
                 response.EnsureSuccessStatusCode();
                 var body = await response.Content.ReadAsStringAsync();
                 details = JsonConvert.DeserializeObject<dynamic>(body);
-                await recipeFormat(details);
-=======
-                    response.EnsureSuccessStatusCode();
-                    var body = await response.Content.ReadAsStringAsync();
-                    details = JsonConvert.DeserializeObject<dynamic>(body);
->>>>>>> a7bcda6e0e8c7d8b5119f9fc9f0673c11202d27f
             }
-                    await recipeFormat(details);
+            await recipeFormat(details);
         }
 
         public Task recipeFormat(dynamic details)
         {
             IList<Recipe> list = new List<Recipe>();
-<<<<<<< HEAD
-            foreach (dynamic a in details.recipes)
-            {
-                Recipe rec = new Recipe();
-                rec.RecipeId = Convert.ToInt32(a.id);
-
-                rec.RecipeName = a.title;
-                rec.RecipeDescription = a.summary;
-=======
             IList<Ingredient> ingre = new List<Ingredient>();
             List<int> ingIDs = context.Ingredients.AsNoTracking().Select(d => d.IngredientId).ToList();
-            foreach(dynamic a in details.recipes)
+            foreach (dynamic a in details.recipes)
             {
                 int recid = Convert.ToInt32(a.id);
-                if(context.Recipes.Any( b => b.RecipeId == recid )== false && a.image != null)
+                if (context.Recipes.Any(b => b.RecipeId == recid) == false && a.image != null)
                 {
-                    
+
                     Recipe rec = new Recipe();
-                            
+
                     rec.RecipeId = Convert.ToInt32(a.id);
-    
+
                     rec.RecipeName = a.title;
                     rec.RecipeDescription = a.summary;
->>>>>>> a7bcda6e0e8c7d8b5119f9fc9f0673c11202d27f
 
                     RecipeDocument recDoc = new RecipeDocument();
                     recDoc.Url = a.sourceUrl;
@@ -198,18 +171,11 @@ namespace PantryBackEnd.Repositories
                     rec.RecipeDocument = recDoc;
 
 
-<<<<<<< HEAD
-                ICollection<RecipeStep> recipeStep = new HashSet<RecipeStep>();
-                foreach (var b in a.analyzedInstructions)
-                {
-                    foreach (var instruction in b.steps)
-=======
                     int count = 0;
                     ICollection<RecipeStep> recipeStep = new HashSet<RecipeStep>();
-                    foreach(var b in a.analyzedInstructions)
->>>>>>> a7bcda6e0e8c7d8b5119f9fc9f0673c11202d27f
+                    foreach (var b in a.analyzedInstructions)
                     {
-                        foreach(var instruction in b.steps)
+                        foreach (var instruction in b.steps)
                         {
                             RecipeStep recStep = new RecipeStep
                             {
@@ -221,16 +187,17 @@ namespace PantryBackEnd.Repositories
                             recipeStep.Add(recStep);
                         }
                     }
-        
+
                     rec.RecipeSteps = recipeStep;
-                                
+
                     ICollection<RecipeIngredient> RecipeIngredients = new HashSet<RecipeIngredient>();
                     foreach (var item in a.extendedIngredients)
                     {
-                        
+
                         try
-                        {   
-                            RecipeIngredient ingredient = new RecipeIngredient{
+                        {
+                            RecipeIngredient ingredient = new RecipeIngredient
+                            {
                                 RecipeId = Convert.ToInt32(a.id),
                                 IngredientId = Convert.ToInt32(item.id),
                                 Amount = Convert.ToSingle(item.amount),
@@ -239,62 +206,36 @@ namespace PantryBackEnd.Repositories
                                 OriginalName = item.originalString
                             };
                             RecipeIngredients.Add(ingredient);
-                            
+
                             int K = Convert.ToInt32(item.id);
-                            Ingredient ing = new Ingredient{
+                            Ingredient ing = new Ingredient
+                            {
                                 IngredientId = K,
                                 Name = item.name
                             };
 
-                            if(ingIDs.Contains(K) == false)
+                            if (ingIDs.Contains(K) == false)
                             {
                                 ingIDs.Add(K);
                                 ingre.Add(ing);
                             }
-                            
+
                         }
-                        catch(Exception)
+                        catch (Exception)
                         {
                             //unlucky
                         }
 
-                    }                    
+                    }
                     rec.RecipeIngredients = RecipeIngredients;
                     list.Add(rec);
-                    }
-<<<<<<< HEAD
                 }
 
-                rec.RecipeSteps = recipeStep;
-
-                ICollection<RecipeIngredient> RecipeIngredients = new HashSet<RecipeIngredient>();
-                foreach (var item in a.extendedIngredients)
-                {
-                    RecipeIngredient ingredient = new RecipeIngredient
-                    {
-                        RecipeId = Convert.ToInt32(a.id),
-                        IngredientId = item.id,
-                        Amount = item.amount,
-                        UnitOfMeasure = item.unit,
-                        Name = item.name
-                    };
-                    RecipeIngredients.Add(ingredient);
-                }
-                rec.RecipeIngredients = RecipeIngredients;
-                list.Add(rec);
-
-            }
-            foreach (Recipe a in list)
-            {
-                context.Recipes.Add(a);
-=======
-                         
             }
 
-                context.Ingredients.AddRange(ingre);
-                context.Recipes.AddRange(list);
->>>>>>> a7bcda6e0e8c7d8b5119f9fc9f0673c11202d27f
-                context.SaveChanges();
+            context.Ingredients.AddRange(ingre);
+            context.Recipes.AddRange(list);
+            context.SaveChanges();
 
             return Task.CompletedTask;
         }
