@@ -249,5 +249,22 @@ namespace PantryBackEnd.Repositories
                 }
             }
         }
+
+        public frontEndRecipeStep getRecipeSteps(int recipeID, Guid id)
+        {
+            //List<frontEndRecipeStep> frontEndRecipeSteps = new List<frontEndRecipeStep>();
+            List<string> inst = new List<string>();
+            frontEndRecipeStep recStep = new frontEndRecipeStep{
+                RecipeId = recipeID,
+            };
+
+            foreach(RecipeStep i in context.RecipeSteps.Where(a => a.RecipeId == recipeID).ToList())
+            {
+                inst.Add(i.Instructions);
+            }
+            recStep.Instructions = inst;
+            
+            return recStep;
+        }
     }
 }

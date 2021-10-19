@@ -66,5 +66,26 @@ namespace PantryBackEnd.Controllers
                 return Ok(new { message = "Failed" });
             }
         }
+
+        [Route("api/getRecipeSteps")]
+        [HttpGet]
+        public ActionResult<List<RecipeStep>> getRecipeSteps(int recipeID)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
+
+                var recStep = recipeRepo.getRecipeSteps(recipeID, userId);
+
+                return Ok(recStep);
+            }
+            catch(Exception)
+            {
+                return Ok(new { message = "Failed" });
+            }
+        }
     }
 }
