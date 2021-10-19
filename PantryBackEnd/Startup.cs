@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using PantryBackEnd.Models;
 using PantryBackEnd.Repositories;
 using Microsoft.Extensions.Logging;
-
+using PantryBackEnd.Notification;
 namespace PantryBackEnd
 {
     public class Startup
@@ -34,6 +34,7 @@ namespace PantryBackEnd
             }
                  , optionsLifetime: ServiceLifetime.Transient);//connect to database
             services.AddCors();
+            services.AddScoped<SendNotification>();
             services.AddScoped<IShoppingList, ShoppingListRepo>();
             services.AddScoped<INotification, NotificationRepo>();
             services.AddScoped<IProduct, ProductRepo>();
