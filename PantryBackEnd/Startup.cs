@@ -17,6 +17,7 @@ using PantryBackEnd.Models;
 using PantryBackEnd.Repositories;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using PantryBackEnd.Notification;
 
 namespace PantryBackEnd
 {
@@ -40,6 +41,7 @@ namespace PantryBackEnd
                 options.EnableSensitiveDataLogging();}
                  ,optionsLifetime: ServiceLifetime.Transient);//connect to database
             services.AddCors();
+            services.AddScoped<SendNotification>();
             services.AddScoped<IShoppingList, ShoppingListRepo>();
             services.AddScoped<INotification, NotificationRepo>();
             services.AddScoped<IProduct, ProductRepo>();
