@@ -145,7 +145,8 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                return Ok(userId);
+                User ok = new User(userId);
+                return Ok(ok);
 
             }
             catch (Exception)
