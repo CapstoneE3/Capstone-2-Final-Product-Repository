@@ -39,9 +39,9 @@ namespace PantryBackEnd.Controllers
                 Subscription subDbEntry = new Subscription
                 {
                     AccId = userId,
-                    SubEndpoint = subs.Endpoint,
-                    Key = subs.key,
-                    Audh = subs.auth
+                    SubEndpoint = subs.endpoint,
+                    Key = (string)subs.keys.ElementAt(0).Key,
+                    Audh = subs.keys.ElementAt(0).Value
                 };
                 await store.StoreSubscription(subDbEntry);
                 Subscription a = store.GetSubscription(userId);
@@ -59,7 +59,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/DeleteSubcriptions")]
         [HttpDelete]
-        public async Task<ActionResult> DeleteSubs([FromBody] SubscriptionFrontEnd subs)
+        public async Task<ActionResult> DeleteSubs()
         {
             try
             {

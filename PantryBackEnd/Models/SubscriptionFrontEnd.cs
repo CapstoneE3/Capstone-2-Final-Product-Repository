@@ -7,9 +7,8 @@ namespace PantryBackEnd.Models
 {
     public class SubscriptionFrontEnd
     {
-        public string Endpoint { get; set; }
+        public string endpoint { get; set; }
 
-        public string key { get; set; }
-        public string auth { get; set; }
+        public Dictionary<string, string> keys { get; set; }
     }
 }
