@@ -25,18 +25,18 @@ namespace PantryBackEnd.Repositories
         {
             return vapidDetails;
         }
-        public Task StoreSubscription(Subscription subs)
+        public async Task StoreSubscription(Subscription subs)
         {
-            context.Subscriptions.Add(subs);
-            context.SaveChangesAsync();
-            return Task.CompletedTask;
+            await context.Subscriptions.AddAsync(subs);
+            await context.SaveChangesAsync();
+            Task.WaitAll();
         }
-        public Task UpdateSub(Subscription subs)
+        public async Task UpdateSub(Subscription subs)
         {
 
             context.Subscriptions.Update(subs);
-            context.SaveChangesAsync();
-            return Task.CompletedTask;
+            await context.SaveChangesAsync();
+            Task.WaitAll();
         }
         public List<InventoryList> GetInventoryList()
         {
