@@ -64,9 +64,9 @@ namespace PantryBackEnd.Controllers
                 return Unauthorized(new { message = "Unauthorized" });
             }
         }
-        [Route("api/DeleteSubcriptions")]
-        [HttpDelete]
-        public async Task<ActionResult> DeleteSubs()
+        [Route("api/replaceSubscription")]
+        [HttpPost]
+        public async Task<ActionResult<Subscription>> ReplaceSub([FromBody] SubscriptionFrontEnd subs)
         {
             try
             {
@@ -74,8 +74,23 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
-                await store.DeleteSub(userId);
-                return Ok(new { message = "Success" });
+                Subscription subDbEntry = new Subscription();
+                subDbEntry.AccId = userId;
+                subDbEntry.SubEndpoint = subs.endpoint;
+                foreach (KeyValuePair<string, string> c in subs.keys)
+                {
+                    if (c.Key.Equals("auth"))
+                    {
+                        subDbEntry.Audh = c.Value;
+                    }
+                    else
+                    {
+                        subDbEntry.Key = c.Value;
+                    }
+                }
+                await store.UpdateSub(subDbEntry);
+                Subscription a = store.GetSubscription(userId);
+                return Ok(a);
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
             {

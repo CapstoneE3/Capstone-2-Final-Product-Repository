@@ -31,10 +31,10 @@ namespace PantryBackEnd.Repositories
             context.SaveChangesAsync();
             return Task.CompletedTask;
         }
-        public Task DeleteSub(Guid id)
+        public Task UpdateSub(Subscription subs)
         {
 
-            context.Subscriptions.Remove(context.Subscriptions.Single(a => a.AccId == id));
+            context.Subscriptions.Update(subs);
             context.SaveChangesAsync();
             return Task.CompletedTask;
         }

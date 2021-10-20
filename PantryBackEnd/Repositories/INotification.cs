@@ -9,7 +9,7 @@ namespace PantryBackEnd.Repositories
     {
         Task StoreSubscription(Subscription subs);
 
-        Task DeleteSub(Guid id);
+        Task UpdateSub(Subscription subs);
 
         List<InventoryList> GetInventoryList();
 
