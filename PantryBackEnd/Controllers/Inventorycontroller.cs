@@ -14,7 +14,7 @@ namespace PantryBackEnd.Controllers
     {
 
         private Guid guid = Guid.NewGuid();
-        JwtService service;
+        private JwtService service;
         private IInventoryRepo InvRepo;
         private IUserRepo userRepo;
         private IProduct productRep;
