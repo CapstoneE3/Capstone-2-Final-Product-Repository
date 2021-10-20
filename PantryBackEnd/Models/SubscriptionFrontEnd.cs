@@ -11,7 +11,5 @@ namespace PantryBackEnd.Models
 
         public string key { get; set; }
         public string auth { get; set; }
-
-        public DateTime expiry { get; set; }
     }
 }
