@@ -57,9 +57,9 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
 
-                var str = recipeRepo.createRecipe(userId, recipeName, recipeDesc);
+                var str = recipeRepo.createRecipe(userId, recipeName, recipeDesc, steps);
 
-                return Ok(new { message = "Success" });
+                return Ok(new { message = str });
             }
             catch(Exception)
             {

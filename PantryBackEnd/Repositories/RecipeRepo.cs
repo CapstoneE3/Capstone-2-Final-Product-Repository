@@ -206,7 +206,7 @@ namespace PantryBackEnd.Repositories
             return recipes;
         }
 
-        public string createRecipe(Guid id, string recipeName, string recipeDesc)
+        public string createRecipe(Guid id, string recipeName, string recipeDesc, List<string> steps)
         {
             try
             {
@@ -224,11 +224,23 @@ namespace PantryBackEnd.Repositories
                         random = rand.Next(10000);
 
                     }while(context.Recipes.Where(a => a.RecipeId == random) == null);
-                        
+                    ICollection<RecipeStep> recStep = new HashSet<RecipeStep>();
+                    
+                    for(int i = 0; i < steps.Count(); i++)
+                    {
+                        RecipeStep ok = new RecipeStep{
+                            StepId = i,
+                            Instructions = steps[i],
+                            RecipeId = random
+                        };
+                        recStep.Add(ok);
+                    }
+                    
                     Recipe rec = new Recipe{
                         RecipeId = random,
                         RecipeName = recipeName,
-                        RecipeDescription = recipeDesc
+                        RecipeDescription = recipeDesc,
+                        RecipeSteps = recStep
                     };
 
                     RecipeList reclist = new RecipeList{
@@ -266,5 +278,7 @@ namespace PantryBackEnd.Repositories
             
             return recStep;
         }
+
+        
     }
 }
