@@ -129,15 +129,18 @@ namespace PantryBackEnd.Controllers
         [HttpGet]
         public ActionResult<bool> IsLoggedIn()
         {
+            CheckLoggedIN loggedIN = new CheckLoggedIN();
             try
             {
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
-                return Ok(true);
+                loggedIN.IsLoggedIn = true;
+                return Ok(loggedIN);
             }
             catch (Exception)
             {
-                return Ok(false);
+                loggedIN.IsLoggedIn = false;
+                return Ok(loggedIN);
             }
         }
         [Route("api/GetUser")]
