@@ -27,19 +27,15 @@ namespace PantryBackEnd.Repositories
         }
         public Task StoreSubscription(Subscription subs)
         {
-            return Task.Run(() =>
-            {
-                context.Subscriptions.Add(subs);
-                context.SaveChangesAsync();
-            });
+            context.Subscriptions.Add(subs);
+            context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
         public Task DeleteSub(Guid id)
         {
-            return Task.Run(() =>
-            {
-                context.Subscriptions.Remove(context.Subscriptions.Single(a => a.AccId == id));
-            }
-            );
+
+            context.Subscriptions.Remove(context.Subscriptions.Single(a => a.AccId == id));
+            return Task.CompletedTask;
         }
         public List<InventoryList> GetInventoryList()
         {
