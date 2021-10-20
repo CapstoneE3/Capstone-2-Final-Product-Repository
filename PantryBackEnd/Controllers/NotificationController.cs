@@ -36,13 +36,19 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
-                Subscription subDbEntry = new Subscription
+                Subscription subDbEntry = new Subscription();
+                subDbEntry.AccId = userId;
+                foreach (KeyValuePair<string, string> c in subs.keys)
                 {
-                    AccId = userId,
-                    SubEndpoint = subs.endpoint,
-                    Key = (string)subs.keys.ElementAt(0).Key,
-                    Audh = subs.keys.ElementAt(0).Value
-                };
+                    if (c.Key.Equals("auth"))
+                    {
+                        subDbEntry.Audh = c.Value;
+                    }
+                    else
+                    {
+                        subDbEntry.Key = c.Value;
+                    }
+                }
                 await store.StoreSubscription(subDbEntry);
                 Subscription a = store.GetSubscription(userId);
                 return Ok(a);
