@@ -39,7 +39,7 @@ namespace PantryBackEnd.Controllers
                 }
                 Response.Cookies.Append("LoggedIn", "SuckOnMY", new CookieOptions
                 {
-                    Domain = "handypantry.azurewebsites.net",
+                    Domain = "azurewebsites.net",
                     SameSite = SameSiteMode.None,
                     Secure = true,
                     Expires = DateTime.Today.AddMonths(1)

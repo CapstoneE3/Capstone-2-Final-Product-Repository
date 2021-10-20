@@ -81,9 +81,9 @@ namespace PantryBackEnd.Controllers
         }
         [Route("TestingAzure")]
         [HttpGet]
-        public void Test()
+        public ActionResult<VapidDt> Test()
         {
-            logger.LogInformation(JsonConvert.SerializeObject(store.GetVapidDt()));
+            return Ok(store.GetVapidDt());
         }
         [Route("api/Test")]
         [HttpGet]
