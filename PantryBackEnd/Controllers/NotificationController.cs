@@ -38,6 +38,7 @@ namespace PantryBackEnd.Controllers
                 Account user = userRepo.GetByID(userId);
                 Subscription subDbEntry = new Subscription();
                 subDbEntry.AccId = userId;
+                subDbEntry.SubEndpoint = subs.endpoint;
                 foreach (KeyValuePair<string, string> c in subs.keys)
                 {
                     if (c.Key.Equals("auth"))
