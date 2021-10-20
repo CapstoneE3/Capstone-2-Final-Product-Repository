@@ -29,8 +29,8 @@ namespace PantryBackEnd
             services.AddDbContext<pantryContext>(options =>
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"));
-            });
-            // , optionsLifetime: ServiceLifetime.Transient);//connect to database
+            }
+             , optionsLifetime: ServiceLifetime.Transient);//connect to database
             services.AddCors();
             services.AddScoped<SendNotification>();
             services.AddScoped<IShoppingList, ShoppingListRepo>();
