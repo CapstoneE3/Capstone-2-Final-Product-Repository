@@ -63,7 +63,8 @@ namespace PantryBackEnd.Controllers
 
                     var check = Request.Cookies["jwt"];
                     var token = service.Verification(check);
-                    return Unauthorized(new { message = "Already logged in" });
+                    Guid userId = Guid.Parse(token.Issuer);
+                    return Unauthorized(new { message = "Already logged in " + userId });
                 }
                 catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
                 {

@@ -28,7 +28,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/subcriptions")]
         [HttpPost]
-        public async Task<ActionResult> StoreSubscription([FromBody] SubscriptionFrontEnd subs)
+        public async Task<ActionResult<Subscription>> StoreSubscription([FromBody] SubscriptionFrontEnd subs)
         {
             try
             {
@@ -44,7 +44,8 @@ namespace PantryBackEnd.Controllers
                     Audh = subs.auth
                 };
                 await store.StoreSubscription(subDbEntry);
-                return NoContent();
+                Subscription a = store.GetSubscription(userId);
+                return Ok(a);
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
             {
