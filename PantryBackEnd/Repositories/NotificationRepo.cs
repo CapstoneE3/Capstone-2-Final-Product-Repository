@@ -35,6 +35,7 @@ namespace PantryBackEnd.Repositories
         {
 
             context.Subscriptions.Remove(context.Subscriptions.Single(a => a.AccId == id));
+            context.SaveChangesAsync();
             return Task.CompletedTask;
         }
         public List<InventoryList> GetInventoryList()

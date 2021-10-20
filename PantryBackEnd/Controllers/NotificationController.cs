@@ -75,7 +75,7 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
                 await store.DeleteSub(userId);
-                return NoContent();
+                return Ok(new { message = "Success" });
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
             {
