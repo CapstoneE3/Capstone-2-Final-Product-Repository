@@ -21,6 +21,7 @@ namespace PantryBackEnd.Models
         public string Searchtag { get; set; }
         public int IngredientId { get; set; }
 
+        public virtual Category CategoryNavigation { get; set; }
         public virtual Ingredient Ingredient { get; set; }
         public virtual ICollection<InventoryList> InventoryLists { get; set; }
         public virtual ICollection<ShoppingList> ShoppingLists { get; set; }

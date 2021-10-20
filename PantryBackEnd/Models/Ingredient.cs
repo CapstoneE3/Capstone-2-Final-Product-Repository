@@ -14,7 +14,9 @@ namespace PantryBackEnd.Models
 
         public int IngredientId { get; set; }
         public string Name { get; set; }
+        public string Category { get; set; }
 
+        public virtual Category CategoryNavigation { get; set; }
         public virtual ICollection<Product> Products { get; set; }
     }
 }

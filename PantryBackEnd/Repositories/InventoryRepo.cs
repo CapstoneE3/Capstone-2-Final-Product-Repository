@@ -34,6 +34,7 @@ namespace PantryBackEnd.Repositories
                                 "Meat & Seafood","From The Deli","Dairy, Eggs & Meals","Conveniece Meals",
                                 "Pantry","Frozen","Drinks","International Foods","Household","Health & Beauty",
                                 "Baby","Pet","Liquor","Tobacco","Sugar & Sweeteners"};
+
             foreach (string i in category)
             {
                 List<Product> prods = context.Products.Where(a => a.Category.Equals(i)).Include(b => b.InventoryLists.Where(c => c.AccId == acc_id)).ToList();
@@ -125,7 +126,7 @@ namespace PantryBackEnd.Repositories
              var request = new HttpRequestMessage
              {
                  Method = HttpMethod.Get,
-                 RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=1000"),
+                 RequestUri = new Uri("https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/random?number=10000"),
                  Headers =
                  {
                      { "x-rapidapi-host", "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com" },
@@ -145,6 +146,8 @@ namespace PantryBackEnd.Repositories
         {
             IList<Recipe> list = new List<Recipe>();
             IList<Ingredient> ingre = new List<Ingredient>();
+            List<string> category = context.Categories.AsNoTracking().Select(p => p.Category1).ToList();
+            List<Category> categoryAdd = new List<Category>();
             List<int> ingIDs = context.Ingredients.AsNoTracking().Select(d => d.IngredientId).ToList();
             foreach(dynamic a in details.recipes)
             {
@@ -184,13 +187,14 @@ namespace PantryBackEnd.Repositories
                     }
         
                     rec.RecipeSteps = recipeStep;
-                                
+                    Boolean addBool = true;            
                     ICollection<RecipeIngredient> RecipeIngredients = new HashSet<RecipeIngredient>();
                     foreach (var item in a.extendedIngredients)
                     {
                         
                         try
                         {   
+                            addBool = true;
                             RecipeIngredient ingredient = new RecipeIngredient{
                                 RecipeId = Convert.ToInt32(a.id),
                                 IngredientId = Convert.ToInt32(item.id),
@@ -201,11 +205,45 @@ namespace PantryBackEnd.Repositories
                             };
                             RecipeIngredients.Add(ingredient);
                             
+                            String cat = item.aisle;
+                            String[] ory = cat.Split(';');
                             int K = Convert.ToInt32(item.id);
+                            
                             Ingredient ing = new Ingredient{
                                 IngredientId = K,
-                                Name = item.name
+                                Name = item.name,
+                                Category = ory[0]
                             };
+        
+
+                            Category cate = new Category{
+                                Category1 = ory[0]
+                            };                
+
+                            
+                            if(cate.Category1==null)
+                            {
+                                addBool=false;
+                                continue;
+                            }
+                            
+                            if(category.Contains(cate.Category1) == false)
+                            {
+                                category.Add(cate.Category1);
+                                categoryAdd.Add(cate);
+                            }
+                            /*
+                            if((category.Contains(cate.Category1) == false) && (ingIDs.Contains(K) == false) && cate.Category1 != null)
+                            {
+                                category.Add(cate.Category1);
+                                categoryAdd.Add(cate);
+                                ingIDs.Add(K);
+                                ingre.Add(ing);
+                            }
+                            else
+                            {
+                                addBool = false;
+                            }*/
 
                             if(ingIDs.Contains(K) == false)
                             {
@@ -219,13 +257,22 @@ namespace PantryBackEnd.Repositories
                             //unlucky
                         }
 
+                    }
+                    if(addBool == false)
+                    {
+                        continue;
                     }                    
                     rec.RecipeIngredients = RecipeIngredients;
-                    list.Add(rec);
+                    if(addBool == true)
+                    {
+                        list.Add(rec);
+
                     }
+
+                }
                          
             }
-
+                context.Categories.AddRange(categoryAdd);
                 context.Ingredients.AddRange(ingre);
                 context.Recipes.AddRange(list);
                 context.SaveChanges();

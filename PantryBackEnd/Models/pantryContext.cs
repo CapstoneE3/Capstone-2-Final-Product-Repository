@@ -19,6 +19,7 @@ namespace PantryBackEnd.Models
 
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Admin> Admins { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public virtual DbSet<InventoryList> InventoryLists { get; set; }
         public virtual DbSet<Product> Products { get; set; }
@@ -98,15 +99,35 @@ namespace PantryBackEnd.Models
                     .HasConstraintName("Admin_acc_id_fkey");
             });
 
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasKey(e => e.Category1)
+                    .HasName("Category_pkey");
+
+                entity.ToTable("Category");
+
+                entity.Property(e => e.Category1).HasColumnName("category");
+            });
+
             modelBuilder.Entity<Ingredient>(entity =>
             {
                 entity.Property(e => e.IngredientId)
                     .ValueGeneratedNever()
                     .HasColumnName("ingredient_ID");
 
+                entity.Property(e => e.Category)
+                    .IsRequired()
+                    .HasColumnName("category");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name");
+
+                entity.HasOne(d => d.CategoryNavigation)
+                    .WithMany(p => p.Ingredients)
+                    .HasForeignKey(d => d.Category)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Ingredients_category_fkey");
             });
 
             modelBuilder.Entity<InventoryList>(entity =>
@@ -171,6 +192,12 @@ namespace PantryBackEnd.Models
                 entity.Property(e => e.Searchtag)
                     .IsRequired()
                     .HasColumnName("searchtag");
+
+                entity.HasOne(d => d.CategoryNavigation)
+                    .WithMany(p => p.Products)
+                    .HasForeignKey(d => d.Category)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Products_category_fkey");
 
                 entity.HasOne(d => d.Ingredient)
                     .WithMany(p => p.Products)
