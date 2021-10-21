@@ -114,10 +114,15 @@ namespace PantryBackEnd.Controllers
         {
             try
             {
+                if (products == null)
+                {
+                    return Ok(new { message = "product is null" });
+                    logger.LogInformation("Product is null");
+                }
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetAccountWithInv(userId);
+                Account user = userRepo.GetAccountWithInv(products.uid);
                 List<InventoryList> list = new List<InventoryList>();
                 products.items = notification.getNotifactionTIme(products.items);
                 logger.LogInformation(products.items.ToString());
@@ -129,13 +134,13 @@ namespace PantryBackEnd.Controllers
                     {
                         foreach (ProductDt a in products.items)
                         {
-                            InventoryList inv = new InventoryList { AccId = userId, ItemId = a.productID, ExpDate = a.exp, Count = a.count, NotificationTime = a.NotificationTime };
+                            InventoryList inv = new InventoryList { AccId = products.uid, ItemId = a.productID, ExpDate = a.exp, Count = a.count, NotificationTime = a.NotificationTime };
                             list.Add(inv);
                         }
                     });
                     InvRepo.AddTIllProduct(list);
 
-                    notification.PreparingNotification(userId, products.items);
+                    notification.PreparingNotification(products.uid, products.items);
                 }
                 else
                 {
@@ -154,7 +159,7 @@ namespace PantryBackEnd.Controllers
                                 {
                                     ItemId = a.productID,
                                     ExpDate = a.exp,
-                                    AccId = userId,
+                                    AccId = products.uid,
                                     Count = a.count,
                                     NotificationTime = a.NotificationTime
                                 };
@@ -168,7 +173,7 @@ namespace PantryBackEnd.Controllers
                             }
                         }
                     });
-                    notification.PreparingNotification(userId, products.items);
+                    notification.PreparingNotification(products.uid, products.items);
                 }
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
