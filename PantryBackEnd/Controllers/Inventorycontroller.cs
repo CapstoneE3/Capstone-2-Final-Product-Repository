@@ -167,9 +167,8 @@ namespace PantryBackEnd.Controllers
                                 InvRepo.updateItem();
                             }
                         }
-                        notification.PreparingNotification(userId, products.items);
-                    }
-                    );
+                    });
+                    notification.PreparingNotification(userId, products.items);
                 }
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
