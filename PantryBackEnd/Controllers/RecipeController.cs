@@ -6,6 +6,7 @@ using PantryBackEnd.Repositories;
 using PantryBackEnd.Models;
 using PantryBackEnd.JwtGenerator;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace PantryBackEnd.Controllers
 {
@@ -56,7 +57,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/addCustomRecipe")]
         [HttpPost]
-        public ActionResult addCustomRecipe(string recipeName, string recipeDesc, List<String> steps, List<RecipeStep> ingredients)
+        public ActionResult addCustomRecipe([FromBody]CustomRecipe obj)
         {
             try
             {
@@ -64,7 +65,7 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
 
-                var str = recipeRepo.createRecipe(userId, recipeName, recipeDesc, steps);
+                var str = recipeRepo.createRecipe(userId, obj);
 
                 return Ok(new { message = str });
             }
@@ -73,6 +74,7 @@ namespace PantryBackEnd.Controllers
                 return Ok(new { message = "Failed" });
             }
         }
+
 
         [Route("api/getRecipeSteps")]
         [HttpGet]

@@ -8,7 +8,7 @@ namespace PantryBackEnd.Repositories
     public interface IRecipe
     {
         
-        string createRecipe(Guid id, string recipeName, string recipeDesc, List<string> steps);
+        string createRecipe(Guid id, CustomRecipe obj);
         
         List<frontEndRecipeDisplayAll> getRecipes(Guid id, int index);
         frontEndRecipeStep getRecipeSteps(int recipeID, Guid id);
