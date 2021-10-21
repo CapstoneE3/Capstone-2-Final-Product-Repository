@@ -183,8 +183,7 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                return BadRequest();
+                return BadRequest(e);
             }
             return Ok();
         }

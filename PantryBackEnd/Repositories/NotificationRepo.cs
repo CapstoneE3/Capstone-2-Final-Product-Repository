@@ -49,7 +49,7 @@ namespace PantryBackEnd.Repositories
         }
         public Subscription GetSubscription(Guid id)
         {
-            return context.Subscriptions.Single(a => a.AccId == id);
+            return context.Subscriptions.Where(a => a.AccId == id).Single();
         }
         public bool CheckSubs(Subscription subs)
         {

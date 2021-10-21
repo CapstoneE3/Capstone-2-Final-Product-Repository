@@ -42,11 +42,13 @@ namespace PantryBackEnd.Notification
                 SubscriptionData data = new SubscriptionData();
                 data.title = "Items expiring soon";
                 data.expiry = item;
+                data.body = new List<string>();
                 foreach (var i in list)
                 {
                     if (i.NotificationTime == item)
                     {
-                        data.body.Add(notification.getProductName(i.productID) + ",");
+                        string productName = notification.getProductName(i.productID) + ",";
+                        data.body.Add(productName);
                     }
                 }
                 why.Add(data);
