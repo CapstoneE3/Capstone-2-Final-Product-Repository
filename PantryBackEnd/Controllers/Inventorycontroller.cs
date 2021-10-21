@@ -24,6 +24,7 @@ namespace PantryBackEnd.Controllers
             this.InvRepo = context;
             this.userRepo = userRepo;
             this.productRep = productRep;
+            this.notification = notification;
 
         }
         public int getCount(ICollection<InventoryList> list, ProductDt product)
@@ -125,13 +126,14 @@ namespace PantryBackEnd.Controllers
                 {
                     return BadRequest(new { message = "ITs null" });
                 }
-                var jwt = Request.Cookies["jwt"];
-                var token = service.Verification(jwt);
-                Guid userId = Guid.Parse(token.Issuer);
+                // var jwt = Request.Cookies["jwt"];
+                // var token = service.Verification(jwt);
+                //Guid userId = Guid.Parse(token.Issuer);
+                int count = 0;
                 Account user = userRepo.GetAccountWithInv(products.AccountId);
                 List<InventoryList> list = new List<InventoryList>();
                 products.items = notification.getNotifactionTIme(products.items); ;
-                if (user.InventoryLists == null || user.InventoryLists.Count == 0)
+                if (user.InventoryLists == null)
                 {
                     await Task.Run(() =>
                     {
@@ -143,11 +145,11 @@ namespace PantryBackEnd.Controllers
                     });
                     InvRepo.AddTIllProduct(list);
 
-                    notification.PreparingNotification(userId, products.items);
+                    notification.PreparingNotification(products.AccountId, products.items);
                 }
                 else
                 {
-                    int count = 6;
+
                     await Task.Run(() =>
                     {
                         foreach (ProductDt a in products.items)
@@ -171,7 +173,7 @@ namespace PantryBackEnd.Controllers
                             }
                         }
                     });
-                    notification.PreparingNotification(userId, products.items);
+                    notification.PreparingNotification(products.AccountId, products.items);
                 }
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
@@ -179,8 +181,9 @@ namespace PantryBackEnd.Controllers
                 Response.Cookies.Delete("jwt");
                 return Unauthorized(new { message = "Expired" });
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return BadRequest();
             }
             return Ok();
