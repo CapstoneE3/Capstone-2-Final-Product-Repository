@@ -118,7 +118,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/QRProducts")]
         [HttpPost]
-        public async Task<IActionResult> AddProductFromQR(TillShoppingItems products)
+        public async Task<IActionResult> AddProductFromQR([FromBody] TillShoppingItems products)
         {
             try
             {
