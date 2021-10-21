@@ -26,7 +26,7 @@ namespace PantryBackEnd.Controllers
         
         [Route("api/getUserRecipes")]
         [HttpGet]
-        public ActionResult<List<Recipe>> getAPIRecipe()
+        public ActionResult<List<Recipe>> getAPIRecipe(int index)
         {
             try
             {
@@ -35,8 +35,11 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
 
-
-                var recipes = recipeRepo.getRecipes(userId);
+                if(index < 0)
+                {
+                    return Ok(new List<frontEndRecipeDisplayAll>());
+                }
+                var recipes = recipeRepo.getRecipes(userId, index);
                 return Ok(recipes);
 
             }
