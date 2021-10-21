@@ -108,8 +108,18 @@ namespace PantryBackEnd.Controllers
 
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
-                List<Product> pro = product.fetchProducts(index);
-                return Ok(pro);
+                if (index >= 0)
+                {
+                    List<Product> pro = product.fetchProducts(index);
+                    return Ok(pro);
+
+                }
+                else
+                {
+                    List<Product> pro = new List<Product>();
+                    return Ok(pro);
+                }
+
             }
             catch (Exception)
             {

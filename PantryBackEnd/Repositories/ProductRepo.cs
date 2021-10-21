@@ -19,7 +19,7 @@ namespace PantryBackEnd.Repositories
         }
         public List<Product> fetchProducts(int index)
         {
-            return context.Products.Skip(index).Take(100).ToList();
+            return context.Products.OrderBy(a => a.ItemId).Skip(index).Take(100).ToList();
         }
 
 
