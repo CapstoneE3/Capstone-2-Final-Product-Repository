@@ -20,72 +20,75 @@ namespace PantryBackEnd.Repositories
 
         public List<Recipe> calculateRecipeScores(Guid accountId)
         {
-            Console.WriteLine("Account ID is: " + accountId); 
+            Console.WriteLine("Account ID is: " + accountId);
 
-            List<Recipe> recipeImportList = context.Recipes.Include(a => a.RecipeIngredients).Take(30).ToList(); 
-                // Should give us a list of 30 random recipes 
+            List<Recipe> recipeImportList = context.Recipes.Include(a => a.RecipeIngredients).Take(30).ToList();
+            // Should give us a list of 30 random recipes 
 
             List<InventoryList> inventory = context.InventoryLists.Where(a => a.AccId == accountId).Include(c => c.Item).ToList();
 
             //List<FrontEndInventoryFormat> userInventory = (List<FrontEndInventoryFormat>) inventoryUser;
             // List<InventoryList> inventoryUser = InventoryRepo.GetInventoryList(accountId);
-                // CHECK THIS FUNCTION CALL!!!
+            // CHECK THIS FUNCTION CALL!!!
 
-            int onePriority = 1; 
-                // Drinks, Liquor, Baby
-            int twoPriority = 2; 
-                // Kids & Lunch Box, Entertaining at Home
-                // Convenience Meals, International Foods 
-            int threePriority = 3;  
-                // Frozen 
-            int fourPriority = 5; 
-                // Bakery, Pantry, From The Deli 
-            int fivePriority = 7; 
-                // Fruit and Vegetables, Meat and Seafood, and Dairy, Eggs and Meals
+            int onePriority = 1;
+            // "Alcoholic Beverages""Beverages""Cereal""Dried Fruits""Ethnic Foods""Gourmet""Savory Snacks"
+            int twoPriority = 2;
+            // "Condiments""Health Foods""Nut butters, Jams, and Honey""Nuts""Sweet Snacks""Tea and Coffee"
+            int threePriority = 3;
+            // "Canned and Jarred""Cheese""Frozen""Gluten Free""Oil, Vinegar, Salad Dressing"
+            // "Refrigerated""Spices and Seasonings"
+            int fourPriority = 5;
+            // "Bakery/Bread""Baking""Bread""Pasta and Rice"
+            int fivePriority = 7;
+            // "Meat""Milk, Eggs, Other Dairy""Produce""Seafood"
 
-            
+
             //int[] allRecipeScores = null; 
             List<int> allRecipeScores = new List<int>();
 
             //List<Recipe> goodRecipes = null; 
             List<Recipe> goodRecipes = new List<Recipe>();
 
-            for(int ii = 0; ii < recipeImportList.Count(); ii++)
+            for (int ii = 0; ii < recipeImportList.Count(); ii++)
             {
                 // CHECK IF ITS .SIZE() OR .LENGTH() FOR ARRAYS
-                
-                int totalRecipeScore = 0; 
+
+                int totalRecipeScore = 0;
+
+                Console.WriteLine(recipeImportList[ii].RecipeId);
 
                 List<RecipeIngredient> ingredientsForRecipe = recipeImportList[ii].RecipeIngredients.ToList();
-                    // CHECK THIS FUNCTION CALL 
+                // CHECK THIS FUNCTION CALL 
 
-                for(int jj = 0; jj < ingredientsForRecipe.Count(); jj++)
+                for (int jj = 0; jj < ingredientsForRecipe.Count(); jj++)
                 {
-                    Console.WriteLine(jj);
+                    //Console.WriteLine(jj);
                     RecipeIngredient currentIngredient = ingredientsForRecipe[jj];
 
 
-                    for(int kk = 0; kk < inventory.Count(); kk++)
+                    for (int kk = 0; kk < inventory.Count(); kk++)
 
                         // we need to loop through all of the products in the users inventory using the kk for-loop above 
                         // On each iteration, we want to grab the kk-th product and assign it to 'prod' in the call below. 
 
                         //Product prod = inventoryUser[kk]
-                            // CHECK THIS FUNCTION CALL 
-                            
+                        // CHECK THIS FUNCTION CALL 
 
 
-                        if(currentIngredient.IngredientId == inventory[kk].Item.IngredientId)
+
+                        if (currentIngredient.IngredientId == inventory[kk].Item.IngredientId)
                         {
-                            string prodCategory = inventory[kk].Item.Category; 
+                            string prodCategory = inventory[kk].Item.Category;
 
-                            if((prodCategory.Equals("Drinks")) || (prodCategory.Equals("Liquor"))
-                            || (prodCategory.Equals("Baby")))
+                            if ((prodCategory.Equals("Alcoholic Beverages")) || (prodCategory.Equals("Beverages"))
+                            || (prodCategory.Equals("Cereal")) || (prodCategory.Equals("Dried Fruits")) || (prodCategory.Equals("Ethnic Foods"))
+                            || (prodCategory.Equals("Gourmet")) || (prodCategory.Equals("Savory Snacks")))
                             {
-                                
-                                if((inventory[kk].ExpDate.Subtract(new TimeSpan(4,0,0,0,0)) > DateTime.Today)) 
+
+                                if ((inventory[kk].ExpDate.Subtract(new TimeSpan(4, 0, 0, 0, 0)) > DateTime.Today))
                                 {
-                                    totalRecipeScore = totalRecipeScore + (onePriority*2); 
+                                    totalRecipeScore = totalRecipeScore + (onePriority * 2);
                                 }
                                 else
                                 {
@@ -93,48 +96,52 @@ namespace PantryBackEnd.Repositories
                                 }
 
                             }
-                            else if((prodCategory.Equals("Kids & Lunch Box")) 
-                            || (prodCategory.Equals("Entertaining At Home")) || (prodCategory.Equals("Convenience Meals"))
-                            || (prodCategory.Equals("International Foods")))
+                            else if ((prodCategory.Equals("Condiments"))
+                            || (prodCategory.Equals("Health Foods")) || (prodCategory.Equals("Nut butters, Jams, and Honey"))
+                            || (prodCategory.Equals("Nuts")) || (prodCategory.Equals("Sweet Snacks"))
+                            || (prodCategory.Equals("Tea and Coffee")))
                             {
-                                if ((inventory[kk].ExpDate.Subtract(new TimeSpan(4,0,0,0,0)) > DateTime.Today))
+                                if ((inventory[kk].ExpDate.Subtract(new TimeSpan(4, 0, 0, 0, 0)) > DateTime.Today))
                                 {
-                                    totalRecipeScore = totalRecipeScore + (twoPriority*2); 
+                                    totalRecipeScore = totalRecipeScore + (twoPriority * 2);
                                 }
                                 else
                                 {
                                     totalRecipeScore = totalRecipeScore + twoPriority;
                                 }
                             }
-                            else if((prodCategory.Equals("Frozen")))
+                            else if ((prodCategory.Equals("Frozen")) || (prodCategory.Equals("Cheese")) ||
+                             (prodCategory.Equals("Canned and Jarred")) || (prodCategory.Equals("Refrigerated")) ||
+                             (prodCategory.Equals("Spices and Seasonings")) || (prodCategory.Equals("Gluten Free")) ||
+                             (prodCategory.Equals("Oil, Vinegar, Salad Dressing")))
                             {
                                 if ((inventory[kk].ExpDate.Subtract(new TimeSpan(4, 0, 0, 0, 0)) > DateTime.Today))
                                 {
-                                    totalRecipeScore = totalRecipeScore + (threePriority*2); 
+                                    totalRecipeScore = totalRecipeScore + (threePriority * 2);
                                 }
                                 else
                                 {
                                     totalRecipeScore = totalRecipeScore + threePriority;
                                 }
                             }
-                            else if((prodCategory.Equals("Bakery")) || (prodCategory.Equals("Pantry"))
-                            || (prodCategory.Equals("From The Deli")))
+                            else if ((prodCategory.Equals("Bakery/Bread")) || (prodCategory.Equals("Baking")) ||
+                             (prodCategory.Equals("Bread")) || (prodCategory.Equals("Pasta and Rice")))
                             {
-                                if ((inventory[kk].ExpDate.Subtract(new TimeSpan(4,0,0,0,0)) > DateTime.Today))
+                                if ((inventory[kk].ExpDate.Subtract(new TimeSpan(4, 0, 0, 0, 0)) > DateTime.Today))
                                 {
-                                    totalRecipeScore = totalRecipeScore + (fourPriority*2); 
+                                    totalRecipeScore = totalRecipeScore + (fourPriority * 2);
                                 }
                                 else
                                 {
                                     totalRecipeScore = totalRecipeScore + fourPriority;
                                 }
                             }
-                            else if((prodCategory.Equals("Fruit & Vegetables")) || (prodCategory.Equals("Meat & Seafood")) 
-                            || (prodCategory.Equals("Dairy, Eggs & Meals")))
+                            else if ((prodCategory.Equals("Meat")) || (prodCategory.Equals("Milk,Eggs,Other Dairy")) ||
+                             (prodCategory.Equals("Produce")) || (prodCategory.Equals("Seafood")))
                             {
-                                if((inventory[kk].ExpDate.Subtract(new TimeSpan(4,0,0,0,0)) > DateTime.Today))
+                                if ((inventory[kk].ExpDate.Subtract(new TimeSpan(4, 0, 0, 0, 0)) > DateTime.Today))
                                 {
-                                    totalRecipeScore = totalRecipeScore + (fivePriority*2); 
+                                    totalRecipeScore = totalRecipeScore + (fivePriority * 2);
                                 }
                                 else
                                 {
@@ -144,71 +151,71 @@ namespace PantryBackEnd.Repositories
 
                         }
 
-                        
-                    }
-
-                    allRecipeScores.Add(totalRecipeScore);
 
                 }
 
-                for(int ii = 0; ii < allRecipeScores.Count(); ii++)
-                {
-                    Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores[ii]); 
-                }
-                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
+                allRecipeScores.Add(totalRecipeScore);
 
-                int recipeOneScore = allRecipeScores.Max(); // gives a score 
-                int recipeOneIndex = allRecipeScores.ToList().IndexOf(recipeOneScore);
-                goodRecipes.Add(recipeImportList[recipeOneIndex]);
-                allRecipeScores.RemoveAt(recipeOneIndex);
-                recipeImportList.RemoveAt(recipeOneIndex);
-                    // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
-                    // because we're about to store it within our goodRecipes list 
-                
-                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
+            }
 
-                int recipeTwoScore = allRecipeScores.Max(); // gives a score 
-                int recipeTwoIndex = allRecipeScores.ToList().IndexOf(recipeOneScore);
-                goodRecipes.Add(recipeImportList[recipeTwoIndex]);
-                allRecipeScores.RemoveAt(recipeTwoIndex);
-                recipeImportList.RemoveAt(recipeTwoIndex);
-                    // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
-                    // because we're about to store it within our goodRecipes list 
+            for (int ii = 0; ii < allRecipeScores.Count(); ii++)
+            {
+                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores[ii]);
+            }
+            //Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
 
-                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
+            int recipeOneScore = allRecipeScores.Max(); // gives a score 
+            int recipeOneIndex = allRecipeScores.ToList().IndexOf(recipeOneScore);
+            goodRecipes.Add(recipeImportList[recipeOneIndex]);
+            allRecipeScores.RemoveAt(recipeOneIndex);
+            recipeImportList.RemoveAt(recipeOneIndex);
+            // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
+            // because we're about to store it within our goodRecipes list 
 
-                int recipeThreeScore = allRecipeScores.Max(); // gives a score 
-                int recipeThreeIndex = allRecipeScores.ToList().IndexOf(recipeOneScore); 
-                goodRecipes.Add(recipeImportList[recipeThreeIndex]);
-                allRecipeScores.RemoveAt(recipeThreeIndex);
-                recipeImportList.RemoveAt(recipeThreeIndex);
-                    // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
-                    // because we're about to store it within our goodRecipes list 
-                
-                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
+            //Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
 
-                int recipeFourScore = allRecipeScores.Max(); // gives a score 
-                int recipeFourIndex = allRecipeScores.ToList().IndexOf(recipeOneScore);
-                goodRecipes.Add(recipeImportList[recipeFourIndex]);
-                allRecipeScores.RemoveAt(recipeFourIndex);
-                recipeImportList.RemoveAt(recipeFourIndex);
-                    // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
-                    // because we're about to store it within our goodRecipes list
-                
-                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
+            int recipeTwoScore = allRecipeScores.Max(); // gives a score 
+            int recipeTwoIndex = allRecipeScores.ToList().IndexOf(recipeTwoScore);
+            goodRecipes.Add(recipeImportList[recipeTwoIndex]);
+            allRecipeScores.RemoveAt(recipeTwoIndex);
+            recipeImportList.RemoveAt(recipeTwoIndex);
+            // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
+            // because we're about to store it within our goodRecipes list 
 
-                int recipeFiveScore = allRecipeScores.Max(); // gives a score 
-                int recipeFiveIndex = allRecipeScores.ToList().IndexOf(recipeOneScore); 
-                goodRecipes.Add(recipeImportList[recipeFiveIndex]);
-                allRecipeScores.RemoveAt(recipeFiveIndex);
-                recipeImportList.RemoveAt(recipeFiveIndex);
-                // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
-                // because we're about to store it within our goodRecipes list
+            //Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
 
-                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
+            int recipeThreeScore = allRecipeScores.Max(); // gives a score 
+            int recipeThreeIndex = allRecipeScores.ToList().IndexOf(recipeThreeScore);
+            goodRecipes.Add(recipeImportList[recipeThreeIndex]);
+            allRecipeScores.RemoveAt(recipeThreeIndex);
+            recipeImportList.RemoveAt(recipeThreeIndex);
+            // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
+            // because we're about to store it within our goodRecipes list 
+
+            //Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
+
+            int recipeFourScore = allRecipeScores.Max(); // gives a score 
+            int recipeFourIndex = allRecipeScores.ToList().IndexOf(recipeFourScore);
+            goodRecipes.Add(recipeImportList[recipeFourIndex]);
+            allRecipeScores.RemoveAt(recipeFourIndex);
+            recipeImportList.RemoveAt(recipeFourIndex);
+            // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
+            // because we're about to store it within our goodRecipes list
+
+            //Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
+
+            int recipeFiveScore = allRecipeScores.Max(); // gives a score 
+            int recipeFiveIndex = allRecipeScores.ToList().IndexOf(recipeFiveScore);
+            goodRecipes.Add(recipeImportList[recipeFiveIndex]);
+            allRecipeScores.RemoveAt(recipeFiveIndex);
+            recipeImportList.RemoveAt(recipeFiveIndex);
+            // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
+            // because we're about to store it within our goodRecipes list
+
+            //Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
 
 
-            return goodRecipes; 
+            return goodRecipes;
 
         }
 
@@ -217,45 +224,47 @@ namespace PantryBackEnd.Repositories
         {
             List<Recipe> recipes = context.Recipes.AsNoTracking().Include(a => a.RecipeDocument).Include(b => b.RecipeLists.
             Where(c => c.AccId == id)).Include(d => d.RecipeIngredients).OrderBy(e => e.RecipeId).Skip(index).Take(20).ToList();
-            
+
             List<frontEndRecipeDisplayAll> returnObj = new List<frontEndRecipeDisplayAll>();
-            
+
 
 
             //return recipes;
-            
-            foreach(Recipe a in recipes)
+
+            foreach (Recipe a in recipes)
             {
                 List<string> str = new List<string>();
-    
-                foreach(RecipeIngredient b in a.RecipeIngredients)
+
+                foreach (RecipeIngredient b in a.RecipeIngredients)
                 {
                     str.Add(b.Name);
                 }
-                
-                if(a.RecipeDocument == null)
+
+                if (a.RecipeDocument == null)
                 {
-                    frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll{
-                    RecipeId = a.RecipeId,
-                    RecipeName = a.RecipeName,
-                    ingredientsList = str,
+                    frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll
+                    {
+                        RecipeId = a.RecipeId,
+                        RecipeName = a.RecipeName,
+                        ingredientsList = str,
                     };
                     returnObj.Add(newObj);
                 }
                 else
                 {
-                    
-                    frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll{
+
+                    frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll
+                    {
                         RecipeId = a.RecipeId,
                         RecipeName = a.RecipeName,
                         ingredientsList = str,
                         PhotoUrl = a.RecipeDocument.PhotoUrl
                     };
                     returnObj.Add(newObj);
-                }              
+                }
             }
-            
-            return returnObj; 
+
+            return returnObj;
         }
 
         public frontEndRecipeClickDetails getRecipeInfo(Guid id, int recipeId)
@@ -271,8 +280,8 @@ namespace PantryBackEnd.Repositories
                 Recipe recipes = context.Recipes.Where(a => a.RecipeName.Equals(recipeName)).Include(b => b.RecipeLists.Where(c => c.AccId == id)).Single();
                 return "Exists";
             }
-            catch(Exception)
-            {   
+            catch (Exception)
+            {
                 try
                 {
                     int random;
@@ -281,21 +290,23 @@ namespace PantryBackEnd.Repositories
                         Random rand = new Random();
                         random = rand.Next(10000);
 
-                    }while(context.Recipes.Where(a => a.RecipeId == random) == null);
+                    } while (context.Recipes.Where(a => a.RecipeId == random) == null);
 
                     ICollection<RecipeStep> recStep = new HashSet<RecipeStep>();
-                    
-                    for(int i = 0; i < steps.Count(); i++)
+
+                    for (int i = 0; i < steps.Count(); i++)
                     {
-                        RecipeStep ok = new RecipeStep{
+                        RecipeStep ok = new RecipeStep
+                        {
                             StepId = i,
                             Instructions = steps[i],
                             RecipeId = random
                         };
                         recStep.Add(ok);
                     }
-                    
-                    Recipe rec = new Recipe{
+
+                    Recipe rec = new Recipe
+                    {
                         RecipeId = random,
                         RecipeName = recipeName,
                         RecipeDescription = recipeDesc,
@@ -303,7 +314,8 @@ namespace PantryBackEnd.Repositories
                         RecipeDocument = null
                     };
 
-                    RecipeList reclist = new RecipeList{
+                    RecipeList reclist = new RecipeList
+                    {
                         RecipeId = random,
                         AccId = id,
                         Recipe = rec
@@ -315,7 +327,7 @@ namespace PantryBackEnd.Repositories
                     return "Success";
 
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     return "Error";
                 }
@@ -326,19 +338,61 @@ namespace PantryBackEnd.Repositories
         {
             //List<frontEndRecipeStep> frontEndRecipeSteps = new List<frontEndRecipeStep>();
             List<string> inst = new List<string>();
-            frontEndRecipeStep recStep = new frontEndRecipeStep{
+            frontEndRecipeStep recStep = new frontEndRecipeStep
+            {
                 RecipeId = recipeID,
             };
 
-            foreach(RecipeStep i in context.RecipeSteps.Where(a => a.RecipeId == recipeID).ToList())
+            foreach (RecipeStep i in context.RecipeSteps.Where(a => a.RecipeId == recipeID).ToList())
             {
                 inst.Add(i.Instructions);
             }
             recStep.Instructions = inst;
-            
+
             return recStep;
         }
 
-        
+        public String addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId)
+        {
+            Product prod = new Product
+            {
+                ItemId = itemId,
+                Quantity = quantity,
+                Category = category,
+                Name = name,
+                Searchtag = searchtag,
+                IngredientId = ingredientId
+            };
+            context.Products.Add(prod);
+            context.SaveChanges();
+            return "Added";
+        }
+
+        public TillShoppingItems getProductDTTest(Guid userId)
+        {
+            List<ProductDt> prodDt = new List<ProductDt>();
+            List<Product> products = context.Products.ToList();
+
+            foreach (Product a in products)
+            {
+                ProductDt prodD = new ProductDt
+                {
+                    productID = a.ItemId,
+                    exp = new DateTime(2021, 5, 1, 8, 30, 52),
+                    count = 1,
+                };
+                prodD.NotificationTime = prodD.exp.Subtract(new TimeSpan(4, 0, 0, 0, 0));
+                prodDt.Add(prodD);
+            }
+
+            TillShoppingItems till = new TillShoppingItems
+            {
+                items = prodDt,
+                uid = userId
+            };
+
+            return till;
+        }
+
     }
 }

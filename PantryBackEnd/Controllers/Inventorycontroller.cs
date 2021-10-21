@@ -25,16 +25,24 @@ namespace PantryBackEnd.Controllers
             this.InvRepo = context;
             this.userRepo = userRepo;
             this.productRep = productRep;
-            this.notification = notification;
-            this.logger = logger;
+
         }
-        /*
-        Add a single product to the database 
-         */
+        public int getCount(ICollection<InventoryList> list, ProductDt product)
+        {
+            foreach (InventoryList a in list)
+            {
+                if (product.productID.Equals(a.ItemId) && DateTime.Equals(a.ExpDate.Date,product.exp.Date))
+                {
+                    a.Count += product.count;
+                    return (int)a.Count;
+                }
+            }
+            return 0;
+        }
         [Route("api/SingleProduct")]
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] ProductDt dt)
-        {
+        {       
             try
             {
                 // check if the request have a valid cookie
@@ -42,13 +50,13 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetAccountWithInv(userId);
-                int count = Services.Services.getCount(user.InventoryLists, dt);
+                int count = getCount(user.InventoryLists, dt);
                 if (count == 0)
                 {
                     InventoryList item = new InventoryList
                     {
                         ItemId = dt.productID,
-                        ExpDate = dt.exp,
+                ExpDate = dt.exp,
                         AccId = userId,
                         Count = dt.count,
                         NotificationTime = dt.NotificationTime
@@ -136,13 +144,12 @@ namespace PantryBackEnd.Controllers
                 }
                 else
                 {
-                    int count = 0;
+                    int count = 6;
                     await Task.Run(() =>
                     {
                         foreach (ProductDt a in products.items)
                         {
-                            count = Services.Services.getCount(user.InventoryLists, a);
-                            logger.LogInformation(a + " " + "Product count " + a.count);
+                            count = getCount(user.InventoryLists, a);
                             if (count == 0)
                             {
                                 InventoryList item = new InventoryList

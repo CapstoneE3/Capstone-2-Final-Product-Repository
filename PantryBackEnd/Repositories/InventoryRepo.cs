@@ -60,11 +60,21 @@ namespace PantryBackEnd.Repositories
                                 };
                                 if (listCount == 0)
                                 {
-                                    b.itemID = a.ItemId;
-                                    b.name = c.Name;
-                                    b.price = (decimal)c.Price;
-                                    b.quantity = c.Quantity;
-                                    b.Expiry_Count.Add(eap);
+                                    if (c.Price != null)
+                                    {
+                                        b.itemID = a.ItemId;
+                                        b.name = c.Name;
+                                        b.price = (decimal)c.Price;
+                                        b.quantity = c.Quantity;
+                                        b.Expiry_Count.Add(eap);
+                                    }
+                                    else
+                                    {
+                                        b.itemID = a.ItemId;
+                                        b.name = c.Name;
+                                        b.quantity = c.Quantity;
+                                        b.Expiry_Count.Add(eap);
+                                    }
                                 }
                                 else
                                 {
