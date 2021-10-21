@@ -31,7 +31,7 @@ namespace PantryBackEnd.Controllers
         {
             foreach (InventoryList a in list)
             {
-                if (product.productID.Equals(a.ItemId) && DateTime.Equals(a.ExpDate.Date,product.exp.Date))
+                if (product.productID.Equals(a.ItemId) && DateTime.Equals(a.ExpDate.Date, product.exp.Date))
                 {
                     a.Count += product.count;
                     return (int)a.Count;
@@ -42,7 +42,7 @@ namespace PantryBackEnd.Controllers
         [Route("api/SingleProduct")]
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] ProductDt dt)
-        {       
+        {
             try
             {
                 // check if the request have a valid cookie
@@ -56,7 +56,7 @@ namespace PantryBackEnd.Controllers
                     InventoryList item = new InventoryList
                     {
                         ItemId = dt.productID,
-                ExpDate = dt.exp,
+                        ExpDate = dt.exp,
                         AccId = userId,
                         Count = dt.count,
                         NotificationTime = dt.NotificationTime
@@ -122,6 +122,10 @@ namespace PantryBackEnd.Controllers
         {
             try
             {
+                if (products == null)
+                {
+                    return BadRequest(new { message = "ITs null" });
+                }
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
