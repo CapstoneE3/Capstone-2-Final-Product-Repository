@@ -7,7 +7,8 @@ namespace PantryBackEnd.Models
 {
     public class TillShoppingItems
     {
-        public Guid uid;
+        public Guid AccountId;
+
         public List<ProductDt> items;
     }
 }

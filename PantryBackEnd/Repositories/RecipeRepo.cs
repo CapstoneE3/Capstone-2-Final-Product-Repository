@@ -17,6 +17,7 @@ namespace PantryBackEnd.Repositories
         {
             this.context = context;
         }
+
         public List<Recipe> calculateRecipeScores(Guid accountId)
         {
             Console.WriteLine("Account ID is: " + accountId);
@@ -387,7 +388,7 @@ namespace PantryBackEnd.Repositories
             TillShoppingItems till = new TillShoppingItems
             {
                 items = prodDt,
-                uid = userId
+                AccountId = userId
             };
 
             return till;

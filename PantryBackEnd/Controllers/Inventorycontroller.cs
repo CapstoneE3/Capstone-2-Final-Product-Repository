@@ -18,7 +18,6 @@ namespace PantryBackEnd.Controllers
         private IUserRepo userRepo;
         private IProduct productRep;
         private SendNotification notification;
-        ILogger<Inventorycontroller> logger;
         public Inventorycontroller(IInventoryRepo context, JwtService service, IUserRepo userRepo, IProduct productRep, SendNotification notification, ILogger<Inventorycontroller> logger)
         {
             this.service = service;
@@ -129,7 +128,7 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetAccountWithInv(products.uid);
+                Account user = userRepo.GetAccountWithInv(products.AccountId);
                 List<InventoryList> list = new List<InventoryList>();
                 products.items = notification.getNotifactionTIme(products.items); ;
                 if (user.InventoryLists == null || user.InventoryLists.Count == 0)
@@ -138,7 +137,7 @@ namespace PantryBackEnd.Controllers
                     {
                         foreach (ProductDt a in products.items)
                         {
-                            InventoryList inv = new InventoryList { AccId = products.uid, ItemId = a.productID, ExpDate = a.exp, Count = a.count, NotificationTime = a.NotificationTime };
+                            InventoryList inv = new InventoryList { AccId = products.AccountId, ItemId = a.productID, ExpDate = a.exp, Count = a.count, NotificationTime = a.NotificationTime };
                             list.Add(inv);
                         }
                     });
@@ -160,7 +159,7 @@ namespace PantryBackEnd.Controllers
                                 {
                                     ItemId = a.productID,
                                     ExpDate = a.exp,
-                                    AccId = products.uid,
+                                    AccId = products.AccountId,
                                     Count = a.count,
                                     NotificationTime = a.NotificationTime
                                 };
@@ -182,7 +181,6 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception)
             {
-                logger.LogInformation("Hello Im line 181");
                 return BadRequest();
             }
             return Ok();
