@@ -5,8 +5,8 @@ using System;
 using PantryBackEnd.Repositories;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using PantryBackEnd.Services;
 using Microsoft.AspNetCore.Http;
+using PantryBackEnd.Services;
 namespace PantryBackEnd.Controllers
 {
     public class Inventorycontroller : ControllerBase
@@ -23,19 +23,31 @@ namespace PantryBackEnd.Controllers
             this.InvRepo = context;
             this.userRepo = userRepo;
             this.productRep = productRep;
-        }
 
+        }
+        public int getCount(ICollection<InventoryList> list, ProductDt product)
+        {
+            foreach (InventoryList a in list)
+            {
+                if (product.productID.Equals(a.ItemId) && DateTime.Equals(a.ExpDate.Date,product.exp.Date))
+                {
+                    a.Count += product.count;
+                    return (int)a.Count;
+                }
+            }
+            return 0;
+        }
         [Route("api/SingleProduct")]
         [HttpPost]
         public async Task<IActionResult> AddProduct([FromBody] ProductDt dt)
-        {
+        {       
             try
             {
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetAccountWithInv(userId);
-                int count = Services.Services.getCount(user.InventoryLists, dt);
+                int count = getCount(user.InventoryLists, dt);
                 if (count == 0)
                 {
                     InventoryList item = new InventoryList
@@ -118,12 +130,12 @@ namespace PantryBackEnd.Controllers
                 }
                 else
                 {
-                    int count = 0;
+                    int count = 6;
                     await Task.Run(() =>
                     {
                         foreach (ProductDt a in products.items)
                         {
-                            count = Services.Services.getCount(user.InventoryLists, a);
+                            count = getCount(user.InventoryLists, a);
                             if (count == 0)
                             {
                                 InventoryList item = new InventoryList
