@@ -126,9 +126,9 @@ namespace PantryBackEnd.Controllers
                 {
                     return BadRequest(new { message = "ITs null" });
                 }
-                // var jwt = Request.Cookies["jwt"];
-                // var token = service.Verification(jwt);
-                //Guid userId = Guid.Parse(token.Issuer);
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
                 int count = 0;
                 Account user = userRepo.GetAccountWithInv(products.AccountId);
                 List<InventoryList> list = new List<InventoryList>();
@@ -145,8 +145,9 @@ namespace PantryBackEnd.Controllers
                     });
                     InvRepo.AddTIllProduct(list);
 
-                    notification.PreparingNotification(products.AccountId, products.items);
+                    // notification.PreparingNotification(products.AccountId, products.items);
                 }
+
                 else
                 {
 
@@ -173,7 +174,7 @@ namespace PantryBackEnd.Controllers
                             }
                         }
                     });
-                    notification.PreparingNotification(products.AccountId, products.items);
+                    //notification.PreparingNotification(products.AccountId, products.items);
                 }
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
@@ -183,7 +184,8 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+
+                return BadRequest(new { message = e });
             }
             return Ok();
         }
