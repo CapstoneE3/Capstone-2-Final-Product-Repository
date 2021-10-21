@@ -271,10 +271,18 @@ namespace PantryBackEnd.Repositories
             return aha;
         }
 
-        public string createRecipe(Guid id, string recipeName, string recipeDesc, List<string> steps)
+
+
+
+        public string createRecipe(Guid id, CustomRecipe obj)
         {
+            //CustomRecipe obj
+            //string recipeName, string recipeDesc, List<string> steps
             try
             {
+                string recipeName = obj.recipeName;
+                List<customIngredients> ingredients = obj.ingredients;
+
                 Recipe recipes = context.Recipes.Where(a => a.RecipeName.Equals(recipeName)).Include(b => b.RecipeLists.Where(c => c.AccId == id)).Single();
                 return "Exists";
             }
@@ -282,6 +290,11 @@ namespace PantryBackEnd.Repositories
             {   
                 try
                 {
+                    string recipeName = obj.recipeName;
+                    string recipeDesc = obj.recipeDesc;
+                    List<string> steps = obj.steps;
+                    List<customIngredients> ingredients = obj.ingredients;
+                    
                     int random;
                     do
                     {
@@ -302,12 +315,28 @@ namespace PantryBackEnd.Repositories
                         recStep.Add(ok);
                     }
                     
+                    ICollection<RecipeIngredient> recIng = new HashSet<RecipeIngredient>();
+
+                    foreach(customIngredients a in ingredients)
+                    {
+                        RecipeIngredient ing = new RecipeIngredient{
+                            RecipeId = random,
+                            IngredientId = a.ingredientId,
+                            Amount = (float)a.amount,
+                            UnitOfMeasure = a.unitOfMeasure,
+                            Name = a.ingredientName,
+                            OriginalName = a.amount.ToString() + a.unitOfMeasure + a.ingredientName
+                        };
+                        recIng.Add(ing);
+                    }              
+
                     Recipe rec = new Recipe{
                         RecipeId = random,
                         RecipeName = recipeName,
                         RecipeDescription = recipeDesc,
                         RecipeSteps = recStep,
-                        RecipeDocument = null
+                        RecipeDocument = null,
+                        RecipeIngredients = recIng
                     };
 
                     RecipeList reclist = new RecipeList{

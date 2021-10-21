@@ -181,6 +181,8 @@ namespace PantryBackEnd.Models
                     .IsRequired()
                     .HasColumnName("name");
 
+                entity.Property(e => e.PhotoUrl).HasColumnName("photoUrl");
+
                 entity.Property(e => e.Price)
                     .HasColumnType("money")
                     .HasColumnName("price");

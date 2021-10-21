@@ -20,6 +20,7 @@ namespace PantryBackEnd.Models
         public decimal? Price { get; set; }
         public string Searchtag { get; set; }
         public int IngredientId { get; set; }
+        public string PhotoUrl { get; set; }
 
         public virtual Category CategoryNavigation { get; set; }
         public virtual Ingredient Ingredient { get; set; }
