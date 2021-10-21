@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PantryBackEnd.Models;
+using System;
 namespace PantryBackEnd.Services
 {
     public static class Services
@@ -8,7 +9,7 @@ namespace PantryBackEnd.Services
         {
             foreach (InventoryList a in list)
             {
-                if (product.productID.Equals(a.ItemId) && product.exp.Equals(a.ExpDate))
+                if (product.productID.Equals(a.ItemId) && DateTime.Equals(a.ExpDate.Date, product.exp.Date))
                 {
                     a.Count += product.count;
                     return (int)a.Count;
@@ -16,6 +17,6 @@ namespace PantryBackEnd.Services
             }
             return 0;
         }
-        
+
     }
 }

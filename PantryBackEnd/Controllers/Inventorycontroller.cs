@@ -110,26 +110,18 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/QRProducts")]
         [HttpPost]
-        public async Task<IActionResult> AddProductFromQR([FromBody] TillShoppingItems products)
+        public async Task<IActionResult> AddProductFromQR(TillShoppingItems products)
         {
             try
             {
-                if (products == null)
-                {
-                    return Ok(new { message = "product is null" });
-                    logger.LogInformation("Product is null");
-                }
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetAccountWithInv(products.uid);
                 List<InventoryList> list = new List<InventoryList>();
-                products.items = notification.getNotifactionTIme(products.items);
-                logger.LogInformation(products.items.ToString());
-                logger.LogInformation("Hello Im line 123");
+                products.items = notification.getNotifactionTIme(products.items); ;
                 if (user.InventoryLists == null || user.InventoryLists.Count == 0)
                 {
-                    logger.LogInformation("Hello Im line 125");
                     await Task.Run(() =>
                     {
                         foreach (ProductDt a in products.items)
@@ -140,21 +132,19 @@ namespace PantryBackEnd.Controllers
                     });
                     InvRepo.AddTIllProduct(list);
 
-                    notification.PreparingNotification(products.uid, products.items);
+                    notification.PreparingNotification(userId, products.items);
                 }
                 else
                 {
                     int count = 0;
                     await Task.Run(() =>
                     {
-                        logger.LogInformation("Hello Im line 143");
                         foreach (ProductDt a in products.items)
                         {
                             count = Services.Services.getCount(user.InventoryLists, a);
                             logger.LogInformation(a + " " + "Product count " + a.count);
                             if (count == 0)
                             {
-                                logger.LogInformation("Hello Im line new product");
                                 InventoryList item = new InventoryList
                                 {
                                     ItemId = a.productID,
@@ -167,13 +157,11 @@ namespace PantryBackEnd.Controllers
                             }
                             else
                             {
-                                logger.LogInformation("Hello Im line Update");
-
                                 InvRepo.updateItem();
                             }
                         }
                     });
-                    notification.PreparingNotification(products.uid, products.items);
+                    notification.PreparingNotification(userId, products.items);
                 }
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
