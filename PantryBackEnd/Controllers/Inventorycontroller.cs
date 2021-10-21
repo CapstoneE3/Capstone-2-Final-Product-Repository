@@ -4,6 +4,7 @@ using PantryBackEnd.Models;
 using System;
 using PantryBackEnd.Repositories;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using PantryBackEnd.Notification;
 namespace PantryBackEnd.Controllers
@@ -17,13 +18,15 @@ namespace PantryBackEnd.Controllers
         private IUserRepo userRepo;
         private IProduct productRep;
         private SendNotification notification;
-        public Inventorycontroller(IInventoryRepo context, JwtService service, IUserRepo userRepo, IProduct productRep, SendNotification notification)
+        ILogger<Inventorycontroller> logger;
+        public Inventorycontroller(IInventoryRepo context, JwtService service, IUserRepo userRepo, IProduct productRep, SendNotification notification, ILogger<Inventorycontroller> logger)
         {
             this.service = service;
             this.InvRepo = context;
             this.userRepo = userRepo;
             this.productRep = productRep;
             this.notification = notification;
+            this.logger = logger;
         }
         /*
         Add a single product to the database 
@@ -117,8 +120,9 @@ namespace PantryBackEnd.Controllers
                 Account user = userRepo.GetAccountWithInv(userId);
                 List<InventoryList> list = new List<InventoryList>();
                 products.items = notification.getNotifactionTIme(products.items);
-                if (user.InventoryLists == null)
+                if (user.InventoryLists == null || user.InventoryLists.Count == 0)
                 {
+                    logger.LogInformation("Hello Im line 125");
                     await Task.Run(() =>
                     {
                         foreach (ProductDt a in products.items)
@@ -136,11 +140,13 @@ namespace PantryBackEnd.Controllers
                     int count = 0;
                     await Task.Run(() =>
                     {
+                        logger.LogInformation("Hello Im line 143");
                         foreach (ProductDt a in products.items)
                         {
                             count = Services.Services.getCount(user.InventoryLists, a);
                             if (count == 0)
                             {
+                                logger.LogInformation("Hello Im line new product");
                                 InventoryList item = new InventoryList
                                 {
                                     ItemId = a.productID,
@@ -153,6 +159,8 @@ namespace PantryBackEnd.Controllers
                             }
                             else
                             {
+                                logger.LogInformation("Hello Im line Update");
+
                                 InvRepo.updateItem();
                             }
                         }

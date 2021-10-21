@@ -36,10 +36,7 @@ namespace PantryBackEnd.Repositories
             int listCount = 0;
             List<FrontEndInventoryFormat> formats;
             Dictionary<string, object> invList = new Dictionary<string, object>();
-            string[] category = {"Kids & Lunch Box","Entertaining At Home","Bakery","Fruit & Vegetables",
-                                "Meat & Seafood","From The Deli","Dairy, Eggs & Meals","Conveniece Meals",
-                                "Pantry","Frozen","Drinks","International Foods","Household","Health & Beauty",
-                                "Baby","Pet","Liquor","Tobacco","Sugar & Sweeteners"};
+            string[] category = context.Categories.Select(a => a.Category1).ToArray();
 
             foreach (string i in category)
             {
