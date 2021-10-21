@@ -120,6 +120,8 @@ namespace PantryBackEnd.Controllers
                 Account user = userRepo.GetAccountWithInv(userId);
                 List<InventoryList> list = new List<InventoryList>();
                 products.items = notification.getNotifactionTIme(products.items);
+                logger.LogInformation(products.items.ToString());
+                logger.LogInformation("Hello Im line 123");
                 if (user.InventoryLists == null || user.InventoryLists.Count == 0)
                 {
                     logger.LogInformation("Hello Im line 125");
@@ -144,6 +146,7 @@ namespace PantryBackEnd.Controllers
                         foreach (ProductDt a in products.items)
                         {
                             count = Services.Services.getCount(user.InventoryLists, a);
+                            logger.LogInformation(a + " " + "Product count " + a.count);
                             if (count == 0)
                             {
                                 logger.LogInformation("Hello Im line new product");
@@ -176,6 +179,7 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception)
             {
+                logger.LogInformation("Hello Im line 181");
                 return BadRequest();
             }
             return Ok();
