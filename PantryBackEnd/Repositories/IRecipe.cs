@@ -10,7 +10,7 @@ namespace PantryBackEnd.Repositories
         
         string createRecipe(Guid id, string recipeName, string recipeDesc, List<string> steps);
         
-        List<frontEndRecipeDisplayAll> getRecipes(Guid id);
+        List<frontEndRecipeDisplayAll> getRecipes(Guid id, int index);
         frontEndRecipeStep getRecipeSteps(int recipeID, Guid id);
         List<Recipe> calculateRecipeScores(Guid accountId);
     }

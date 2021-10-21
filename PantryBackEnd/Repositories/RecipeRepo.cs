@@ -213,11 +213,15 @@ namespace PantryBackEnd.Repositories
         }
 
 
-        public List<frontEndRecipeDisplayAll> getRecipes(Guid id)
+        public List<frontEndRecipeDisplayAll> getRecipes(Guid id, int index)
         {
-            List<Recipe> recipes = context.Recipes.AsNoTracking().Include(a => a.RecipeDocument).Include(b => b.RecipeLists.Where(c => c.AccId == id)).Include(d => d.RecipeIngredients).ToList();
+            List<Recipe> recipes = context.Recipes.AsNoTracking().Include(a => a.RecipeDocument).Include(b => b.RecipeLists.
+            Where(c => c.AccId == id)).Include(d => d.RecipeIngredients).OrderBy(e => e.RecipeId).Skip(index).Take(20).ToList();
+            
             List<frontEndRecipeDisplayAll> returnObj = new List<frontEndRecipeDisplayAll>();
             
+
+
             //return recipes;
             
             foreach(Recipe a in recipes)
