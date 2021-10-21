@@ -20,7 +20,8 @@ namespace PantryBackEnd.Repositories
 
         public List<Recipe> calculateRecipeScores(Guid accountId)
         {
-            
+            Console.WriteLine("Account ID is: " + accountId); 
+
             List<Recipe> recipeImportList = context.Recipes.Include(a => a.RecipeIngredients).Take(30).ToList(); 
                 // Should give us a list of 30 random recipes 
 
@@ -60,7 +61,7 @@ namespace PantryBackEnd.Repositories
 
                 for(int jj = 0; jj < ingredientsForRecipe.Count(); jj++)
                 {
-                    
+                    Console.WriteLine(jj);
                     RecipeIngredient currentIngredient = ingredientsForRecipe[jj];
 
 
@@ -150,6 +151,12 @@ namespace PantryBackEnd.Repositories
 
                 }
 
+                for(int ii = 0; ii < allRecipeScores.Count(); ii++)
+                {
+                    Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores[ii]); 
+                }
+                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
+
                 int recipeOneScore = allRecipeScores.Max(); // gives a score 
                 int recipeOneIndex = allRecipeScores.ToList().IndexOf(recipeOneScore);
                 goodRecipes.Add(recipeImportList[recipeOneIndex]);
@@ -158,6 +165,7 @@ namespace PantryBackEnd.Repositories
                     // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
                     // because we're about to store it within our goodRecipes list 
                 
+                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
 
                 int recipeTwoScore = allRecipeScores.Max(); // gives a score 
                 int recipeTwoIndex = allRecipeScores.ToList().IndexOf(recipeOneScore);
@@ -167,6 +175,8 @@ namespace PantryBackEnd.Repositories
                     // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
                     // because we're about to store it within our goodRecipes list 
 
+                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
+
                 int recipeThreeScore = allRecipeScores.Max(); // gives a score 
                 int recipeThreeIndex = allRecipeScores.ToList().IndexOf(recipeOneScore); 
                 goodRecipes.Add(recipeImportList[recipeThreeIndex]);
@@ -175,6 +185,7 @@ namespace PantryBackEnd.Repositories
                     // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
                     // because we're about to store it within our goodRecipes list 
                 
+                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
 
                 int recipeFourScore = allRecipeScores.Max(); // gives a score 
                 int recipeFourIndex = allRecipeScores.ToList().IndexOf(recipeOneScore);
@@ -184,6 +195,7 @@ namespace PantryBackEnd.Repositories
                     // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
                     // because we're about to store it within our goodRecipes list
                 
+                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
 
                 int recipeFiveScore = allRecipeScores.Max(); // gives a score 
                 int recipeFiveIndex = allRecipeScores.ToList().IndexOf(recipeOneScore); 
@@ -193,6 +205,7 @@ namespace PantryBackEnd.Repositories
                 // Can pre-emptively remove our good recipe (representation) from allRecipeScores and recipeImportList
                 // because we're about to store it within our goodRecipes list
 
+                Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
 
 
             return goodRecipes; 
@@ -200,10 +213,51 @@ namespace PantryBackEnd.Repositories
         }
 
 
-        public List<Recipe> getRecipes(Guid id)
+        public List<frontEndRecipeDisplayAll> getRecipes(Guid id)
         {
-            List<Recipe> recipes = context.Recipes.Include(a => a.RecipeDocument).Include(b => b.RecipeLists.Where(c => c.AccId == id)).ToList();
-            return recipes;
+            List<Recipe> recipes = context.Recipes.AsNoTracking().Include(a => a.RecipeDocument).Include(b => b.RecipeLists.Where(c => c.AccId == id)).Include(d => d.RecipeIngredients).ToList();
+            List<frontEndRecipeDisplayAll> returnObj = new List<frontEndRecipeDisplayAll>();
+            
+            //return recipes;
+            
+            foreach(Recipe a in recipes)
+            {
+                List<string> str = new List<string>();
+    
+                foreach(RecipeIngredient b in a.RecipeIngredients)
+                {
+                    str.Add(b.Name);
+                }
+                
+                if(a.RecipeDocument == null)
+                {
+                    frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll{
+                    RecipeId = a.RecipeId,
+                    RecipeName = a.RecipeName,
+                    ingredientsList = str,
+                    };
+                    returnObj.Add(newObj);
+                }
+                else
+                {
+                    
+                    frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll{
+                        RecipeId = a.RecipeId,
+                        RecipeName = a.RecipeName,
+                        ingredientsList = str,
+                        PhotoUrl = a.RecipeDocument.PhotoUrl
+                    };
+                    returnObj.Add(newObj);
+                }              
+            }
+            
+            return returnObj; 
+        }
+
+        public frontEndRecipeClickDetails getRecipeInfo(Guid id, int recipeId)
+        {
+            frontEndRecipeClickDetails aha = new frontEndRecipeClickDetails();
+            return aha;
         }
 
         public string createRecipe(Guid id, string recipeName, string recipeDesc, List<string> steps)
@@ -224,6 +278,7 @@ namespace PantryBackEnd.Repositories
                         random = rand.Next(10000);
 
                     }while(context.Recipes.Where(a => a.RecipeId == random) == null);
+
                     ICollection<RecipeStep> recStep = new HashSet<RecipeStep>();
                     
                     for(int i = 0; i < steps.Count(); i++)
@@ -240,7 +295,8 @@ namespace PantryBackEnd.Repositories
                         RecipeId = random,
                         RecipeName = recipeName,
                         RecipeDescription = recipeDesc,
-                        RecipeSteps = recStep
+                        RecipeSteps = recStep,
+                        RecipeDocument = null
                     };
 
                     RecipeList reclist = new RecipeList{

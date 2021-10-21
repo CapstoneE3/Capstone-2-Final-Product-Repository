@@ -10,7 +10,6 @@ namespace PantryBackEnd.Models
         public int RecipeId { get; set; }
         public string Url { get; set; }
         public string PhotoUrl { get; set; }
-
         public virtual Recipe Recipe { get; set; }
     }
 }
