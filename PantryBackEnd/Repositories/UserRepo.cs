@@ -15,7 +15,7 @@ namespace PantryBackEnd.Repositories
         }
         public Account GetByEmail(string email)
         {
-            return context.Accounts.FirstOrDefault(u => u.Email.Equals(email));
+            return context.Accounts.Single(u => u.Email.Equals(email));
         }
         public Account Register(Account user)
         {
@@ -26,18 +26,18 @@ namespace PantryBackEnd.Repositories
         }
         public Account GetByID(Guid id)
         {
-            Account x = context.Accounts.Where(user => user.AccId == id).First();
+            Account x = context.Accounts.Where(user => user.AccId == id).Single();
             return x;
         }
         public Account GetAccountWithInv(Guid id)
         {
-            Account x = context.Accounts.Where(user => user.AccId == id).Include(a => a.InventoryLists).First();
+            Account x = context.Accounts.Where(user => user.AccId == id).Include(a => a.InventoryLists).Single();
             return x;
         }
 
         public string removeUser(Account user)
         {
-            
+
             return "";
         }
     }

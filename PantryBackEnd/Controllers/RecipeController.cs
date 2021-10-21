@@ -29,7 +29,7 @@ namespace PantryBackEnd.Controllers
 
         }
 
-        
+
         [Route("api/getUserRecipes")]
         [HttpGet]
         public ActionResult<List<Recipe>> getAPIRecipe()
@@ -39,14 +39,13 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
 
 
                 var recipes = recipeRepo.getRecipes(userId);
                 return Ok(recipes);
 
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return Unauthorized();
             }
@@ -61,13 +60,12 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
 
                 var str = recipeRepo.createRecipe(userId, recipeName, recipeDesc);
 
                 return Ok(new { message = "Success" });
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return Ok(new { message = "Failed" });
             }
@@ -82,13 +80,12 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
 
                 var recStep = recipeRepo.getRecipeSteps(recipeID, userId);
 
                 return Ok(recStep);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return Ok(new { message = "Failed" });
             }

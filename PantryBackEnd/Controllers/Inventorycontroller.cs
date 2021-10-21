@@ -92,7 +92,6 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
                 var list = InvRepo.GetInventoryList(userId);
                 return Ok(list);
             }
@@ -185,7 +184,6 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
 
                 string msg = InvRepo.removeProduct(userId, dt.productID, dt.count, dt.exp);
 

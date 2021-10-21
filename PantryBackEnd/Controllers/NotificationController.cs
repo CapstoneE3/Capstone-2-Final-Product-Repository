@@ -64,6 +64,44 @@ namespace PantryBackEnd.Controllers
                 return Unauthorized(new { message = "Unauthorized" });
             }
         }
+        [Route("api/CheckSubscription")]
+        [HttpPost]
+        public ActionResult<CheckTHemSubs> CheckNotification([FromBody] SubscriptionFrontEnd subs)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
+                Subscription subDbEntry = new Subscription();
+                subDbEntry.AccId = userId;
+                subDbEntry.SubEndpoint = subs.endpoint;
+                foreach (KeyValuePair<string, string> c in subs.keys)
+                {
+                    if (c.Key.Equals("auth"))
+                    {
+                        subDbEntry.Audh = c.Value;
+                    }
+                    else
+                    {
+                        subDbEntry.Key = c.Value;
+                    }
+                }
+                CheckTHemSubs check = new CheckTHemSubs();
+                check.Subscribed = store.CheckSubs(subDbEntry);
+                return Ok(check);
+            }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+            {
+                Response.Cookies.Delete("jwt");
+                return Unauthorized(new { message = "Expired" });
+            }
+            catch (Exception)
+            {
+                return Unauthorized(new { message = "Unauthorized" });
+            }
+        }
         [Route("api/replaceSubscription")]
         [HttpPost]
         public async Task<ActionResult<Subscription>> ReplaceSub([FromBody] SubscriptionFrontEnd subs)

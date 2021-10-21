@@ -51,5 +51,11 @@ namespace PantryBackEnd.Repositories
         {
             return context.Subscriptions.Single(a => a.AccId == id);
         }
+        public bool CheckSubs(Subscription subs)
+        {
+            return context.Subscriptions.Any(a => a.SubEndpoint == subs.SubEndpoint);
+        }
+
+
     }
 }

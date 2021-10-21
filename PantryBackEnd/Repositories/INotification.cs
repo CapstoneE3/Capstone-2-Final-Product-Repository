@@ -17,6 +17,8 @@ namespace PantryBackEnd.Repositories
 
         Subscription GetSubscription(Guid id);
 
+        bool CheckSubs(Subscription subs);
+
         VapidDt GetVapidDt();
     }
 }
