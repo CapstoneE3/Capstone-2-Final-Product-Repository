@@ -12,6 +12,7 @@ namespace PantryBackEnd.Models
             InventoryLists = new HashSet<InventoryList>();
             RecipeLists = new HashSet<RecipeList>();
             ShoppingLists = new HashSet<ShoppingList>();
+            Subscriptions = new HashSet<Subscription>();
         }
 
         public Guid AccId { get; set; }
@@ -21,9 +22,9 @@ namespace PantryBackEnd.Models
         public string Lastname { get; set; }
 
         public virtual Admin Admin { get; set; }
-        public virtual Subscription Subscription { get; set; }
         public virtual ICollection<InventoryList> InventoryLists { get; set; }
         public virtual ICollection<RecipeList> RecipeLists { get; set; }
         public virtual ICollection<ShoppingList> ShoppingLists { get; set; }
+        public virtual ICollection<Subscription> Subscriptions { get; set; }
     }
 }

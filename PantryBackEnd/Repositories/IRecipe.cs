@@ -8,8 +8,10 @@ namespace PantryBackEnd.Repositories
     public interface IRecipe
     {
         
-        String createRecipe(Guid id, string recipeName, string recipeDesc);
-        List<Recipe> getRecipes(Guid id);
+        string createRecipe(Guid id, string recipeName, string recipeDesc, List<string> steps);
+        
+        List<frontEndRecipeDisplayAll> getRecipes(Guid id);
         frontEndRecipeStep getRecipeSteps(int recipeID, Guid id);
+        List<Recipe> calculateRecipeScores(Guid accountId);
     }
 }

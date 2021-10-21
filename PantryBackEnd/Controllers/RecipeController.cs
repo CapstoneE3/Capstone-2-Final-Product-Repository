@@ -61,9 +61,9 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
 
-                var str = recipeRepo.createRecipe(userId, recipeName, recipeDesc);
+                var str = recipeRepo.createRecipe(userId, recipeName, recipeDesc, steps);
 
-                return Ok(new { message = "Success" });
+                return Ok(new { message = str });
             }
             catch (Exception)
             {
@@ -88,6 +88,28 @@ namespace PantryBackEnd.Controllers
             catch (Exception)
             {
                 return Ok(new { message = "Failed" });
+            }
+        }
+
+        [Route("api/testRecipeScoreLogic")]
+        [HttpGet]
+        public ActionResult<List<Recipe>> calculateRecipeScores()
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
+
+                var goodRecipes = recipeRepo.calculateRecipeScores(userId);
+
+                return Ok(goodRecipes); 
+
+            }
+            catch (Exception)
+            {
+                 return Ok(new { message = "Failed" });
             }
         }
     }

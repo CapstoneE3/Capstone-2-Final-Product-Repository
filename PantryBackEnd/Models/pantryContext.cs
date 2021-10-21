@@ -351,14 +351,14 @@ namespace PantryBackEnd.Models
 
             modelBuilder.Entity<Subscription>(entity =>
             {
-                entity.HasKey(e => e.AccId)
+                entity.HasKey(e => new { e.AccId, e.SubEndpoint })
                     .HasName("Subscription_pkey");
 
                 entity.ToTable("Subscription");
 
-                entity.Property(e => e.AccId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("acc_ID");
+                entity.Property(e => e.AccId).HasColumnName("acc_ID");
+
+                entity.Property(e => e.SubEndpoint).HasColumnName("sub_endpoint");
 
                 entity.Property(e => e.Audh)
                     .IsRequired()
@@ -368,13 +368,9 @@ namespace PantryBackEnd.Models
                     .IsRequired()
                     .HasColumnName("key");
 
-                entity.Property(e => e.SubEndpoint)
-                    .IsRequired()
-                    .HasColumnName("sub_endpoint");
-
                 entity.HasOne(d => d.Acc)
-                    .WithOne(p => p.Subscription)
-                    .HasForeignKey<Subscription>(d => d.AccId)
+                    .WithMany(p => p.Subscriptions)
+                    .HasForeignKey(d => d.AccId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Subscription_acc_ID_fkey");
             });
