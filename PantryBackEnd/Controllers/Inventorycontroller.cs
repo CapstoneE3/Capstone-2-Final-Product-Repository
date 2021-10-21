@@ -5,8 +5,6 @@ using System;
 using PantryBackEnd.Repositories;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using PantryBackEnd.Services;
-using Microsoft.AspNetCore.Http;
 using PantryBackEnd.Notification;
 namespace PantryBackEnd.Controllers
 {
@@ -125,7 +123,7 @@ namespace PantryBackEnd.Controllers
                     {
                         foreach (ProductDt a in products.items)
                         {
-                            InventoryList inv = new InventoryList { AccId = userId, ItemId = a.productID, NotificationTime = a.exp, Count = a.count };
+                            InventoryList inv = new InventoryList { AccId = userId, ItemId = a.productID, ExpDate = a.exp, Count = a.count, NotificationTime = a.NotificationTime };
                             list.Add(inv);
                         }
                     });
@@ -170,7 +168,7 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception)
             {
-                return Unauthorized();
+                return BadRequest();
             }
             return Ok();
         }
