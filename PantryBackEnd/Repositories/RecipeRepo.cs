@@ -272,8 +272,56 @@ namespace PantryBackEnd.Repositories
         }
 
 
+        public CustomRecipe convertToCustom(int recipeID)
+        {
+            try
+            {
+                Recipe recipes = context.Recipes.Where(a => a.RecipeId == recipeID).Include(d => d.RecipeIngredients).Include(e => e.RecipeSteps)
+                .Include(b => b.RecipeDocument).AsNoTracking().Single();
+                if(recipes.RecipeDocument == null)
+                {
+                    return null;
+                }
+                else if(recipes.RecipeDocument.Url == null)
+                {
+                    return null;
+                }
+                //.Where(c => c.PhotoUrl != null)
+                List<string> str = new List<string>();
+                foreach(RecipeStep z in recipes.RecipeSteps)
+                {
+                    str.Add(z.Instructions);
+                }
 
+                List<customIngredients> custIng = new List<customIngredients>();
+                foreach(RecipeIngredient x in recipes.RecipeIngredients)
+                {
+                    customIngredients ing = new customIngredients{
+                        amount = (double)x.Amount,
+                        unitOfMeasure = x.UnitOfMeasure,
+                        ingredientName = x.Name,
+                        ingredientId = x.IngredientId
+                    };
+                    custIng.Add(ing);
+                }
 
+                CustomRecipe cusRec = new CustomRecipe{
+                    recipeName = "Custom " +recipes.RecipeName,
+                    recipeDesc = recipes.RecipeDescription,
+                    steps = str,
+                    ingredients = custIng,
+                    photo = recipes.RecipeDocument.PhotoUrl,
+                    url = recipes.RecipeDocument.Url
+                };
+
+                return cusRec;
+                
+            }
+            catch(InvalidOperationException)
+            {
+                return null;
+            }
+        }
         public string createRecipe(Guid id, CustomRecipe obj)
         {
             //CustomRecipe obj
@@ -291,8 +339,8 @@ namespace PantryBackEnd.Repositories
                 try
                 {
                     string recipeName = obj.recipeName;
-                    string recipeDesc = obj.recipeDesc;
                     List<string> steps = obj.steps;
+                    string recipeDesc = obj.recipeDesc;
                     List<customIngredients> ingredients = obj.ingredients;
                     
                     int random;
@@ -330,14 +378,29 @@ namespace PantryBackEnd.Repositories
                         recIng.Add(ing);
                     }              
 
-                    Recipe rec = new Recipe{
-                        RecipeId = random,
-                        RecipeName = recipeName,
-                        RecipeDescription = recipeDesc,
-                        RecipeSteps = recStep,
-                        RecipeDocument = null,
-                        RecipeIngredients = recIng
-                    };
+                    Recipe rec;
+                    if(obj.photo == null)
+                    {
+                            rec = new Recipe{
+                            RecipeId = random,
+                            RecipeName = recipeName,
+                            RecipeDescription = recipeDesc,
+                            RecipeSteps = recStep,
+                            RecipeDocument = null,
+                            RecipeIngredients = recIng
+                        };
+                    }                   
+                    else
+                    {
+                            rec = new Recipe{
+                            RecipeId = random,
+                            RecipeName = recipeName,
+                            RecipeDescription = recipeDesc,
+                            RecipeSteps = recStep,
+                            RecipeDocument = new RecipeDocument{PhotoUrl = obj.photo,RecipeId = random, Url = obj.url},
+                            RecipeIngredients = recIng
+                        };
+                    }
 
                     RecipeList reclist = new RecipeList{
                         RecipeId = random,
