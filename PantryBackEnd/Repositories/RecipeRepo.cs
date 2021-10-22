@@ -219,7 +219,7 @@ namespace PantryBackEnd.Repositories
 
         }
 
-        
+
 
         public List<frontEndRecipeDisplayAll> browseApiRecipes(int index, Guid id)
         {
@@ -469,7 +469,7 @@ namespace PantryBackEnd.Repositories
             }
         }
 
-        public frontEndRecipeStep getRecipeSteps(int recipeID, Guid id)
+        public frontEndRecipeStep getRecipeSteps(int recipeID)
         {
             //List<frontEndRecipeStep> frontEndRecipeSteps = new List<frontEndRecipeStep>();
             List<string> inst = new List<string>();
@@ -484,6 +484,50 @@ namespace PantryBackEnd.Repositories
             recStep.Instructions = inst;
             
             return recStep;
+        }
+
+        public frontEndRecipeDisplayAll getInfo(int recipeID)
+        {
+            Recipe rec = context.Recipes.AsNoTracking().Where(a => a.RecipeId == recipeID).Include(b => b.RecipeDocument).
+                Include(c => c.RecipeIngredients).Single();
+            List<string> str = new List<string>();
+            foreach(RecipeIngredient a in rec.RecipeIngredients)
+            {
+                str.Add(a.Name);
+            }
+
+            frontEndRecipeDisplayAll obj;
+            if(rec.RecipeDocument == null)
+            {
+                obj = new frontEndRecipeDisplayAll{
+                RecipeId = recipeID,
+                RecipeName = rec.RecipeName,
+                PhotoUrl = null,
+                ingredientsList = str
+                };
+            }
+            else
+            {
+                obj = new frontEndRecipeDisplayAll{
+                RecipeId = recipeID,
+                RecipeName = rec.RecipeName,
+                PhotoUrl = rec.RecipeDocument.PhotoUrl,
+                ingredientsList = str
+                };    
+            }
+
+            return obj;
+        }
+        
+        public frontEndRecipeClickDetails addDescToInfo(frontEndRecipeDisplayAll info)
+        {
+            frontEndRecipeClickDetails obj = new frontEndRecipeClickDetails();
+            obj.basicInfo = info;
+
+            Recipe rec = context.Recipes.AsNoTracking().Where(a => a.RecipeId == obj.basicInfo.RecipeId).Single();
+            obj.desc = rec.RecipeDescription;
+
+            return obj;
         }
 
         public String addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId)

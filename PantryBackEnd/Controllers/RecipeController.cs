@@ -122,9 +122,9 @@ namespace PantryBackEnd.Controllers
             }
         }
 
-        [Route("api/getRecipeSteps")]
+        [Route("api/OnClickRecipe")]
         [HttpGet]
-        public ActionResult<List<RecipeStep>> getRecipeSteps(int recipeID)
+        public ActionResult<frontEndRecipeClickDetails> OnClickRecipe(int recipeID)
         {
             try
             {
@@ -133,15 +133,40 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
 
-                var recStep = recipeRepo.getRecipeSteps(recipeID, userId);
+                //var recStep = recipeRepo.getRecipeSteps(recipeID);
+                var info = recipeRepo.getInfo(recipeID);
+                var clickInfo = recipeRepo.addDescToInfo(info);
 
-                return Ok(recStep);
+                return Ok(clickInfo);
             }
             catch(Exception)
             {
                 return Ok(new { message = "Failed" });
             }
         }
+
+        /*
+        [Route("api/getFullDetailsRecipe")]
+        [HttpGet]
+        public ActionResult<fullRecipeDetails> getFullDetails(frontEndRecipeClickDetails info)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
+
+                var recStep = recipeRepo.getRecipeSteps(info.basicInfo.RecipeId);
+                var clickInfo = recipeRepo.fullInfo(info);
+
+                return Ok(clickInfo);
+            }
+            catch(Exception)
+            {
+                return Ok(new { message = "Failed" });
+            }
+        } */
 
         [Route("api/getAllProductsForIng")]
         [HttpGet]

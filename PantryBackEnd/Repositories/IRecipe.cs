@@ -13,9 +13,12 @@ namespace PantryBackEnd.Repositories
         Ingredient getAllProductsForIng(int ingId);
         List<frontEndRecipeDisplayAll> getRecipes(Guid id, int index);
         List<frontEndRecipeDisplayAll> browseApiRecipes(int index, Guid id);
-        frontEndRecipeStep getRecipeSteps(int recipeID, Guid id);
+        frontEndRecipeStep getRecipeSteps(int recipeID);
+
+        frontEndRecipeClickDetails addDescToInfo(frontEndRecipeDisplayAll recStep);
         List<Recipe> calculateRecipeScores(Guid accountId);
 
+        frontEndRecipeDisplayAll getInfo(int recipeID);
         String addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId);
 
         TillShoppingItems getProductDTTest(Guid userId);
