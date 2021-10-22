@@ -192,7 +192,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/removeInventoryItem")]
         [HttpDelete]
-        public ActionResult removeInventoryItem([FromBody] ProductDt dt)
+        public ActionResult removeInventoryItem([FromBody] RemoveProduct dt)
         {
             try
             {

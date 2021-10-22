@@ -498,47 +498,47 @@ namespace PantryBackEnd.Repositories
             return recStep;
         }
 
-        public String addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId)
-        {
-            Product prod = new Product
-            {
-                ItemId = itemId,
-                Quantity = quantity,
-                Category = category,
-                Name = name,
-                Searchtag = searchtag,
-                IngredientId = ingredientId
-            };
-            context.Products.Add(prod);
-            context.SaveChanges();
-            return "Added";
-        }
+        // public String addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId)
+        // {
+        //     Product prod = new Product
+        //     {
+        //         ItemId = itemId,
+        //         Quantity = quantity,
+        //         Category = category,
+        //         Name = name,
+        //         Searchtag = searchtag,
+        //         IngredientId = ingredientId
+        //     };
+        //     context.Products.Add(prod);
+        //     context.SaveChanges();
+        //     return "Added";
+        // }
 
-        public TillShoppingItems getProductDTTest(Guid userId)
-        {
-            List<ProductDt> prodDt = new List<ProductDt>();
-            List<Product> products = context.Products.ToList();
+        // public TillShoppingItems getProductDTTest(Guid userId)
+        // {
+        //     List<ProductDt> prodDt = new List<ProductDt>();
+        //     List<Product> products = context.Products.ToList();
 
-            foreach (Product a in products)
-            {
-                ProductDt prodD = new ProductDt
-                {
-                    productID = a.ItemId,
-                    exp = new DateTime(2021, 5, 1, 8, 30, 52),
-                    count = 1,
-                };
-                prodD.NotificationTime = prodD.exp.Subtract(new TimeSpan(4, 0, 0, 0, 0));
-                prodDt.Add(prodD);
-            }
+        //     foreach (Product a in products)
+        //     {
+        //         ProductDt prodD = new ProductDt
+        //         {
+        //             productID = a.ItemId,
+        //             exp = new DateTime(2021, 5, 1, 8, 30, 52),
+        //             count = 1,
+        //         };
+        //         prodD.NotificationTime = prodD.exp.Subtract(new TimeSpan(4, 0, 0, 0, 0));
+        //         prodDt.Add(prodD);
+        //     }
 
-            TillShoppingItems till = new TillShoppingItems
-            {
-                items = prodDt,
-                AccountId = userId
-            };
+        //     TillShoppingItems till = new TillShoppingItems
+        //     {
+        //         items = prodDt,
+        //         AccountId = userId
+        //     };
 
-            return till;
-        }
+        //     return till;
+        // }
 
         public Ingredient getAllProductsForIng(int ingId)
         {

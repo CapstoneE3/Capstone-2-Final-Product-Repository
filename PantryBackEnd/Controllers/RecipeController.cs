@@ -12,12 +12,6 @@ namespace PantryBackEnd.Controllers
 {
     public class RecipeController : ControllerBase
     {
-        [Route("api/addRecipe")]
-        [HttpPost]
-        public void addRecipe()
-        {
-
-        }
         private IRecipe recipeRepo;
         private JwtService service;
         private IUserRepo userRepo;
@@ -175,34 +169,34 @@ namespace PantryBackEnd.Controllers
             }
         }
 
-        [Route("api/addProductTest")]
-        [HttpPost]
-        public ActionResult addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId)
-        {
-            string str = recipeRepo.addProductTest(itemId, quantity, category, name, searchtag, ingredientId);
-            return Ok(str);
-        }
+        // [Route("api/addProductTest")]
+        // [HttpPost]
+        // public ActionResult addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId)
+        // {
+        //     string str = recipeRepo.addProductTest(itemId, quantity, category, name, searchtag, ingredientId);
+        //     return Ok(str);
+        // }
 
-        [Route("api/getProductDTTest")]
-        [HttpGet]
-        public ActionResult<List<ProductDt>> getProductDTTest()
-        {
-            try
-            {
-                var jwt = Request.Cookies["jwt"];
-                var token = service.Verification(jwt);
-                Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
+        // [Route("api/getProductDTTest")]
+        // [HttpGet]
+        // public ActionResult<List<ProductDt>> getProductDTTest()
+        // {
+        //     try
+        //     {
+        //         var jwt = Request.Cookies["jwt"];
+        //         var token = service.Verification(jwt);
+        //         Guid userId = Guid.Parse(token.Issuer);
+        //         Account user = userRepo.GetByID(userId);
 
-                var obj = recipeRepo.getProductDTTest(userId);
+        //         var obj = recipeRepo.getProductDTTest(userId);
 
-                return Ok(obj);
+        //         return Ok(obj);
 
-            }
-            catch (Exception)
-            {
-                return Ok(new { message = "Failed" });
-            }
-        }
+        //     }
+        //     catch (Exception)
+        //     {
+        //         return Ok(new { message = "Failed" });
+        //     }
+        // }
     }
 }

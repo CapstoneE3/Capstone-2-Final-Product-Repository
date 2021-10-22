@@ -7,7 +7,7 @@ namespace PantryBackEnd.Repositories
 {
     public interface IRecipe
     {
-        
+
         string createRecipe(Guid id, CustomRecipe obj);
         CustomRecipe convertToCustom(int recipeID);
         Ingredient getAllProductsForIng(int ingId);
@@ -16,8 +16,8 @@ namespace PantryBackEnd.Repositories
         frontEndRecipeStep getRecipeSteps(int recipeID, Guid id);
         List<Recipe> calculateRecipeScores(Guid accountId);
 
-        String addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId);
+        // String addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId);
 
-        TillShoppingItems getProductDTTest(Guid userId);
+        // TillShoppingItems getProductDTTest(Guid userId);
     }
 }
