@@ -44,6 +44,7 @@ namespace PantryBackEnd.Repositories
         public Task updateItems(ShoppingList item)
         {
             context.ShoppingLists.Update(item);
+            context.SaveChanges();
             return Task.CompletedTask;
         }
         public Task DeleteShoppingItem(string itemID, Guid id)

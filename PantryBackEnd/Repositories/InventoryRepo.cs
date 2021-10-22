@@ -100,7 +100,7 @@ namespace PantryBackEnd.Repositories
 
         public string removeProduct(Guid acc_id, string item_id, int count, DateTime exp)
         {
-            List<InventoryList> invlist = context.InventoryLists.ToList();
+            List<InventoryList> invlist = context.InventoryLists.Where(a => a.AccId == acc_id).ToList();
             foreach (InventoryList il in invlist)
             {
                 if (il.AccId == acc_id && il.ItemId == item_id && il.ExpDate == exp)
@@ -109,11 +109,13 @@ namespace PantryBackEnd.Repositories
                     {
                         //invlist.Remove(il);
                         context.Remove(context.InventoryLists.Single(a => a.ItemId.Equals(item_id) && a.AccId == acc_id && exp == a.ExpDate));
+                        context.SaveChanges();
                         break;
                     }
                     else if (count < il.Count)
                     {
                         il.Count -= count;
+                        context.SaveChanges();
                         break;
                     }
                     else
