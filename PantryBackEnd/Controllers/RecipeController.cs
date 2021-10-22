@@ -30,9 +30,6 @@ namespace PantryBackEnd.Controllers
 
         }
 
-<<<<<<< HEAD
-
-=======
         [Route("api/browseRecipes")]
         [HttpGet]
         public ActionResult<List<Recipe>> browseRecipes(int index)
@@ -44,7 +41,7 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
 
-                if(index < 0)
+                if (index < 0)
                 {
                     return Ok(new List<frontEndRecipeDisplayAll>());
                 }
@@ -52,13 +49,12 @@ namespace PantryBackEnd.Controllers
                 return Ok(recipes);
 
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return Unauthorized();
             }
         }
-        
->>>>>>> 383ac725ae20a89af90cce808641c38d755b1efb
+
         [Route("api/getUserRecipes")]
         [HttpGet]
         public ActionResult<List<Recipe>> getAPIRecipe(int index)
@@ -69,7 +65,7 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
 
-                if(index < 0)
+                if (index < 0)
                 {
                     return Ok(new List<frontEndRecipeDisplayAll>());
                 }
@@ -85,7 +81,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/addCustomRecipe")]
         [HttpPost]
-        public ActionResult addCustomRecipe([FromBody]CustomRecipe obj)
+        public ActionResult addCustomRecipe([FromBody] CustomRecipe obj)
         {
             try
             {
@@ -116,15 +112,15 @@ namespace PantryBackEnd.Controllers
                 Account user = userRepo.GetByID(userId);
 
                 CustomRecipe obj = recipeRepo.convertToCustom(recipeID);
-                if(obj == null)
+                if (obj == null)
                 {
-                    return Ok(new {message = "Recipe does not exist"});
+                    return Ok(new { message = "Recipe does not exist" });
                 }
                 var str = recipeRepo.createRecipe(userId, obj);
 
                 return Ok(new { message = str });
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return Ok(new { message = "Failed" });
             }
@@ -152,9 +148,9 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/getAllProductsForIng")]
         [HttpGet]
-        public ActionResult<Ingredient> getAllProductsForIng( int ingId)
+        public ActionResult<Ingredient> getAllProductsForIng(int ingId)
         {
-               return recipeRepo.getAllProductsForIng(ingId);     
+            return recipeRepo.getAllProductsForIng(ingId);
         }
 
         [Route("api/testRecipeScoreLogic")]
@@ -170,12 +166,12 @@ namespace PantryBackEnd.Controllers
 
                 var goodRecipes = recipeRepo.calculateRecipeScores(userId);
 
-                return Ok(goodRecipes); 
+                return Ok(goodRecipes);
 
             }
             catch (Exception)
             {
-                 return Ok(new { message = "Failed" });
+                return Ok(new { message = "Failed" });
             }
         }
 
@@ -186,7 +182,7 @@ namespace PantryBackEnd.Controllers
             string str = recipeRepo.addProductTest(itemId, quantity, category, name, searchtag, ingredientId);
             return Ok(str);
         }
-        
+
         [Route("api/getProductDTTest")]
         [HttpGet]
         public ActionResult<List<ProductDt>> getProductDTTest()
@@ -200,10 +196,10 @@ namespace PantryBackEnd.Controllers
 
                 var obj = recipeRepo.getProductDTTest(userId);
 
-                return Ok(obj); 
+                return Ok(obj);
 
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return Ok(new { message = "Failed" });
             }
