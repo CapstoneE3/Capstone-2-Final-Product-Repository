@@ -8,7 +8,7 @@ namespace PantryBackEnd.Repositories
     {
         void AddProduct(InventoryList product);
         Dictionary<string, object> GetInventoryList(Guid acc_id);
-        string removeProduct(Guid acc_id, string item_id, int count, DateTime exp);
+        Task<string> removeProduct(Guid acc_id, string item_id, int count, DateTime exp);
         Task randomRecipe();
 
         void AddTIllProduct(List<InventoryList> product);

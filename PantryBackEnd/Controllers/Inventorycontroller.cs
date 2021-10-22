@@ -192,7 +192,7 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/removeInventoryItem")]
         [HttpDelete]
-        public ActionResult removeInventoryItem([FromBody] RemoveProduct dt)
+        public async Task<ActionResult> removeInventoryItem([FromBody] RemoveProduct dt)
         {
             try
             {
@@ -200,9 +200,9 @@ namespace PantryBackEnd.Controllers
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
 
-                string msg = InvRepo.removeProduct(userId, dt.productID, dt.count, dt.exp);
+                string msg = await InvRepo.removeProduct(userId, dt.productID, dt.count, dt.exp);
 
-
+                Task.WaitAll();
                 return Ok(new { message = "Success" });
 
             }

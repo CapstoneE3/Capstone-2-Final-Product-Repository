@@ -100,7 +100,7 @@ namespace PantryBackEnd.Repositories
         }
 
 
-        public string removeProduct(Guid acc_id, string item_id, int count, DateTime exp)
+        public async Task<string> removeProduct(Guid acc_id, string item_id, int count, DateTime exp)
         {
             List<InventoryList> invlist = context.InventoryLists.Where(a => a.AccId == acc_id).ToList();
             foreach (InventoryList il in invlist)
@@ -110,14 +110,14 @@ namespace PantryBackEnd.Repositories
                     if (count == il.Count)
                     {
                         //invlist.Remove(il);
-                        context.Remove(context.InventoryLists.Single(a => a.ItemId.Equals(item_id) && a.AccId == acc_id && exp == a.ExpDate));
-                        context.SaveChanges();
+                        context.Remove(context.InventoryLists.Single(a => a.ItemId.Equals(item_id) && a.AccId == acc_id && exp.Date == a.ExpDate.Date));
+                        await context.SaveChangesAsync();
                         break;
                     }
                     else if (count < il.Count)
                     {
                         il.Count -= count;
-                        context.SaveChanges();
+                        await context.SaveChangesAsync();
                         break;
                     }
                     else
@@ -132,8 +132,8 @@ namespace PantryBackEnd.Repositories
 
             //context.Remove(context.InventoryLists.Where(a => a.ItemId == item_id && a.AccId.Equals(acc_id)));
             //context.Remove(context.InventoryLists.Single(a => a.AccId == acc_id && a.ItemId.Equals(item_id)));               
-            context.SaveChanges();
             //}
+            Task.WaitAll();
             return "success";
         }
         public async Task randomRecipe()
