@@ -196,9 +196,14 @@ namespace PantryBackEnd.Controllers
         {
             try
             {
+                if (dt == null)
+                {
+                    return Ok("Null");
+                }
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
+
 
                 string msg = await InvRepo.removeProduct(userId, dt.productID, dt.count, dt.exp);
 
