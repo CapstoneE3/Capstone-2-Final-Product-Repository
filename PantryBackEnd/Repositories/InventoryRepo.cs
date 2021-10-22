@@ -67,6 +67,7 @@ namespace PantryBackEnd.Repositories
                                         b.price = (decimal)c.Price;
                                         b.quantity = c.Quantity;
                                         b.Expiry_Count.Add(eap);
+                                        b.photo = c.PhotoUrl;
                                     }
                                     else
                                     {
@@ -74,6 +75,7 @@ namespace PantryBackEnd.Repositories
                                         b.name = c.Name;
                                         b.quantity = c.Quantity;
                                         b.Expiry_Count.Add(eap);
+                                        b.photo = c.PhotoUrl;
                                     }
                                 }
                                 else
