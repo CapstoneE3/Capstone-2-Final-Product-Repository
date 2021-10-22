@@ -9,5 +9,7 @@ namespace PantryBackEnd.Repositories
         Task addShoppingItems(ShoppingList items);
         List<ShoppingItemsFormat> getShoppingList(Guid id);
         Task DeleteShoppingItem(string itemID, Guid id);
+
+        Task AddShoppingList(List<ShoppingList> items);
     }
 }

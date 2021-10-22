@@ -476,6 +476,11 @@ namespace PantryBackEnd.Repositories
 
             return till;
         }
-        
+
+        public Ingredient getAllProductsForIng(int ingId)
+        {
+            Ingredient prods = context.Ingredients.Where(a => a.IngredientId == ingId).Include(b => b.Products).Single();
+            return prods; 
+        }
     }
 }

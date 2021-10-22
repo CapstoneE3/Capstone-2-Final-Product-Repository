@@ -21,6 +21,12 @@ namespace PantryBackEnd.Repositories
             context.SaveChanges();
             return Task.CompletedTask;
         }
+        public Task AddShoppingList(List<ShoppingList> items)
+        {
+            context.ShoppingLists.AddRange(items);
+            context.SaveChanges();
+            return Task.CompletedTask;
+        }
         public Task DeleteShoppingItem(string itemID, Guid id)
         {
             context.ShoppingLists.Remove(context.ShoppingLists.Where(a => a.AccId == id && a.ItemId.Equals(itemID)).Single());
