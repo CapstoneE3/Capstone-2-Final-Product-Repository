@@ -202,7 +202,6 @@ namespace PantryBackEnd.Controllers
 
                 string msg = await InvRepo.removeProduct(userId, dt.productID, dt.count, dt.exp);
 
-                Task.WaitAll();
                 return Ok(new { message = "Success" });
 
             }
