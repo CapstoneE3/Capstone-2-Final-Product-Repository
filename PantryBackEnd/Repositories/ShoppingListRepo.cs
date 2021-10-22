@@ -21,6 +21,31 @@ namespace PantryBackEnd.Repositories
             context.SaveChanges();
             return Task.CompletedTask;
         }
+        public Task AddShoppingList(List<ShoppingList> items)
+        {
+
+
+            context.ShoppingLists.AddRange(items);
+            context.SaveChanges();
+            return Task.CompletedTask;
+        }
+        public int GetItemCount(ShoppingList items)
+        {
+            try
+            {
+
+                return context.ShoppingLists.Where(a => a.Item.ItemId.Equals(items.ItemId)).Where(d => d.AccId == items.AccId).Select(c => c.Count).Single();
+            }
+            catch (InvalidOperationException)
+            {
+                return 0;
+            }
+        }
+        public Task updateItems(ShoppingList item)
+        {
+            context.ShoppingLists.Update(item);
+            return Task.CompletedTask;
+        }
         public Task DeleteShoppingItem(string itemID, Guid id)
         {
             context.ShoppingLists.Remove(context.ShoppingLists.Where(a => a.AccId == id && a.ItemId.Equals(itemID)).Single());

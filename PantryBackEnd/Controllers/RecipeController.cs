@@ -75,6 +75,32 @@ namespace PantryBackEnd.Controllers
             }
         }
 
+        [Route("api/ApiRecipeToCustom")]
+        [HttpPost]
+
+        public ActionResult ApiRecipeToCustom(int recipeID)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
+
+                CustomRecipe obj = recipeRepo.convertToCustom(recipeID);
+                if(obj == null)
+                {
+                    return Ok(new {message = "Recipe does not exist"});
+                }
+                var str = recipeRepo.createRecipe(userId, obj);
+
+                return Ok(new { message = str });
+            }
+            catch(Exception)
+            {
+                return Ok(new { message = "Failed" });
+            }
+        }
 
         [Route("api/getRecipeSteps")]
         [HttpGet]
@@ -94,6 +120,13 @@ namespace PantryBackEnd.Controllers
             {
                 return Ok(new { message = "Failed" });
             }
+        }
+
+        [Route("api/getAllProductsForIng")]
+        [HttpGet]
+        public ActionResult<Ingredient> getAllProductsForIng( int ingId)
+        {
+               return recipeRepo.getAllProductsForIng(ingId);     
         }
 
         [Route("api/testRecipeScoreLogic")]

@@ -52,6 +52,7 @@ namespace PantryBackEnd.Controllers
             }
         }
 
+
         [Route("api/DeleteShoppingItem")]
         [HttpDelete]
         public async Task<ActionResult> DeleteShoppingItem([FromBody] ShoppingItems items)
@@ -127,6 +128,46 @@ namespace PantryBackEnd.Controllers
             }
 
 
+        }
+
+        [Route("api/addProductFromList")]
+        [HttpPost]
+        public async Task<ActionResult> addProductsFromList([FromBody] List<string> prods)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                List<ShoppingList> shopList = new List<ShoppingList>();
+
+                foreach (string a in prods)
+                {
+                    ShoppingList shop = new ShoppingList
+                    {
+                        ItemId = a,
+                        Count = 1,
+                        AccId = userId
+                    };
+                    int count = shopping.GetItemCount(shop);
+                    if (count > 0)
+                    {
+                        shop.Count += count;
+                        await shopping.updateItems(shop);
+                    }
+                    else
+                    {
+                        shopList.Add(shop);
+                    }
+                }
+
+                await shopping.AddShoppingList(shopList);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return Unauthorized();
+            }
         }
     }
 }
