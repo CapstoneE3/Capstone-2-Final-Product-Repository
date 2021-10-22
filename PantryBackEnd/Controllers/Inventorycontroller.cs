@@ -198,7 +198,7 @@ namespace PantryBackEnd.Controllers
             {
                 if (dt == null)
                 {
-                    return Ok("Null");
+                    return Ok(new { message = "object is null" });
                 }
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
