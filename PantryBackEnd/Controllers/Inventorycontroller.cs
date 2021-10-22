@@ -210,9 +210,9 @@ namespace PantryBackEnd.Controllers
                 Response.Cookies.Delete("jwt");
                 return Unauthorized(new { message = "Expired" });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Unauthorized(new { message = "Failed" });
+                return Unauthorized(new { message = "Failed" + e });
             }
 
         }
