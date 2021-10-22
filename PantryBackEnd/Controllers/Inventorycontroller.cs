@@ -6,12 +6,7 @@ using PantryBackEnd.Repositories;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
-<<<<<<< HEAD
 using PantryBackEnd.Notification;
-=======
-using Microsoft.AspNetCore.Http;
-
->>>>>>> 9d6dd7385aefb5b227bfab9f4f68f1e9dacab9c2
 namespace PantryBackEnd.Controllers
 {
     public class Inventorycontroller : ControllerBase

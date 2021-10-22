@@ -296,7 +296,7 @@ namespace PantryBackEnd.Repositories
                     string recipeDesc = obj.recipeDesc;
                     List<string> steps = obj.steps;
                     List<customIngredients> ingredients = obj.ingredients;
-                    
+
                     int random;
                     do
                     {
@@ -317,11 +317,6 @@ namespace PantryBackEnd.Repositories
                         };
                         recStep.Add(ok);
                     }
-<<<<<<< HEAD
-
-                    Recipe rec = new Recipe
-                    {
-=======
                     
                     ICollection<RecipeIngredient> recIng = new HashSet<RecipeIngredient>();
 
@@ -339,7 +334,6 @@ namespace PantryBackEnd.Repositories
                     }              
 
                     Recipe rec = new Recipe{
->>>>>>> 9d6dd7385aefb5b227bfab9f4f68f1e9dacab9c2
                         RecipeId = random,
                         RecipeName = recipeName,
                         RecipeDescription = recipeDesc,
