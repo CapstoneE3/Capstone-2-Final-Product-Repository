@@ -219,16 +219,13 @@ namespace PantryBackEnd.Repositories
 
         }
 
-        
-        public List<frontEndRecipeDisplayAll> getRecipes(Guid id, int index)
+        public List<frontEndRecipeDisplayAll> browseApiRecipes(int index, Guid id)
         {
-            List<Recipe> recipes = context.Recipes.AsNoTracking().Include(a => a.RecipeDocument).Include(b => b.RecipeLists.
-            Where(c => c.AccId == id)).Include(d => d.RecipeIngredients).OrderBy(e => e.RecipeId).Skip(index).Take(20).ToList();
-            
+            List<Recipe> recipes = context.Recipes.AsNoTracking().Where(d => d.RecipeLists.Any(j => j.AccId == id) == false).Include(a => a.RecipeDocument).Include(b => b.RecipeIngredients).
+            OrderBy(c => c.RecipeId).Skip(index).Take(20).ToList();
+
             List<frontEndRecipeDisplayAll> returnObj = new List<frontEndRecipeDisplayAll>();
             
-
-
             //return recipes;
             
             foreach(Recipe a in recipes)
@@ -257,6 +254,55 @@ namespace PantryBackEnd.Repositories
                         RecipeName = a.RecipeName,
                         ingredientsList = str,
                         PhotoUrl = a.RecipeDocument.PhotoUrl
+                    };
+                    returnObj.Add(newObj);
+                }              
+            }
+            
+            return returnObj; 
+        }
+
+
+        public List<frontEndRecipeDisplayAll> getRecipes(Guid id, int index)
+        {
+            //List<Recipe> recipes = context.Recipes.AsNoTracking().Include(a => a.RecipeDocument).Include(b => b.RecipeLists.
+            //Where(c => c.AccId == id)).Include(d => d.RecipeIngredients).OrderBy(e => e.RecipeId).Skip(index).Take(20).ToList();
+            
+            List<RecipeList> recipeLists = context.RecipeLists.AsNoTracking().Where(x => x.AccId == id).Include(a => a.Recipe.RecipeDocument).
+            Include(b => b.Recipe.RecipeIngredients).OrderBy(e => e.RecipeId).Skip(index).Take(20).ToList();
+
+            List<frontEndRecipeDisplayAll> returnObj = new List<frontEndRecipeDisplayAll>();
+            
+
+
+            //return recipes;
+            
+            foreach(RecipeList a in recipeLists)
+            {
+                List<string> str = new List<string>();
+    
+                foreach(RecipeIngredient b in a.Recipe.RecipeIngredients)
+                {
+                    str.Add(b.Name);
+                }
+                
+                if(a.Recipe.RecipeDocument == null)
+                {
+                    frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll{
+                    RecipeId = a.RecipeId,
+                    RecipeName = a.Recipe.RecipeName,
+                    ingredientsList = str,
+                    };
+                    returnObj.Add(newObj);
+                }
+                else
+                {
+                    
+                    frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll{
+                        RecipeId = a.RecipeId,
+                        RecipeName = a.Recipe.RecipeName,
+                        ingredientsList = str,
+                        PhotoUrl = a.Recipe.RecipeDocument.PhotoUrl
                     };
                     returnObj.Add(newObj);
                 }              

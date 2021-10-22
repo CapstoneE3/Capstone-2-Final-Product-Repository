@@ -12,6 +12,7 @@ namespace PantryBackEnd.Repositories
         CustomRecipe convertToCustom(int recipeID);
         Ingredient getAllProductsForIng(int ingId);
         List<frontEndRecipeDisplayAll> getRecipes(Guid id, int index);
+        List<frontEndRecipeDisplayAll> browseApiRecipes(int index, Guid id);
         frontEndRecipeStep getRecipeSteps(int recipeID, Guid id);
         List<Recipe> calculateRecipeScores(Guid accountId);
 

@@ -24,6 +24,30 @@ namespace PantryBackEnd.Controllers
 
         }
 
+        [Route("api/browseRecipes")]
+        [HttpGet]
+        public ActionResult<List<Recipe>> browseRecipes(int index)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
+
+                if(index < 0)
+                {
+                    return Ok(new List<frontEndRecipeDisplayAll>());
+                }
+                var recipes = recipeRepo.browseApiRecipes(index, userId);
+                return Ok(recipes);
+
+            }
+            catch(Exception)
+            {
+                return Unauthorized();
+            }
+        }
         
         [Route("api/getUserRecipes")]
         [HttpGet]
