@@ -17,7 +17,10 @@ namespace PantryBackEnd.Repositories
         {
             this.context = context;
         }
-
+        public  List<Ingredient> AllIngridient()
+        {
+            return context.Ingredients.ToList();
+        }
         public List<Recipe> calculateRecipeScores(Guid accountId)
         {
             Console.WriteLine("Account ID is: " + accountId);

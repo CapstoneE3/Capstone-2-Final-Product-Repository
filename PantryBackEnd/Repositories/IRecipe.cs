@@ -15,6 +15,7 @@ namespace PantryBackEnd.Repositories
         List<frontEndRecipeDisplayAll> browseApiRecipes(int index, Guid id);
         frontEndRecipeStep getRecipeSteps(int recipeID, Guid id);
         List<Recipe> calculateRecipeScores(Guid accountId);
+        List<Ingredient> AllIngridient();
 
         // String addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId);
 

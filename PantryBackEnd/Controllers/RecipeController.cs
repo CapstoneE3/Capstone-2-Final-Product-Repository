@@ -146,7 +146,12 @@ namespace PantryBackEnd.Controllers
         {
             return recipeRepo.getAllProductsForIng(ingId);
         }
-
+        [Route("api/AllIngedients")]
+        [HttpGet]
+        public ActionResult<List<Ingredient>> getAllIngrdient()
+        {
+           return Ok(recipeRepo.AllIngridient());
+        }
         [Route("api/testRecipeScoreLogic")]
         [HttpGet]
         public ActionResult<List<Recipe>> calculateRecipeScores()
