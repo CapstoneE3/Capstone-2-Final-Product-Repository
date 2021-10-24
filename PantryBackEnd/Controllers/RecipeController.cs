@@ -128,8 +128,8 @@ namespace PantryBackEnd.Controllers
         {
             try
             {
-                //var jwt = Request.Cookies["jwt"];
-                //var token = service.Verification(jwt);
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
                 await recipeRepo.RemoveRecipe(RecipeId);
 
                 return Ok(new { message = "Success" });
