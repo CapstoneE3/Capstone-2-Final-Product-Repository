@@ -7,7 +7,7 @@ namespace PantryBackEnd.Repositories
 {
     public interface IRecipe
     {
-
+        Task RemoveRecipe(int id);
         Task<string> createRecipe(Guid id, CustomRecipe obj);
         Task<CustomRecipe> convertToCustom(int recipeID);
         Ingredient getAllProductsForIng(int ingId);

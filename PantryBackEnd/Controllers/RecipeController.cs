@@ -122,6 +122,27 @@ namespace PantryBackEnd.Controllers
                 return Unauthorized(new { message = "Failed" });
             }
         }
+        [Route("api/RemoveFave")]
+        [HttpGet]
+        public async Task<ActionResult> RemoveFavouriteRecipe(int RecipeId)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                await recipeRepo.RemoveRecipe(RecipeId);
+
+                return Ok(new { message = "Success" });
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return Unauthorized();
+            }
+        }
 
         [Route("api/getRecipeSteps")]
         [HttpGet]
