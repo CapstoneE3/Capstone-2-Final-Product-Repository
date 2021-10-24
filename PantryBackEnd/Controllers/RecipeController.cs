@@ -96,7 +96,7 @@ namespace PantryBackEnd.Controllers
         [Route("api/ApiRecipeToCustom")]
         [HttpPost]
 
-        public ActionResult ApiRecipeToCustom(int recipeID)
+        public async Task<ActionResult> ApiRecipeToCustom(int recipeID)
         {
             try
             {
@@ -105,12 +105,12 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
 
-                CustomRecipe obj = recipeRepo.convertToCustom(recipeID);
+                CustomRecipe obj = await recipeRepo.convertToCustom(recipeID);
                 if (obj == null)
                 {
-                    return Ok(new { message = "Recipe does not exist" });
+                    return BadRequest(new { message = "Recipe does not exist" });
                 }
-                var str = recipeRepo.createRecipe(userId, obj);
+                var str = await recipeRepo.createRecipe(userId, obj);
 
                 return Ok(new { message = str });
             }
@@ -150,7 +150,7 @@ namespace PantryBackEnd.Controllers
         [HttpGet]
         public ActionResult<List<Ingredient>> getAllIngrdient()
         {
-           return Ok(recipeRepo.AllIngridient());
+            return Ok(recipeRepo.AllIngridient());
         }
         [Route("api/testRecipeScoreLogic")]
         [HttpGet]

@@ -8,8 +8,8 @@ namespace PantryBackEnd.Repositories
     public interface IRecipe
     {
 
-        string createRecipe(Guid id, CustomRecipe obj);
-        CustomRecipe convertToCustom(int recipeID);
+        Task<string> createRecipe(Guid id, CustomRecipe obj);
+        Task<CustomRecipe> convertToCustom(int recipeID);
         Ingredient getAllProductsForIng(int ingId);
         List<frontEndRecipeDisplayAll> getRecipes(Guid id, int index);
         List<frontEndRecipeDisplayAll> browseApiRecipes(int index, Guid id);
