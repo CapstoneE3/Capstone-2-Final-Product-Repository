@@ -25,6 +25,7 @@ namespace PantryBackEnd.Repositories
         public async Task RemoveRecipe(int id)
         {
             context.Recipes.Remove(await context.Recipes.Where(a => a.RecipeId == id).SingleAsync());
+            await context.SaveChangesAsync();
         }
         public List<Recipe> calculateRecipeScores(Guid accountId)
         {

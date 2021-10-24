@@ -63,13 +63,21 @@ namespace PantryBackEnd.Notification
             VapidDt details = notification.GetVapidDt();
             webpush.SetVapidDetails(details.subjecy, details.publicKey, details.privateKey);
             List<string> names = new List<string>();
-            foreach (SubscriptionData x in list)
+            try
             {
-                Subscription subscriptionData = notification.GetSubscription(id);
-                PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
-                string data = JsonConvert.SerializeObject(x);
-                string payload = data;
-                await webpush.SendNotificationAsync(push, payload);
+
+                foreach (SubscriptionData x in list)
+                {
+                    Subscription subscriptionData = notification.GetSubscription(id);
+                    PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
+                    string data = JsonConvert.SerializeObject(x);
+                    string payload = data;
+                    await webpush.SendNotificationAsync(push, payload);
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                Console.WriteLine("There is no Notification is not Subscribe");
             }
         }
     }
