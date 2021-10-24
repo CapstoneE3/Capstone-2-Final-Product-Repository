@@ -245,7 +245,7 @@ namespace PantryBackEnd.Models
                 entity.HasOne(d => d.Recipe)
                     .WithOne(p => p.RecipeDocument)
                     .HasForeignKey<RecipeDocument>(d => d.RecipeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("Recipe_document_recipe_ID_fkey");
             });
 
@@ -275,7 +275,7 @@ namespace PantryBackEnd.Models
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeIngredients)
                     .HasForeignKey(d => d.RecipeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("Recipe_Ingredients_recipe_ID_fkey");
             });
 
@@ -299,7 +299,7 @@ namespace PantryBackEnd.Models
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeLists)
                     .HasForeignKey(d => d.RecipeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("Recipe_List_recipe_ID_fkey");
             });
 
@@ -321,7 +321,7 @@ namespace PantryBackEnd.Models
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeSteps)
                     .HasForeignKey(d => d.RecipeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("Recipe_Steps_recipe_ID_fkey");
             });
 
