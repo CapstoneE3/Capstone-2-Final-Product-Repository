@@ -223,7 +223,8 @@ namespace PantryBackEnd.Repositories
 
         public List<frontEndRecipeDisplayAll> browseApiRecipes(int index, Guid id)
         {
-            List<Recipe> recipes = context.Recipes.AsNoTracking().Where(d => d.RecipeLists.Any(j => j.AccId == id) == false).Include(a => a.RecipeDocument).Include(b => b.RecipeIngredients).
+            List<Recipe> recipes = context.Recipes.AsNoTracking().Where(d => d.RecipeLists.Any(j => j.AccId == id) == false).
+            Include(a => a.RecipeDocument).Include(b => b.RecipeIngredients).
             OrderBy(c => c.RecipeId).Skip(index).Take(20).ToList();
 
             List<frontEndRecipeDisplayAll> returnObj = new List<frontEndRecipeDisplayAll>();
@@ -358,6 +359,10 @@ namespace PantryBackEnd.Repositories
                         ingredientName = x.Name,
                         ingredientId = x.IngredientId
                     };
+                    if(x.LinkProd != null)
+                    {
+                        ing.linkProduct = x.LinkProd;
+                    }
                     custIng.Add(ing);
                 }
 
@@ -387,7 +392,7 @@ namespace PantryBackEnd.Repositories
                 string recipeName = obj.recipeName;
                 List<customIngredients> ingredients = obj.ingredients;
 
-                Recipe recipes = context.Recipes.Where(a => a.RecipeName.Equals(recipeName)).Include(b => b.RecipeLists.Where(c => c.AccId == id)).Single();
+                Recipe recipes = context.Recipes.Where(a => a.RecipeName.Equals(recipeName)).Include(b => b.RecipeLists.Where(c => c.AccId == c.AccId)).Single();
                 return "Exists";
             }
             catch(Exception)
@@ -431,6 +436,11 @@ namespace PantryBackEnd.Repositories
                             Name = a.ingredientName,
                             OriginalName = a.amount.ToString() + a.unitOfMeasure + a.ingredientName
                         };
+
+                        if(a.linkProduct != null)
+                        {
+                            ing.LinkProd = a.linkProduct;
+                        }
                         recIng.Add(ing);
                     }              
 
