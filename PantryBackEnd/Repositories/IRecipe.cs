@@ -21,7 +21,7 @@ namespace PantryBackEnd.Repositories
 
         frontEndRecipeDisplayAll getInfo(int recipeID);
         String addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId);
-
-        // TillShoppingItems getProductDTTest(Guid userId);
+        fullRecipeDetails fullInfo(int id);
+        //TillShoppingItems getProductDTTest(Guid userId);
     }
 }

@@ -167,10 +167,10 @@ namespace PantryBackEnd.Controllers
             }
         }
 
-        /*
+        
         [Route("api/getFullDetailsRecipe")]
         [HttpGet]
-        public ActionResult<fullRecipeDetails> getFullDetails(frontEndRecipeClickDetails info)
+        public ActionResult<fullRecipeDetails> getFullDetails(int recipeId)
         {
             try
             {
@@ -179,8 +179,7 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = userRepo.GetByID(userId);
 
-                var recStep = recipeRepo.getRecipeSteps(info.basicInfo.RecipeId);
-                var clickInfo = recipeRepo.fullInfo(info);
+                var clickInfo = recipeRepo.fullInfo(recipeId);
 
                 return Ok(clickInfo);
             }
@@ -188,7 +187,7 @@ namespace PantryBackEnd.Controllers
             {
                 return Ok(new { message = "Failed" });
             }
-        } */
+        } 
 
         [Route("api/getAllProductsForIng")]
         [HttpGet]

@@ -7,8 +7,15 @@ namespace PantryBackEnd.Models
 {
     public class fullRecipeDetails
     {
-        frontEndRecipeClickDetails info { get; set;}
-        frontEndRecipeStep steps { get; set;}
+
+        public int RecipeId { get; set; }
+        public string RecipeName { get; set; }
+
+        public List<customIngredients> ingredientsList  { get; set; }
+
+        public string PhotoUrl { get; set; }
+        public string desc { get; set;} 
+        public frontEndRecipeStep steps { get; set;}
 
     }
 }
