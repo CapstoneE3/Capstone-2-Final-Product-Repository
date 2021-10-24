@@ -26,7 +26,7 @@ namespace PantryBackEnd.Repositories
                  ids = ingredients.IngredientId,
                  name = ingredients.Name,
                  UnitOfMeasure = RecipeIngredient.UnitOfMeasure
-             }).ToList();
+             }).Distinct().ToList();
             return ok;
         }
 
