@@ -7,10 +7,7 @@ namespace PantryBackEnd.Models
 {
     public class frontEndRecipeClickDetails
     {
-        public int RecipeId { get; set; }
-        public string RecipeName { get; set; }
-        public virtual ICollection<RecipeIngredient> RecipeIngredients { get; set; }
-        public string RecipeDescription { get; set; }
-        public string PhotoUrl { get; set; }
+        public frontEndRecipeDisplayAll basicInfo { get; set;}
+        public string desc { get; set; }
     }
 }
