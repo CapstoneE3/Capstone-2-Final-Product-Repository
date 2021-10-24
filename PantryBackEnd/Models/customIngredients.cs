@@ -11,5 +11,6 @@ namespace PantryBackEnd.Models
         public string unitOfMeasure;
         public string ingredientName;
         public int ingredientId;
+        public string linkProduct;
     }
 }
