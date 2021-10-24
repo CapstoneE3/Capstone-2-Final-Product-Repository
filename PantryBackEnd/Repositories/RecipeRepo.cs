@@ -17,7 +17,7 @@ namespace PantryBackEnd.Repositories
         {
             this.context = context;
         }
-        public  List<Ingredient> AllIngridient()
+        public List<Ingredient> AllIngridient()
         {
             return context.Ingredients.ToList();
         }
@@ -327,12 +327,12 @@ namespace PantryBackEnd.Repositories
         }
 
 
-        public CustomRecipe convertToCustom(int recipeID)
+        public async Task<CustomRecipe> convertToCustom(int recipeID)
         {
             try
             {
-                Recipe recipes = context.Recipes.Where(a => a.RecipeId == recipeID).Include(d => d.RecipeIngredients).Include(e => e.RecipeSteps)
-                .Include(b => b.RecipeDocument).AsNoTracking().Single();
+                Recipe recipes = await context.Recipes.Where(a => a.RecipeId == recipeID).Include(d => d.RecipeIngredients).Include(e => e.RecipeSteps)
+                .Include(b => b.RecipeDocument).AsNoTracking().SingleAsync();
                 if (recipes.RecipeDocument == null)
                 {
                     return null;
@@ -379,7 +379,7 @@ namespace PantryBackEnd.Repositories
                 return null;
             }
         }
-        public string createRecipe(Guid id, CustomRecipe obj)
+        public async Task<string> createRecipe(Guid id, CustomRecipe obj)
         {
             //CustomRecipe obj
             //string recipeName, string recipeDesc, List<string> steps
@@ -388,7 +388,7 @@ namespace PantryBackEnd.Repositories
                 string recipeName = obj.recipeName;
                 List<customIngredients> ingredients = obj.ingredients;
 
-                Recipe recipes = context.Recipes.Where(a => a.RecipeName.Equals(recipeName)).Include(b => b.RecipeLists.Where(c => c.AccId == id)).Single();
+                Recipe recipes = await context.Recipes.Where(a => a.RecipeName.Equals(recipeName)).Include(b => b.RecipeLists.Where(c => c.AccId == id)).SingleAsync();
                 return "Exists";
             }
             catch (Exception)
