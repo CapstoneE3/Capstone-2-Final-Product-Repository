@@ -232,11 +232,15 @@ namespace PantryBackEnd.Repositories
             
             foreach(Recipe a in recipes)
             {
-                List<string> str = new List<string>();
-    
+                List<ingredients> ings = new List<ingredients>();
+
                 foreach(RecipeIngredient b in a.RecipeIngredients)
                 {
-                    str.Add(b.Name);
+                    ingredients ing = new ingredients{
+                        ids = b.IngredientId,
+                        name = b.Name
+                    };
+                    ings.Add(ing);
                 }
                 
                 if(a.RecipeDocument == null)
@@ -244,7 +248,7 @@ namespace PantryBackEnd.Repositories
                     frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll{
                     RecipeId = a.RecipeId,
                     RecipeName = a.RecipeName,
-                    ingredientsList = str,
+                    ingredientsList = ings,
                     };
                     returnObj.Add(newObj);
                 }
@@ -254,7 +258,7 @@ namespace PantryBackEnd.Repositories
                     frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll{
                         RecipeId = a.RecipeId,
                         RecipeName = a.RecipeName,
-                        ingredientsList = str,
+                        ingredientsList = ings,
                         PhotoUrl = a.RecipeDocument.PhotoUrl
                     };
                     returnObj.Add(newObj);
@@ -281,11 +285,15 @@ namespace PantryBackEnd.Repositories
             
             foreach(RecipeList a in recipeLists)
             {
-                List<string> str = new List<string>();
-    
+                List<ingredients> ings = new List<ingredients>();
+
                 foreach(RecipeIngredient b in a.Recipe.RecipeIngredients)
                 {
-                    str.Add(b.Name);
+                    ingredients ing = new ingredients{
+                        ids = b.IngredientId,
+                        name = b.Name
+                    };
+                    ings.Add(ing);
                 }
                 
                 if(a.Recipe.RecipeDocument == null)
@@ -293,7 +301,7 @@ namespace PantryBackEnd.Repositories
                     frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll{
                     RecipeId = a.RecipeId,
                     RecipeName = a.Recipe.RecipeName,
-                    ingredientsList = str,
+                    ingredientsList = ings,
                     };
                     returnObj.Add(newObj);
                 }
@@ -303,7 +311,7 @@ namespace PantryBackEnd.Repositories
                     frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll{
                         RecipeId = a.RecipeId,
                         RecipeName = a.Recipe.RecipeName,
-                        ingredientsList = str,
+                        ingredientsList = ings,
                         PhotoUrl = a.Recipe.RecipeDocument.PhotoUrl
                     };
                     returnObj.Add(newObj);
@@ -490,10 +498,16 @@ namespace PantryBackEnd.Repositories
         {
             Recipe rec = context.Recipes.AsNoTracking().Where(a => a.RecipeId == recipeID).Include(b => b.RecipeDocument).
                 Include(c => c.RecipeIngredients).Single();
-            List<string> str = new List<string>();
+            List<ingredients> ings = new List<ingredients>();
+
             foreach(RecipeIngredient a in rec.RecipeIngredients)
             {
-                str.Add(a.Name);
+                ingredients ing = new ingredients{
+                    ids = a.IngredientId,
+                    name = a.Name
+                };
+                ings.Add(ing);
+                
             }
 
             frontEndRecipeDisplayAll obj;
@@ -503,7 +517,7 @@ namespace PantryBackEnd.Repositories
                 RecipeId = recipeID,
                 RecipeName = rec.RecipeName,
                 PhotoUrl = null,
-                ingredientsList = str
+                ingredientsList = ings
                 };
             }
             else
@@ -512,13 +526,59 @@ namespace PantryBackEnd.Repositories
                 RecipeId = recipeID,
                 RecipeName = rec.RecipeName,
                 PhotoUrl = rec.RecipeDocument.PhotoUrl,
-                ingredientsList = str
+                ingredientsList = ings
                 };    
             }
 
             return obj;
         }
         
+        public fullRecipeDetails fullInfo(int id)
+        {
+            List<RecipeIngredient> recIng = context.RecipeIngredients.Where(a => a.RecipeId == id).ToList();
+            Recipe rec = context.Recipes.Where(a => a.RecipeId == id).Include(b => b.RecipeDocument).Single();
+            frontEndRecipeStep steps = getRecipeSteps(id);
+            List<customIngredients> custIng = new List<customIngredients>();
+            foreach(RecipeIngredient a in recIng)
+            {
+                customIngredients ing = new customIngredients{
+                    amount = a.Amount,
+                    unitOfMeasure = a.UnitOfMeasure,
+                    ingredientName = a.Name,
+                    ingredientId = a.IngredientId
+                };
+
+                custIng.Add(ing);
+            }
+
+            
+            fullRecipeDetails details = new fullRecipeDetails{
+                ingredientsList = custIng,
+                RecipeId = id,
+                RecipeName = rec.RecipeName,
+                desc = rec.RecipeDescription,
+                steps = steps
+            };
+
+            if(rec.RecipeDocument != null)
+            {
+                if(rec.RecipeDocument.PhotoUrl != null)
+                {
+                    details.PhotoUrl = rec.RecipeDocument.PhotoUrl;
+                }
+                else
+                {
+                    details.PhotoUrl = null;
+                }
+            }
+            else
+            {
+                details.PhotoUrl = null;
+            }
+
+            return details;
+
+        }
         public frontEndRecipeClickDetails addDescToInfo(frontEndRecipeDisplayAll info)
         {
             frontEndRecipeClickDetails obj = new frontEndRecipeClickDetails();

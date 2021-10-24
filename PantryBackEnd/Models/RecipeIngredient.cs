@@ -13,7 +13,9 @@ namespace PantryBackEnd.Models
         public string UnitOfMeasure { get; set; }
         public string Name { get; set; }
         public string OriginalName { get; set; }
+        public string LinkProd { get; set; }
 
+        public virtual Product LinkProdNavigation { get; set; }
         public virtual Recipe Recipe { get; set; }
     }
 }

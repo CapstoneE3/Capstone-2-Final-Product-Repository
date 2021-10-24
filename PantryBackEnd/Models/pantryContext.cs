@@ -264,6 +264,8 @@ namespace PantryBackEnd.Models
 
                 entity.Property(e => e.Amount).HasColumnName("amount");
 
+                entity.Property(e => e.LinkProd).HasColumnName("linkProd");
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasColumnName("name");
@@ -271,6 +273,11 @@ namespace PantryBackEnd.Models
                 entity.Property(e => e.UnitOfMeasure)
                     .IsRequired()
                     .HasColumnName("unit_of_measure");
+
+                entity.HasOne(d => d.LinkProdNavigation)
+                    .WithMany(p => p.RecipeIngredients)
+                    .HasForeignKey(d => d.LinkProd)
+                    .HasConstraintName("Recipe_Ingredients_linkProd_fkey");
 
                 entity.HasOne(d => d.Recipe)
                     .WithMany(p => p.RecipeIngredients)
