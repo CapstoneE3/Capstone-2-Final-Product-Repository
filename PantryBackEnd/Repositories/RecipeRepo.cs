@@ -389,7 +389,7 @@ namespace PantryBackEnd.Repositories
                 List<customIngredients> ingredients = obj.ingredients;
 
                 Recipe recipes = await context.Recipes.Where(a => a.RecipeName.Equals(recipeName)).Include(b => b.RecipeLists.Where(c => c.AccId == id)).SingleAsync();
-                return "Success";
+                return "Exists";
             }
             catch (Exception)
             {

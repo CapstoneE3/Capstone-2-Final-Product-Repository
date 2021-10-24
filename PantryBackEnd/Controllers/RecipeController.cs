@@ -111,12 +111,15 @@ namespace PantryBackEnd.Controllers
                     return BadRequest(new { message = "Recipe does not exist" });
                 }
                 var str = await recipeRepo.createRecipe(userId, obj);
-
+                if (str.Equals("Exists") || str.Equals("Error"))
+                {
+                    return BadRequest(new { message = str });
+                }
                 return Ok(new { message = str });
             }
             catch (Exception)
             {
-                return Ok(new { message = "Failed" });
+                return Unauthorized(new { message = "Failed" });
             }
         }
 
