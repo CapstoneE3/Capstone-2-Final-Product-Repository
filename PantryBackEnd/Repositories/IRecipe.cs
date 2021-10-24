@@ -17,7 +17,7 @@ namespace PantryBackEnd.Repositories
 
         frontEndRecipeClickDetails addDescToInfo(frontEndRecipeDisplayAll recStep);
         List<Recipe> calculateRecipeScores(Guid accountId);
-        List<Ingredient> AllIngridient();
+        List<AllIngredients> AllIngridient();
 
         frontEndRecipeDisplayAll getInfo(int recipeID);
         String addProductTest(string itemId, string quantity, string category, string name, string searchtag, int ingredientId);

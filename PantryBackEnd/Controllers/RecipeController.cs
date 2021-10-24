@@ -167,7 +167,7 @@ namespace PantryBackEnd.Controllers
             }
         }
 
-        
+
         [Route("api/getFullDetailsRecipe")]
         [HttpGet]
         public ActionResult<fullRecipeDetails> getFullDetails(int recipeId)
@@ -183,11 +183,11 @@ namespace PantryBackEnd.Controllers
 
                 return Ok(clickInfo);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return Ok(new { message = "Failed" });
             }
-        } 
+        }
 
         [Route("api/getAllProductsForIng")]
         [HttpGet]
@@ -197,7 +197,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/AllIngedients")]
         [HttpGet]
-        public ActionResult<List<Ingredient>> getAllIngrdient()
+        public ActionResult<List<AllIngredients>> getAllIngrdient()
         {
             return Ok(recipeRepo.AllIngridient());
         }
