@@ -327,12 +327,15 @@ namespace PantryBackEnd.Repositories
 
             return returnObj;
         }
-
+        private bool CaseSensitive(string text, string tex1)
+        {
+            return text.IndexOf(tex1, StringComparison.CurrentCultureIgnoreCase) >= 0;
+        }
         public Task<List<frontEndRecipeDisplayAll>> Search(string value)
         {
             var t = Task.Run(() =>
             {
-                List<Recipe> recipes = context.Recipes.AsNoTracking().Where(f => f.RecipeName.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0).Where(d => d.RecipeLists.Any(j => j.AccId == j.AccId) == false).Include(a => a.RecipeDocument).Include(b => b.RecipeIngredients).
+                List<Recipe> recipes = context.Recipes.AsNoTracking().Where(x => x.RecipeName.ToLower().Contains(value.ToLower())).Where(d => d.RecipeLists.Any(j => j.AccId == j.AccId) == false).Include(a => a.RecipeDocument).Include(b => b.RecipeIngredients).
             OrderBy(c => c.RecipeId).ToList();
 
                 List<frontEndRecipeDisplayAll> returnObj = new List<frontEndRecipeDisplayAll>();
