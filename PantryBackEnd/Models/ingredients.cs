@@ -9,5 +9,7 @@ namespace PantryBackEnd.Models
     {
         public int ids { get; set; }
         public string name { get; set; }
+
+        public string linkProd { get; set; }
     }
 }

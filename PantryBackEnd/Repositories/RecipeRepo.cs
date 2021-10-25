@@ -260,6 +260,10 @@ namespace PantryBackEnd.Repositories
                         ids = b.IngredientId,
                         name = b.Name
                     };
+                    if (b.LinkProd != null)
+                    {
+                        ing.linkProd = b.LinkProd;
+                    }
                     ings.Add(ing);
                 }
                 single.ingredientsList = ings;
@@ -289,6 +293,10 @@ namespace PantryBackEnd.Repositories
                         ids = b.IngredientId,
                         name = b.Name
                     };
+                    if (b.LinkProd != null)
+                    {
+                        ing.linkProd = b.LinkProd;
+                    }
                     ings.Add(ing);
                 }
 
@@ -342,6 +350,10 @@ namespace PantryBackEnd.Repositories
                             ids = b.IngredientId,
                             name = b.Name
                         };
+                        if (b.LinkProd != null)
+                        {
+                            ing.linkProd = b.LinkProd;
+                        }
                         ings.Add(ing);
                     }
 
@@ -400,6 +412,10 @@ namespace PantryBackEnd.Repositories
                         ids = b.IngredientId,
                         name = b.Name
                     };
+                    if (b.LinkProd != null)
+                    {
+                        ing.linkProd = b.LinkProd;
+                    }
                     ings.Add(ing);
                 }
 
@@ -649,6 +665,10 @@ namespace PantryBackEnd.Repositories
                     ids = a.IngredientId,
                     name = a.Name
                 };
+                if (a.LinkProd != null)
+                {
+                    ing.linkProd = a.LinkProd;
+                }
                 ings.Add(ing);
 
             }
@@ -693,6 +713,7 @@ namespace PantryBackEnd.Repositories
                     ingredientName = a.Name,
                     ingredientId = a.IngredientId,
                     linkProduct = a.LinkProd
+
                 };
 
                 custIng.Add(ing);
