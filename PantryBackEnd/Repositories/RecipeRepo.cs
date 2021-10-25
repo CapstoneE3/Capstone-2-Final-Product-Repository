@@ -498,7 +498,7 @@ namespace PantryBackEnd.Repositories
                             LinkProd = null
                         };
 
-                        if (a.linkProduct != null || a.linkProduct.Equals(""))
+                        if (a.linkProduct != null)
                         {
                             ing.LinkProd = a.linkProduct;
                         }

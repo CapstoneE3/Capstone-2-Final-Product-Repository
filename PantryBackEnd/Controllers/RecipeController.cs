@@ -107,7 +107,6 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                Account user = userRepo.GetByID(userId);
 
                 CustomRecipe obj = await recipeRepo.convertToCustom(recipeID);
                 if (obj == null)
