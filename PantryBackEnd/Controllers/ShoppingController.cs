@@ -70,7 +70,7 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception e)
             {
-                return Unauthorized();
+                return Unauthorized(new { message = "Yo u are calling the wrong one" });
             }
         }
 
@@ -123,7 +123,6 @@ namespace PantryBackEnd.Controllers
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
             {
-                Response.Cookies.Delete("jwt");
                 return Unauthorized(new { message = "Expired" });
             }
             catch (Exception)
@@ -148,7 +147,6 @@ namespace PantryBackEnd.Controllers
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
             {
-                Response.Cookies.Delete("jwt");
                 return Unauthorized(new { message = "Expired" });
             }
             catch (Exception)
