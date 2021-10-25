@@ -12,7 +12,7 @@ namespace PantryBackEnd.Models
         public string recipeDesc;
         public List<string> steps;
 
-        public string photo;
+        public string photoUrl;
         public string url;
        
         public List<customIngredients> ingredients;
