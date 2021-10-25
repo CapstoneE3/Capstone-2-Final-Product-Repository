@@ -320,7 +320,61 @@ namespace PantryBackEnd.Repositories
             return returnObj;
         }
 
+        public Task<List<frontEndRecipeDisplayAll>> Search(string value)
+        {
+            var t = Task.Run(() =>
+            {
+                List<Recipe> recipes = context.Recipes.AsNoTracking().Where(f => f.RecipeName.Contains(value)).Where(d => d.RecipeLists.Any(j => j.AccId == j.AccId) == false).Include(a => a.RecipeDocument).Include(b => b.RecipeIngredients).
+            OrderBy(c => c.RecipeId).ToList();
 
+                List<frontEndRecipeDisplayAll> returnObj = new List<frontEndRecipeDisplayAll>();
+
+                //return recipes;
+
+                foreach (Recipe a in recipes)
+                {
+                    List<ingredients> ings = new List<ingredients>();
+
+                    foreach (RecipeIngredient b in a.RecipeIngredients)
+                    {
+                        ingredients ing = new ingredients
+                        {
+                            ids = b.IngredientId,
+                            name = b.Name
+                        };
+                        ings.Add(ing);
+                    }
+
+                    if (a.RecipeDocument == null)
+                    {
+                        frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll
+                        {
+                            RecipeId = a.RecipeId,
+                            RecipeName = a.RecipeName,
+                            ingredientsList = ings,
+                        };
+                        returnObj.Add(newObj);
+                    }
+                    else
+                    {
+
+                        frontEndRecipeDisplayAll newObj = new frontEndRecipeDisplayAll
+                        {
+                            RecipeId = a.RecipeId,
+                            RecipeName = a.RecipeName,
+                            ingredientsList = ings,
+                            PhotoUrl = a.RecipeDocument.PhotoUrl,
+                            url = a.RecipeDocument.Url
+                        };
+                        returnObj.Add(newObj);
+                    }
+                }
+                return returnObj;
+            }
+            );
+            return t;
+
+        }
         public List<frontEndRecipeDisplayAll> getRecipes(Guid id, int index)
         {
             //List<Recipe> recipes = context.Recipes.AsNoTracking().Include(a => a.RecipeDocument).Include(b => b.RecipeLists.

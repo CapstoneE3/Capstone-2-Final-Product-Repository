@@ -147,7 +147,26 @@ namespace PantryBackEnd.Controllers
                 return Unauthorized();
             }
         }
+        [Route("api/Search")]
+        [HttpGet]
+        public async Task<ActionResult<List<frontEndRecipeDisplayAll>>> SearchApi(string value)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
 
+                var recipes = await recipeRepo.Search(value);
+                return Ok(recipes);
+
+            }
+            catch (Exception)
+            {
+                return Unauthorized();
+            }
+        }
         [Route("api/UpdateRecipe")]
         [HttpPost]
         public async Task<ActionResult> updateRecipe([FromBody] CustomRecipe obj, int id)
