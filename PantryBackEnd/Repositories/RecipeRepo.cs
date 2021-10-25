@@ -280,7 +280,8 @@ namespace PantryBackEnd.Repositories
                         RecipeId = a.RecipeId,
                         RecipeName = a.RecipeName,
                         ingredientsList = ings,
-                        PhotoUrl = a.RecipeDocument.PhotoUrl
+                        PhotoUrl = a.RecipeDocument.PhotoUrl,
+                        url = a.RecipeDocument.Url
                     };
                     returnObj.Add(newObj);
                 }
