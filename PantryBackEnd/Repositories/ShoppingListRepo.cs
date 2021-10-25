@@ -69,6 +69,14 @@ namespace PantryBackEnd.Repositories
             }
             return items;
         }
+        public Account getUserShoppingList(Guid id)
+        {
+            return context.Accounts.Where(a => a.AccId == id).Include(b => b.ShoppingLists).Single();
+        }
+        public async Task UpdateShop()
+        {
+            await context.SaveChangesAsync();
+        }
 
     }
 }

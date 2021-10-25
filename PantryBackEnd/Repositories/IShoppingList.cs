@@ -13,5 +13,7 @@ namespace PantryBackEnd.Repositories
         Task AddShoppingList(List<ShoppingList> items);
         int GetItemCount(ShoppingList items);
         Task updateItems(ShoppingList item);
+        Account getUserShoppingList(Guid id);
+        Task UpdateShop();
     }
 }
