@@ -76,15 +76,15 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/AddShoppingItemList")]
         [HttpPost]
-        public async Task<ActionResult> AddShoppingItemList([FromBody] List<ShoppingItems> items)
+        public async Task<ActionResult> AddShoppingItemList([FromBody] List<ShoppingItems> items, Guid id)
         {
             try
             {
 
-                var jwt = Request.Cookies["jwt"];
-                var token = service.Verification(jwt);
-                Guid userId = Guid.Parse(token.Issuer);
-                Account user = shopping.getUserShoppingList(userId);
+                //var jwt = Request.Cookies["jwt"];
+                //var token = service.Verification(jwt);
+                //Guid userId = Guid.Parse(token.Issuer);
+                Account user = shopping.getUserShoppingList(id);
                 List<ShoppingList> list = new List<ShoppingList>();
                 if (user.ShoppingLists == null || user.ShoppingLists.Count == 0)
                 {
@@ -92,7 +92,7 @@ namespace PantryBackEnd.Controllers
                     {
                         foreach (ShoppingItems a in items)
                         {
-                            ShoppingList inv = new ShoppingList { ItemId = a.ItemId, Count = a.Count, AccId = userId };
+                            ShoppingList inv = new ShoppingList { ItemId = a.ItemId, Count = a.Count, AccId = id };
                             list.Add(inv);
                         }
                     });
@@ -108,7 +108,7 @@ namespace PantryBackEnd.Controllers
                            count = ShoppingCount(user.ShoppingLists, a);
                            if (count == 0)
                            {
-                               ShoppingList inv = new ShoppingList { ItemId = a.ItemId, Count = a.Count, AccId = userId };
+                               ShoppingList inv = new ShoppingList { ItemId = a.ItemId, Count = a.Count, AccId = id };
                                shopping.addShoppingItems(inv);
                            }
                            else
