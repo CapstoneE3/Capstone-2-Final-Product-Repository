@@ -691,7 +691,8 @@ namespace PantryBackEnd.Repositories
                     amount = a.Amount,
                     unitOfMeasure = a.UnitOfMeasure,
                     ingredientName = a.Name,
-                    ingredientId = a.IngredientId
+                    ingredientId = a.IngredientId,
+                    linkProduct = a.LinkProd
                 };
 
                 custIng.Add(ing);
