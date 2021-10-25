@@ -9,13 +9,13 @@ namespace PantryBackEnd.Models
     {
 
         public string recipeName;
-        public string recipeDesc;
+        public string desc;
         public List<string> steps;
 
         public string photoUrl;
         public string url;
-       
-        public List<customIngredients> ingredients;
+
+        public List<customIngredients> ingredientsList;
 
     }
 }

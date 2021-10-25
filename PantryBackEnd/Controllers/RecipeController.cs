@@ -75,15 +75,15 @@ namespace PantryBackEnd.Controllers
 
         [Route("api/addCustomRecipe")]
         [HttpPost]
-        public ActionResult addCustomRecipe([FromBody] CustomRecipe obj)
+        public async Task<ActionResult> addCustomRecipe([FromBody] CustomRecipe obj)
         {
             try
             {
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-
-                var str = recipeRepo.createRecipe(userId, obj);
+                obj.recipeName = "Custom " + obj.recipeName;
+                var str = await recipeRepo.createRecipe(userId, obj);
                 if (str.Equals("Exists") || str.Equals("Error"))
                 {
                     return BadRequest(new { message = str });

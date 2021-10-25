@@ -394,9 +394,9 @@ namespace PantryBackEnd.Repositories
                 CustomRecipe cusRec = new CustomRecipe
                 {
                     recipeName = "Custom " + recipes.RecipeName,
-                    recipeDesc = recipes.RecipeDescription,
+                    desc = recipes.RecipeDescription,
                     steps = str,
-                    ingredients = custIng,
+                    ingredientsList = custIng,
                     photoUrl = recipes.RecipeDocument.PhotoUrl,
                     url = recipes.RecipeDocument.Url
                 };
@@ -417,9 +417,9 @@ namespace PantryBackEnd.Repositories
             try
             {
                 string recipeName = obj.recipeName;
-                List<customIngredients> ingredients = obj.ingredients;
+                List<customIngredients> ingredients = obj.ingredientsList;
 
-                Recipe recipes = await context.Recipes.Where(a => a.RecipeName.Equals(recipeName)).Include(b => b.RecipeLists.Where(c => c.AccId == id)).SingleAsync();
+                Recipe recipes = await context.Recipes.AsNoTracking().Where(a => a.RecipeName.Equals(recipeName)).Include(b => b.RecipeLists.Where(c => c.AccId == id)).SingleAsync();
                 return "Exists";
             }
             catch (Exception)
@@ -428,8 +428,8 @@ namespace PantryBackEnd.Repositories
                 {
                     string recipeName = obj.recipeName;
                     List<string> steps = obj.steps;
-                    string recipeDesc = obj.recipeDesc;
-                    List<customIngredients> ingredients = obj.ingredients;
+                    string recipeDesc = obj.desc;
+                    List<customIngredients> ingredients = obj.ingredientsList;
 
                     int random;
                     do
@@ -464,10 +464,11 @@ namespace PantryBackEnd.Repositories
                             Amount = (float)a.amount,
                             UnitOfMeasure = a.unitOfMeasure,
                             Name = a.ingredientName,
-                            OriginalName = a.amount.ToString() + a.unitOfMeasure + a.ingredientName
+                            OriginalName = a.amount.ToString() + a.unitOfMeasure + a.ingredientName,
+                            LinkProd = null
                         };
 
-                        if (a.linkProduct != null)
+                        if (a.linkProduct != null || a.linkProduct.Equals(""))
                         {
                             ing.LinkProd = a.linkProduct;
                         }
@@ -487,6 +488,18 @@ namespace PantryBackEnd.Repositories
                             RecipeIngredients = recIng
                         };
                     }
+                    else if (obj.photoUrl != null && obj.url == null)
+                    {
+                        rec = new Recipe
+                        {
+                            RecipeId = random,
+                            RecipeName = recipeName,
+                            RecipeDescription = recipeDesc,
+                            RecipeSteps = recStep,
+                            RecipeDocument = new RecipeDocument { PhotoUrl = obj.photoUrl, RecipeId = random, Url = "custom recipe" },
+                            RecipeIngredients = recIng
+                        };
+                    }
                     else
                     {
                         rec = new Recipe
@@ -498,6 +511,7 @@ namespace PantryBackEnd.Repositories
                             RecipeDocument = new RecipeDocument { PhotoUrl = obj.photoUrl, RecipeId = random, Url = obj.url },
                             RecipeIngredients = recIng
                         };
+
                     }
 
                     RecipeList reclist = new RecipeList
@@ -513,8 +527,9 @@ namespace PantryBackEnd.Repositories
                     return recID;
 
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine(e);
                     return "Error";
                 }
             }
