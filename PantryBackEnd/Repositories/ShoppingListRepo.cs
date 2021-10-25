@@ -15,11 +15,10 @@ namespace PantryBackEnd.Repositories
             this.context = context;
         }
 
-        public Task addShoppingItems(ShoppingList items)
+        public async Task addShoppingItems(ShoppingList items)
         {
-            context.ShoppingLists.Add(items);
-            context.SaveChanges();
-            return Task.CompletedTask;
+            await context.ShoppingLists.AddAsync(items);
+            await context.SaveChangesAsync();
         }
         public Task AddShoppingList(List<ShoppingList> items)
         {
