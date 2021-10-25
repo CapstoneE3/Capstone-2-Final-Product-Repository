@@ -22,7 +22,7 @@ namespace PantryBackEnd.Repositories
         {
             Console.WriteLine("Account ID is: " + accountId); 
 
-            List<Recipe> recipeImportList = context.Recipes.Include(a => a.RecipeIngredients).Take(30).ToList(); 
+            List<Recipe> recipeImportList = context.Recipes.Include(a => a.RecipeIngredients).Include(b => b.RecipeDocument).Take(30).ToList(); 
                 // Should give us a list of 30 random recipes 
 
             List<InventoryList> inventory = context.InventoryLists.Where(a => a.AccId == accountId).Include(c => c.Item).ToList();
@@ -157,11 +157,11 @@ namespace PantryBackEnd.Repositories
                     allRecipeScores.Add(totalRecipeScore);
 
                 }
-
+                /*
                 for(int ii = 0; ii < allRecipeScores.Count(); ii++)
                 {
                     Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores[ii]); 
-                }
+                }*/
                 //Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
 
                 int recipeOneScore = allRecipeScores.Max(); // gives a score 
@@ -214,7 +214,11 @@ namespace PantryBackEnd.Repositories
 
                 //Console.WriteLine("Here are all " + allRecipeScores.Count() + " recipe scores: " + allRecipeScores); 
 
-
+                Console.WriteLine("Recipe 1 : " + recipeOneScore + " index = " + recipeOneIndex + "id = " + goodRecipes[0].RecipeId);
+                Console.WriteLine("Recipe 2 : " + recipeTwoScore + " index = " + recipeTwoIndex + "id = " + goodRecipes[1].RecipeId);
+                Console.WriteLine("Recipe 3 : " + recipeThreeScore + " index = " + recipeThreeIndex +  "id = " + goodRecipes[2].RecipeId);
+                Console.WriteLine("Recipe 4 : " + recipeFourScore + " index = " + recipeFourIndex +  "id = " + goodRecipes[3].RecipeId);
+                Console.WriteLine("Recipe 5 : " + recipeFiveScore + " index = " + recipeFiveIndex +  "id = " + goodRecipes[4].RecipeId);
             return goodRecipes; 
 
         }
@@ -231,6 +235,7 @@ namespace PantryBackEnd.Repositories
                 };
                 if(a.RecipeDocument != null)
                 {
+                    
                     single.PhotoUrl = a.RecipeDocument.PhotoUrl;
                 }
                 List<ingredients> ings = new List<ingredients>();
@@ -243,6 +248,7 @@ namespace PantryBackEnd.Repositories
                     ings.Add(ing);
                 }
                 single.ingredientsList = ings;
+                recipes.Add(single);
             }
 
             return recipes;
