@@ -72,9 +72,9 @@ namespace PantryBackEnd.Repositories
         {
             return context.Accounts.Where(a => a.AccId == id).Include(b => b.ShoppingLists).Single();
         }
-        public async Task UpdateShop()
+        public void UpdateShop()
         {
-            await context.SaveChangesAsync();
+            context.SaveChanges();
         }
 
     }

@@ -62,7 +62,7 @@ namespace PantryBackEnd.Controllers
                 }
                 else
                 {
-                    await shopping.UpdateShop();
+                    shopping.UpdateShop();
                 }
 
                 return Ok();
@@ -86,13 +86,13 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
                 Account user = shopping.getUserShoppingList(userId);
                 List<ShoppingList> list = new List<ShoppingList>();
-                if (user.ShoppingLists == null)
+                if (user.ShoppingLists == null || user.ShoppingLists.Count == 0)
                 {
                     await Task.Run(() =>
                     {
                         foreach (ShoppingItems a in items)
                         {
-                            ShoppingList inv = new ShoppingList { ItemId = a.ItemId, Count = a.Count };
+                            ShoppingList inv = new ShoppingList { ItemId = a.ItemId, Count = a.Count, AccId = userId };
                             list.Add(inv);
                         }
                     });
@@ -108,7 +108,7 @@ namespace PantryBackEnd.Controllers
                            count = ShoppingCount(user.ShoppingLists, a);
                            if (count == 0)
                            {
-                               ShoppingList inv = new ShoppingList { ItemId = a.ItemId, Count = a.Count };
+                               ShoppingList inv = new ShoppingList { ItemId = a.ItemId, Count = a.Count, AccId = userId };
                                shopping.addShoppingItems(inv);
                            }
                            else
