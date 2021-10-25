@@ -148,6 +148,31 @@ namespace PantryBackEnd.Controllers
             }
         }
 
+        [Route("api/UpdateRecipe")]
+        [HttpPost]
+        public async Task<ActionResult> updateRecipe([FromBody] CustomRecipe obj, int id)
+        {
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                Account user = userRepo.GetByID(userId);
+                await recipeRepo.RemoveRecipe(id);
+                var str = await recipeRepo.createRecipe(userId, obj);
+                if (str.Equals("Exists") || str.Equals("Error"))
+                {
+                    return BadRequest(new { message = str });
+                }
+
+                return Ok(new { message = str });
+            }
+            catch (Exception)
+            {
+                return Ok(new { message = "Failed" });
+            }
+        }
+
         [Route("api/OnClickRecipe")]
         [HttpGet]
         public ActionResult<frontEndRecipeClickDetails> OnClickRecipe(int recipeID)
