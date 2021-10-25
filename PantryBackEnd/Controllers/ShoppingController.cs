@@ -125,9 +125,9 @@ namespace PantryBackEnd.Controllers
             {
                 return Unauthorized(new { message = "Expired" });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Unauthorized();
+                return BadRequest(new { message = e });
             }
         }
 
