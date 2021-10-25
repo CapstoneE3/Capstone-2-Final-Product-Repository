@@ -227,7 +227,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/testRecipeScoreLogic")]
         [HttpGet]
-        public ActionResult<List<Recipe>> calculateRecipeScores()
+        public ActionResult<List<frontEndRecipeDisplayAll>> calculateRecipeScores()
         {
             try
             {
