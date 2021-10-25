@@ -371,7 +371,7 @@ namespace PantryBackEnd.Repositories
                     recipeDesc = recipes.RecipeDescription,
                     steps = str,
                     ingredients = custIng,
-                    photo = recipes.RecipeDocument.PhotoUrl,
+                    photoUrl = recipes.RecipeDocument.PhotoUrl,
                     url = recipes.RecipeDocument.Url
                 };
 
@@ -445,7 +445,7 @@ namespace PantryBackEnd.Repositories
                     }              
 
                     Recipe rec;
-                    if(obj.photo == null)
+                    if(obj.photoUrl == null)
                     {
                             rec = new Recipe{
                             RecipeId = random,
@@ -463,7 +463,7 @@ namespace PantryBackEnd.Repositories
                             RecipeName = recipeName,
                             RecipeDescription = recipeDesc,
                             RecipeSteps = recStep,
-                            RecipeDocument = new RecipeDocument{PhotoUrl = obj.photo,RecipeId = random, Url = obj.url},
+                            RecipeDocument = new RecipeDocument{PhotoUrl = obj.photoUrl,RecipeId = random, Url = obj.url},
                             RecipeIngredients = recIng
                         };
                     }
