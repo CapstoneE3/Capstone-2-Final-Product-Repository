@@ -74,6 +74,8 @@ namespace PantryBackEnd
                     if (origin.ToLower().StartsWith("http://localhost")) return true;
                     // Insert your production domain here.
                     if (origin.ToLower().StartsWith("https://handypantry.azurewebsites.net")) return true;
+                    if (origin.ToLower().StartsWith("https://demotillapp.azurewebsites.net/")) return true;
+
                     return false;
                 })
                 .AllowCredentials()
