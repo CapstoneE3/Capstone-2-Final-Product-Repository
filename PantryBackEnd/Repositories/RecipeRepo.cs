@@ -40,7 +40,7 @@ namespace PantryBackEnd.Repositories
         {
             Console.WriteLine("Account ID is: " + accountId);
 
-            List<Recipe> recipeImportList = context.Recipes.Include(a => a.RecipeIngredients).Take(30).ToList();
+            List<Recipe> recipeImportList = context.Recipes.Include(a => a.RecipeIngredients).Include(d => d.RecipeDocument).Take(30).ToList();
             // Should give us a list of 30 random recipes 
 
             List<InventoryList> inventory = context.InventoryLists.Where(a => a.AccId == accountId).Include(c => c.Item).ToList();
