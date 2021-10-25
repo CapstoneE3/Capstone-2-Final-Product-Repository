@@ -10,6 +10,7 @@ namespace PantryBackEnd.Repositories
         Task RemoveRecipe(int id);
         Task<string> createRecipe(Guid id, CustomRecipe obj);
         Task<CustomRecipe> convertToCustom(int recipeID);
+        List<frontEndRecipeDisplayAll> displayRecommendation(List<Recipe> recs);
         Ingredient getAllProductsForIng(int ingId);
         List<frontEndRecipeDisplayAll> getRecipes(Guid id, int index);
         List<frontEndRecipeDisplayAll> browseApiRecipes(int index, Guid id);
