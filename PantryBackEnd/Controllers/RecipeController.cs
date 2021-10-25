@@ -186,8 +186,8 @@ namespace PantryBackEnd.Controllers
                 Account user = userRepo.GetByID(userId);
 
                 var goodRecipes = recipeRepo.calculateRecipeScores(userId);
-
-                return Ok(goodRecipes); 
+                var returnObj = recipeRepo.displayRecommendation(goodRecipes);
+                return Ok(returnObj); 
 
             }
             catch (Exception)

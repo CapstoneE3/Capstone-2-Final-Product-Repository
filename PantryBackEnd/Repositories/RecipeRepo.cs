@@ -219,7 +219,34 @@ namespace PantryBackEnd.Repositories
 
         }
 
+        public List<frontEndRecipeDisplayAll> displayRecommendation(List<Recipe> recs)
+        {
+            List<frontEndRecipeDisplayAll> recipes = new List<frontEndRecipeDisplayAll>();
+            foreach(Recipe a in recs)
+            {
+                frontEndRecipeDisplayAll single = new frontEndRecipeDisplayAll{
+                    RecipeId = a.RecipeId,
+                    RecipeName = a.RecipeName,
+                    PhotoUrl = null
+                };
+                if(a.RecipeDocument != null)
+                {
+                    single.PhotoUrl = a.RecipeDocument.PhotoUrl;
+                }
+                List<ingredients> ings = new List<ingredients>();
+                foreach(RecipeIngredient b in a.RecipeIngredients)
+                {
+                    ingredients ing = new ingredients{
+                        ids = b.IngredientId,
+                        name = b.Name
+                    };
+                    ings.Add(ing);
+                }
+                single.ingredientsList = ings;
+            }
 
+            return recipes;
+        }
 
         public List<frontEndRecipeDisplayAll> browseApiRecipes(int index, Guid id)
         {

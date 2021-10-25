@@ -7,7 +7,7 @@ namespace PantryBackEnd.Repositories
 {
     public interface IRecipe
     {
-        
+        List<frontEndRecipeDisplayAll> displayRecommendation(List<Recipe> recs);
         string createRecipe(Guid id, CustomRecipe obj);
         CustomRecipe convertToCustom(int recipeID);
         Ingredient getAllProductsForIng(int ingId);
