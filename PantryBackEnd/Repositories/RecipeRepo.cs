@@ -549,7 +549,7 @@ namespace PantryBackEnd.Repositories
                             UnitOfMeasure = a.unitOfMeasure,
                             Name = a.ingredientName,
                             OriginalName = a.amount.ToString() + a.unitOfMeasure + a.ingredientName,
-                            LinkProd = null
+                            LinkProd = a.linkProduct
                         };
 
                         if (a.linkProduct != null)
