@@ -412,6 +412,7 @@ namespace PantryBackEnd.Repositories
         {
             //CustomRecipe obj
             //string recipeName, string recipeDesc, List<string> steps
+            var recID = "";
             try
             {
                 string recipeName = obj.recipeName;
@@ -434,6 +435,7 @@ namespace PantryBackEnd.Repositories
                     {
                         Random rand = new Random();
                         random = rand.Next(10000);
+                        recID = random.ToString();
 
                     } while (context.Recipes.Where(a => a.RecipeId == random) == null);
 
@@ -507,7 +509,7 @@ namespace PantryBackEnd.Repositories
                     context.RecipeLists.Add(reclist);
                     context.SaveChanges();
 
-                    return "Success";
+                    return recID;
 
                 }
                 catch (Exception)

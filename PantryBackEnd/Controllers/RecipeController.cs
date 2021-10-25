@@ -84,12 +84,16 @@ namespace PantryBackEnd.Controllers
                 Guid userId = Guid.Parse(token.Issuer);
 
                 var str = recipeRepo.createRecipe(userId, obj);
+                if (str.Equals("Exists") || str.Equals("Error"))
+                {
+                    return BadRequest(new { message = str });
+                }
 
                 return Ok(new { message = str });
             }
             catch (Exception)
             {
-                return Ok(new { message = "Failed" });
+                return BadRequest(new { message = "Failed" });
             }
         }
 
@@ -163,7 +167,7 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception)
             {
-                return Ok(new { message = "Failed" });
+                return BadRequest(new { message = "Failed" });
             }
         }
 
@@ -185,7 +189,7 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception)
             {
-                return Ok(new { message = "Failed" });
+                return BadRequest(new { message = "Failed" });
             }
         }
 
@@ -193,13 +197,33 @@ namespace PantryBackEnd.Controllers
         [HttpGet]
         public ActionResult<Ingredient> getAllProductsForIng(int ingId)
         {
-            return recipeRepo.getAllProductsForIng(ingId);
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                return Ok(recipeRepo.getAllProductsForIng(ingId));
+            }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+            {
+                return Unauthorized();
+            }
         }
         [Route("api/AllIngedients")]
         [HttpGet]
         public ActionResult<List<AllIngredients>> getAllIngrdient()
         {
-            return Ok(recipeRepo.AllIngridient());
+            try
+            {
+                var jwt = Request.Cookies["jwt"];
+                var token = service.Verification(jwt);
+                Guid userId = Guid.Parse(token.Issuer);
+                return Ok(recipeRepo.AllIngridient());
+            }
+            catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
+            {
+                return Unauthorized();
+            }
         }
         [Route("api/testRecipeScoreLogic")]
         [HttpGet]
