@@ -55,6 +55,7 @@ namespace PantryBackEnd.Repositories
         public List<ShoppingItemsFormat> getShoppingList(Guid id)
         {
             List<ShoppingItemsFormat> items = new List<ShoppingItemsFormat>();
+
             foreach (ShoppingList a in context.ShoppingLists.Where(a => a.AccId == id).Include(c => c.Item).ToList())
             {
                 ShoppingItemsFormat shopItem = new ShoppingItemsFormat
@@ -62,7 +63,9 @@ namespace PantryBackEnd.Repositories
                     ItemId = a.ItemId,
                     name = a.Item.Name,
                     price = (decimal)a.Item.Price,
-                    Count = a.Count
+                    Count = a.Count,
+                    quantity = a.Item.Quantity,
+                    category = a.Item.Category
                 };
                 items.Add(shopItem);
             }
