@@ -60,7 +60,7 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception)
             {
-                return Unauthorized(new { message = "Unauthorized" });
+                return BadRequest(new { message = "Bad Man" });
             }
         }
         [Route("api/CheckSubscription")]
@@ -98,7 +98,7 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception)
             {
-                return Unauthorized(new { message = "Unauthorized" });
+                return BadRequest(new { message = "Bad Man" });
             }
         }
         [Route("api/replaceSubscription")]
@@ -136,7 +136,7 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception)
             {
-                return Unauthorized(new { message = "Unauthorized" });
+                return BadRequest(new { message = "Bad Man" });
             }
         }
         [Route("TestingAzure")]
