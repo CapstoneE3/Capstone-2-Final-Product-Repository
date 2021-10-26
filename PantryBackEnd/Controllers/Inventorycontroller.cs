@@ -145,7 +145,7 @@ namespace PantryBackEnd.Controllers
                     });
                     InvRepo.AddTIllProduct(list);
 
-                    // notification.PreparingNotification(products.AccountId, products.items);
+                    notification.PreparingNotification(products.AccountId, products.items);
                 }
 
                 else
@@ -174,7 +174,7 @@ namespace PantryBackEnd.Controllers
                             }
                         }
                     });
-                    //notification.PreparingNotification(products.AccountId, products.items);
+                    notification.PreparingNotification(products.AccountId, products.items);
                 }
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
