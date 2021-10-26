@@ -156,7 +156,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/GetShoppingItems")]
         [HttpGet]
-        public ActionResult<List<ShoppingItemsFormat>> GetShoppingItems()
+        public ActionResult<Dictionary<string, List<ShoppingItemsFormat>>> GetShoppingItems()
         {
             try
             {
@@ -164,7 +164,8 @@ namespace PantryBackEnd.Controllers
                 var jwt = Request.Cookies["jwt"];
                 var token = service.Verification(jwt);
                 Guid userId = Guid.Parse(token.Issuer);
-                return Ok(shopping.getShoppingList(userId));
+                var list = shopping.getShoppingList(userId);
+                return Ok(list);
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
             {
@@ -173,7 +174,7 @@ namespace PantryBackEnd.Controllers
             }
             catch (Exception)
             {
-                return Unauthorized();
+                return BadRequest();
             }
         }
 

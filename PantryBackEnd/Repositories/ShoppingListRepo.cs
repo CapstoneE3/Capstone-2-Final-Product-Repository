@@ -52,10 +52,10 @@ namespace PantryBackEnd.Repositories
             context.SaveChanges();
             return Task.CompletedTask;
         }
-        public List<ShoppingItemsFormat> getShoppingList(Guid id)
+        public Dictionary<string, List<ShoppingItemsFormat>> getShoppingList(Guid id)
         {
             List<ShoppingItemsFormat> items = new List<ShoppingItemsFormat>();
-
+            Dictionary<string, List<ShoppingItemsFormat>> diction = new Dictionary<string, List<ShoppingItemsFormat>>();
             foreach (ShoppingList a in context.ShoppingLists.Where(a => a.AccId == id).Include(c => c.Item).ToList())
             {
                 ShoppingItemsFormat shopItem = new ShoppingItemsFormat
@@ -67,9 +67,17 @@ namespace PantryBackEnd.Repositories
                     quantity = a.Item.Quantity,
                     category = a.Item.Category
                 };
-                items.Add(shopItem);
+                if (diction.ContainsKey(a.Item.Category))
+                {
+                    diction[a.Item.Category].Add(shopItem);
+                }
+                else
+                {
+                    diction.Add(a.Item.Category, new List<ShoppingItemsFormat>());
+                    diction[a.Item.Category].Add(shopItem);
+                }
             }
-            return items;
+            return diction;
         }
         public Account getUserShoppingList(Guid id)
         {
