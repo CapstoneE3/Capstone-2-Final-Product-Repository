@@ -25,7 +25,7 @@ namespace PantryBackEnd.Controllers
             this.logger = logger;
         }
 
-        [Route("api/subcriptions")]
+        [Route("api/StoreSubscriptions")]
         [HttpPost]
         public async Task<ActionResult<Subscription>> StoreSubscription([FromBody] SubscriptionFrontEnd subs)
         {
@@ -58,8 +58,9 @@ namespace PantryBackEnd.Controllers
                 Response.Cookies.Delete("jwt");
                 return Unauthorized(new { message = "Expired" });
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                logger.LogError(e.ToString());
                 return BadRequest(new { message = "Bad Man" });
             }
         }
@@ -96,8 +97,9 @@ namespace PantryBackEnd.Controllers
                 Response.Cookies.Delete("jwt");
                 return Unauthorized(new { message = "Expired" });
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                logger.LogError(e.ToString());
                 return BadRequest(new { message = "Bad Man" });
             }
         }
@@ -134,8 +136,10 @@ namespace PantryBackEnd.Controllers
                 Response.Cookies.Delete("jwt");
                 return Unauthorized(new { message = "Expired" });
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                logger.LogError(e.ToString());
+
                 return BadRequest(new { message = "Bad Man" });
             }
         }
