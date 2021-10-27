@@ -159,7 +159,7 @@ namespace PantryBackEnd.Controllers
         }
         [Route("api/Test")]
         [HttpGet]
-        public async Task<ActionResult> TestNotification()
+        public  ActionResult TestNotification()
         {
             try
             {
@@ -176,7 +176,7 @@ namespace PantryBackEnd.Controllers
                 
                 PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
                 string payload = "Your items are expiring ";
-                await webpush.SendNotificationAsync(push, payload);
+                webpush.SendNotification(push, payload);
                 return Ok();
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
