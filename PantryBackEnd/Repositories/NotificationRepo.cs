@@ -47,9 +47,9 @@ namespace PantryBackEnd.Repositories
         {
             return context.Products.Single(a => a.ItemId.Equals(itemId)).Name;
         }
-        public Subscription GetSubscription(Guid id)
+        public Subscription GetSubscription(Guid id,string endpoint)
         {
-            return context.Subscriptions.Where(a => a.AccId == id).Single();
+            return context.Subscriptions.Where(a => a.AccId == id && a.SubEndpoint == endpoint).Single();
         }
         public bool CheckSubs(Subscription subs)
         {

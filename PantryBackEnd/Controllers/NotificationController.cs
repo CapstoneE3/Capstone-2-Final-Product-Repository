@@ -50,7 +50,7 @@ namespace PantryBackEnd.Controllers
                     }
                 }
                 await store.StoreSubscription(subDbEntry);
-                Subscription a = store.GetSubscription(userId);
+                Subscription a = store.GetSubscription(userId,subDbEntry.SubEndpoint);
                 return Ok(a);
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
