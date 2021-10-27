@@ -25,7 +25,7 @@ namespace PantryBackEnd.Controllers
             this.logger = logger;
         }
 
-        [Route("api/StoreSubscriptions")]
+        [Route("api/subcriptions")]
         [HttpPost]
         public async Task<ActionResult<Subscription>> StoreSubscription([FromBody] SubscriptionFrontEnd subs)
         {
