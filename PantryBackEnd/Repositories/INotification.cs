@@ -15,7 +15,7 @@ namespace PantryBackEnd.Repositories
 
         string getProductName(string itemId);
 
-        Subscription GetSubscription(Guid id);
+        List<Subscription> GetSubscription(Guid id);
 
         bool CheckSubs(Subscription subs);
 

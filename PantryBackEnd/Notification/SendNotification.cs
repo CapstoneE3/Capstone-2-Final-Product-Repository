@@ -68,11 +68,15 @@ namespace PantryBackEnd.Notification
 
                 foreach (SubscriptionData x in list)
                 {
-                    Subscription subscriptionData = notification.GetSubscription(id);
-                    PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
-                    string data = JsonConvert.SerializeObject(x);
-                    string payload = data;
-                    await webpush.SendNotificationAsync(push, payload);
+                    List<Subscription> Dataa = notification.GetSubscription(id);
+                    foreach (var subscriptionData in  Dataa)
+                    {
+                        
+                        PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
+                        string data = JsonConvert.SerializeObject(x);
+                        string payload = data;
+                        await webpush.SendNotificationAsync(push, payload);
+                    }
                 }
             }
             catch (InvalidOperationException)

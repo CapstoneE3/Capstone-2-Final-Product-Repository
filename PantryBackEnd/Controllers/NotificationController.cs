@@ -50,8 +50,9 @@ namespace PantryBackEnd.Controllers
                     }
                 }
                 await store.StoreSubscription(subDbEntry);
-                Subscription a = store.GetSubscription(userId,subDbEntry.SubEndpoint);
-                return Ok(a);
+                List<Subscription> a = store.GetSubscription(userId);
+                var b = a.Find(c => c.SubEndpoint.Equals(subDbEntry.SubEndpoint));
+                return Ok(b);
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
             {
@@ -128,8 +129,10 @@ namespace PantryBackEnd.Controllers
                     }
                 }
                 await store.UpdateSub(subDbEntry);
-                Subscription a = store.GetSubscription(userId);
-                return Ok(a);
+                List<Subscription> a = store.GetSubscription(userId);
+                var b = a.Find(c => c.SubEndpoint.Equals(subDbEntry.SubEndpoint));
+
+                return Ok(b);
             }
             catch (Microsoft.IdentityModel.Tokens.SecurityTokenExpiredException)
             {
@@ -166,8 +169,8 @@ namespace PantryBackEnd.Controllers
                 WebPushClient webpush = new WebPushClient();
                 VapidDt details = store.GetVapidDt();
                 webpush.SetVapidDetails(details.subjecy, details.publicKey, details.privateKey);
-                Subscription subscriptionData = store.GetSubscription(userId);
-
+                List<Subscription> C = store.GetSubscription(userId);
+                Subscription subscriptionData = C[0];
                 PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
                 string payload = "Your items are expiring ";
                 await webpush.SendNotificationAsync(push, payload);
