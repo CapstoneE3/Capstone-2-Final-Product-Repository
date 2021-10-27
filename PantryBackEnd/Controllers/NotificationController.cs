@@ -8,6 +8,7 @@ using PantryBackEnd.JwtGenerator;
 using WebPush;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 namespace PantryBackEnd.Controllers
 {
     public class NotificationController : ControllerBase
@@ -170,7 +171,9 @@ namespace PantryBackEnd.Controllers
                 VapidDt details = store.GetVapidDt();
                 webpush.SetVapidDetails(details.subjecy, details.publicKey, details.privateKey);
                 List<Subscription> C = store.GetSubscription(userId);
-                Subscription subscriptionData = C[0];
+                Subscription subscriptionData = C.First();
+                logger.LogInformation(JsonConvert.SerializeObject(subscriptionData));
+                
                 PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
                 string payload = "Your items are expiring ";
                 await webpush.SendNotificationAsync(push, payload);

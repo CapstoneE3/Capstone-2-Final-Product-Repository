@@ -95,12 +95,16 @@ namespace PantryBackEnd
             webpush.SetVapidDetails(details.subjecy, details.publicKey, details.privateKey);
             foreach (KeyValuePair<Guid, object> a in list)
             {
-                Subscription subscriptionData = notification.GetSubscription(a.Key);
+                List<Subscription> c =  notification.GetSubscription(a.Key);
+                foreach(var subscriptionData in c)
+                {
 
-                PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
-                string data = JsonConvert.SerializeObject(a.Value);
-                string payload = data;
-                await webpush.SendNotificationAsync(push, payload);
+                    PushSubscription push = new PushSubscription(subscriptionData.SubEndpoint, subscriptionData.Key, subscriptionData.Audh);
+                    string data = JsonConvert.SerializeObject(a.Value);
+                    string payload = data;
+                    await webpush.SendNotificationAsync(push, payload);
+                }
             }
-        }*/
+        }
+    }*/
 }
